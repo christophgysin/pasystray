@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=PulseAudio System Tray
+GenericName=
+Comment=An Applet for PulseAudio
+Exec=pasystray
+Icon=audio-card
+StartupNotify=true
+Type=Application
+Categories=Application;AudioVideo;Audio;
