@@ -32,6 +32,6 @@ GtkWidget* systray_menu_item_quit();
 GtkWidget* systray_create_menuitem(GtkMenu* m, const char* text, const char* icon_name);
 
 void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer user_data);
-void start_application_cb(const char* command);
+void start_application_cb(GtkMenuItem* menuitem, const char* command);
 
 #endif /* SYSTRAY_H */

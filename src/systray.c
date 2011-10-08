@@ -1,6 +1,12 @@
 #include <stdlib.h>
 #include "systray.h"
 
+static const char* COMMAND_PAMAN = "paman";
+static const char* COMMAND_PAVUCONTROL = "pavucontrol";
+static const char* COMMAND_PAVUMETER = "pavumeter";
+static const char* COMMAND_PAVUMETER_REC = "pavumeter --record";
+static const char* COMMAND_PAPREFS = "paprefs";
+
 userdata_t* u;
 
 void systray_create()
@@ -31,11 +37,11 @@ void systray_menu_create()
     systray_menu_add_submenu(u->menu, "Sources", u->sources, "audio-input-microphone");
     systray_menu_add_separator();
 
-    systray_menu_add_application("_Manager...", NULL, "paman");
-    systray_menu_add_application("_Volume Control...", NULL, "pavucontrol");
-    systray_menu_add_application("_Volume Meter (Playback)...", NULL, "pavumeter");
-    systray_menu_add_application("_Volume Meter (Recording)...", NULL, "pavumeter --record");
-    systray_menu_add_application("_Configure Local Sound Server...", NULL, "paprefs");
+    systray_menu_add_application("_Manager...", NULL, COMMAND_PAMAN);
+    systray_menu_add_application("_Volume Control...", NULL, COMMAND_PAVUCONTROL);
+    systray_menu_add_application("_Volume Meter (Playback)...", NULL, COMMAND_PAVUMETER);
+    systray_menu_add_application("_Volume Meter (Recording)...", NULL, COMMAND_PAVUMETER_REC);
+    systray_menu_add_application("_Configure Local Sound Server...", NULL, COMMAND_PAPREFS);
 
     /*
     gtk_menu_shell_append(GTK_MENU_SHELL(u->menu), gtk_separator_menu_item_new());
@@ -92,13 +98,17 @@ void systray_submenu_add_radio_item(menu_info_t* m, const char* name)
 void systray_menu_add_application(const char* text, const char* icon, const char* command)
 {
     GtkWidget* item = systray_create_menuitem(GTK_MENU(u->menu), text, icon);
-    gchar* c = g_find_program_in_path(command);
+
+    gchar** exe = g_strsplit_set(command, " ", 2);
+    gchar* c = g_find_program_in_path(exe[0]);
     gtk_widget_set_sensitive(item, (c != NULL));
     g_free(c);
-    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(start_application_cb), (void*)command);
+    g_strfreev(exe);
+
+    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(start_application_cb), (gpointer)command);
 }
 
-void start_application_cb(const char* command)
+void start_application_cb(GtkMenuItem* menuitem, const char* command)
 {
     g_spawn_command_line_async(command, NULL);
 }
