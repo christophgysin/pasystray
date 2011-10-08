@@ -12,9 +12,11 @@ userdata_t* u;
 void systray_create()
 {
     u = malloc(sizeof(userdata_t));
+    u->servers = malloc(sizeof(menu_info_t));
     u->sinks = malloc(sizeof(menu_info_t));
     u->sources = malloc(sizeof(menu_info_t));
-    u->servers = malloc(sizeof(menu_info_t));
+    u->sink_inputs = malloc(sizeof(menu_info_t));
+    u->source_outputs = malloc(sizeof(menu_info_t));
 
     systray_create_gui();
 }
@@ -32,9 +34,11 @@ void systray_menu_create()
 {
     u->menu = gtk_menu_new();
 
-    systray_menu_add_submenu(u->menu, "Servers", u->servers, "network-wired");
-    systray_menu_add_submenu(u->menu, "Sinks", u->sinks, "audio-card");
-    systray_menu_add_submenu(u->menu, "Sources", u->sources, "audio-input-microphone");
+    systray_menu_add_submenu(u->menu, "Default Server", u->servers, "network-wired");
+    systray_menu_add_submenu(u->menu, "Default Sink", u->sinks, "audio-card");
+    systray_menu_add_submenu(u->menu, "Default Source", u->sources, "audio-input-microphone");
+    systray_menu_add_submenu(u->menu, "Playback Streams", u->sink_inputs, "player_play");
+    systray_menu_add_submenu(u->menu, "Recording Streams", u->source_outputs, "player_record");
     systray_menu_add_separator();
 
     systray_menu_add_application("_Manager...", NULL, COMMAND_PAMAN);
@@ -84,15 +88,20 @@ GtkWidget* systray_create_menuitem(GtkMenu* m, const char* text, const char* ico
     return item;
 }
 
-void systray_submenu_add_radio_item(menu_info_t* m, const char* name)
+void systray_submenu_add_radio_item(menu_info_t* m, const char* text)
 {
-    GtkWidget* item = gtk_radio_menu_item_new_with_label(m->group, name);
+    GtkWidget* item = gtk_radio_menu_item_new_with_label(m->group, text);
     if(!m->group)
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), TRUE);
 
     m->group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(item));
     gtk_menu_shell_append(m->menu, item);
     gtk_widget_show(item);
+}
+
+void systray_submenu_add_menu_item(menu_info_t* m, const char* text, const char* icon)
+{
+    GtkWidget* item = systray_create_menuitem(GTK_MENU(m->menu), text, icon);
 }
 
 void systray_menu_add_application(const char* text, const char* icon, const char* command)
