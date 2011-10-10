@@ -16,8 +16,6 @@ src/.deps/
 src/Makefile
 src/Makefile.in
 src/pasystray
-src/pasystray-pasystray.o
-src/pasystray-pulseaudio.o
-src/pasystray-systray.o
+src/*.o
 stamp-h1
 tags
