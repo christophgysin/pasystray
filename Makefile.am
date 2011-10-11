@@ -1,10 +1,2 @@
 EXTRA_DIST = bootstrap.sh README LICENSE
 SUBDIRS=src
-
-MAINTAINERCLEANFILES=README
-noinst_DATA = README
-
-README:
-	rm -f README
-	$(MAKE) -C doc README
-	cd $(srcdir) && ln -s doc/README README
