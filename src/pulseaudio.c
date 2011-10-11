@@ -6,31 +6,34 @@
 #include "pulseaudio.h"
 #include "systray.h"
 
-static pa_context* context = NULL;
 static pa_threaded_mainloop* m = NULL;
+static pa_context* context = NULL;
+static pa_proplist* context_proplist = NULL;
 static char* server = NULL;
 
-void pulseaudio_init()
+void pulseaudio_init(menu_infos_t* mis)
 {
-    pa_mainloop_api* mainloop_api = NULL;
-
     if(!(m = pa_threaded_mainloop_new()))
         quit("pa_threaded_mainloop_new() failed.");
 
-    mainloop_api = pa_threaded_mainloop_get_api(m);
+    pulseaudio_prepare_context();
+    pa_context_set_state_callback(context, context_state_cb, mis);
+}
 
-    pa_proplist* proplist = pa_proplist_new();
-    pa_proplist_sets(proplist, PA_PROP_APPLICATION_NAME, "PulseAudio systray");
+void pulseaudio_prepare_context()
+{
+    pa_mainloop_api* mainloop_api = pa_threaded_mainloop_get_api(m);
 
-    if(!(context = pa_context_new_with_proplist(mainloop_api, NULL, proplist)))
+    context_proplist = pa_proplist_new();
+    pa_proplist_sets(context_proplist, PA_PROP_APPLICATION_NAME, "PulseAudio systray");
+
+    context = pa_context_new_with_proplist(mainloop_api, NULL, context_proplist);
+    if(!context)
         quit("pa_context_new() failed.");
 }
 
-
-void pulseaudio_connect(menu_infos_t* mis)
+void pulseaudio_connect()
 {
-    pa_context_set_state_callback(context, context_state_cb, mis);
-
     if(pa_context_connect(context, server, 0, NULL) < 0)
     {
         fprintf(stderr, "pa_context_connect() failed: ");
@@ -50,9 +53,8 @@ void context_state_cb(pa_context* c, void* userdata)
 
     switch(pa_context_get_state(c))
     {
-        case PA_CONTEXT_CONNECTING:
-        case PA_CONTEXT_AUTHORIZING:
-        case PA_CONTEXT_SETTING_NAME:
+        case PA_CONTEXT_UNCONNECTED:
+            fprintf(stderr, "PulseAudio context unconnected!\n");
             break;
 
         case PA_CONTEXT_READY:
@@ -66,27 +68,37 @@ void context_state_cb(pa_context* c, void* userdata)
                         subscribed_cb, mis));
             break;
 
-        case PA_CONTEXT_TERMINATED:
-            fprintf(stderr, "terminated\n");
-            break;
-
         case PA_CONTEXT_FAILED:
-        default:
             fprintf(stderr, "PulseAudio connection failure: %s\n", pa_strerror(pa_context_errno(c)));
             fprintf(stderr, "reconnecting...\n");
             menu_infos_clear(mis);
             pulseaudio_connect(mis);
+            break;
+
+        case PA_CONTEXT_TERMINATED:
+            fprintf(stderr, "PulseAudio terminated!\n");
+            fprintf(stderr, "reconnecting...\n");
+            menu_infos_clear(mis);
+            pa_context_unref(context);
+            pulseaudio_prepare_context();
+            pulseaudio_connect(mis);
+            break;
+
+        case PA_CONTEXT_CONNECTING:
+        case PA_CONTEXT_AUTHORIZING:
+        case PA_CONTEXT_SETTING_NAME:
+            break;
     }
 }
 
 void subscribed_cb(pa_context* c, int success, void* userdata)
 {
     menu_infos_t* mis = userdata;
-    pa_operation_unref(pa_context_get_server_info(c, add_server_cb, mis->servers));
-    pa_operation_unref(pa_context_get_sink_info_list(c, add_sink_cb, mis->sinks));
-    pa_operation_unref(pa_context_get_source_info_list(c, add_source_cb, mis->sources));
-    pa_operation_unref(pa_context_get_sink_input_info_list(c, add_sink_input_cb, mis->sink_inputs));
-    pa_operation_unref(pa_context_get_source_output_info_list(c, add_source_output_cb, mis->source_outputs));
+    pa_operation_unref(pa_context_get_server_info(c, add_server_cb, &mis->menu_info[MENU_SERVER]));
+    pa_operation_unref(pa_context_get_sink_info_list(c, add_sink_cb, &mis->menu_info[MENU_SINK]));
+    pa_operation_unref(pa_context_get_source_info_list(c, add_source_cb, &mis->menu_info[MENU_SOURCE]));
+    pa_operation_unref(pa_context_get_sink_input_info_list(c, add_sink_input_cb, &mis->menu_info[MENU_INPUT]));
+    pa_operation_unref(pa_context_get_source_output_info_list(c, add_source_output_cb, &mis->menu_info[MENU_OUTPUT]));
 }
 
 void event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, void* userdata)
@@ -98,68 +110,48 @@ void event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, voi
 
     /* print_event(pa_subscription_event_type_t t, uint32_t index); */
 
-    switch(facility)
+    switch(type)
     {
-        case PA_SUBSCRIPTION_EVENT_SERVER:
-            switch(type)
+        case PA_SUBSCRIPTION_EVENT_NEW:
+            switch(facility)
             {
-                case PA_SUBSCRIPTION_EVENT_NEW:
-                    // add_server
+                case PA_SUBSCRIPTION_EVENT_SERVER:
+                    pa_operation_unref(pa_context_get_server_info(c, add_server_cb, &mis->menu_info[MENU_SERVER]));
                     break;
-                case PA_SUBSCRIPTION_EVENT_REMOVE:
-                    // remove_server
+                case PA_SUBSCRIPTION_EVENT_SINK:
+                    pa_operation_unref(pa_context_get_sink_info_by_index(c, index, add_sink_cb, &mis->menu_info[MENU_SINK]));
+                    break;
+                case PA_SUBSCRIPTION_EVENT_SOURCE:
+                    pa_operation_unref(pa_context_get_source_info_by_index(c, index, add_source_cb, &mis->menu_info[MENU_SOURCE]));
+                    break;
+                case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
+                    pa_operation_unref(pa_context_get_sink_input_info(c, index, add_sink_input_cb, &mis->menu_info[MENU_INPUT]));
+                    break;
+                case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
+                    pa_operation_unref(pa_context_get_source_output_info(c, index, add_source_output_cb, &mis->menu_info[MENU_OUTPUT]));
                     break;
                 default:
                     break;
             }
             break;
-        case PA_SUBSCRIPTION_EVENT_SINK:
-            switch(type)
+
+        case PA_SUBSCRIPTION_EVENT_REMOVE:
+            switch(facility)
             {
-                case PA_SUBSCRIPTION_EVENT_NEW:
-                    pa_operation_unref(pa_context_get_sink_info_by_index(c, index, add_sink_cb, mis->sinks));
+                case PA_SUBSCRIPTION_EVENT_SERVER:
+                    menu_info_item_remove(mis, MENU_SERVER, index);
                     break;
-                case PA_SUBSCRIPTION_EVENT_REMOVE:
-                    remove_sink(mis->sinks, index);
+                case PA_SUBSCRIPTION_EVENT_SINK:
+                    menu_info_item_remove(mis, MENU_SINK, index);
                     break;
-                default:
+                case PA_SUBSCRIPTION_EVENT_SOURCE:
+                    menu_info_item_remove(mis, MENU_SOURCE, index);
                     break;
-            }
-            break;
-        case PA_SUBSCRIPTION_EVENT_SOURCE:
-            switch(type)
-            {
-                case PA_SUBSCRIPTION_EVENT_NEW:
-                    pa_operation_unref(pa_context_get_source_info_by_index(c, index, add_source_cb, mis->sources));
+                case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
+                    menu_info_item_remove(mis, MENU_INPUT, index);
                     break;
-                case PA_SUBSCRIPTION_EVENT_REMOVE:
-                    remove_source(mis->sources, index);
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
-            switch(type)
-            {
-                case PA_SUBSCRIPTION_EVENT_NEW:
-                    pa_operation_unref(pa_context_get_sink_input_info(c, index, add_sink_input_cb, mis->sink_inputs));
-                    break;
-                case PA_SUBSCRIPTION_EVENT_REMOVE:
-                    // remove_sink_input
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
-            switch(type)
-            {
-                case PA_SUBSCRIPTION_EVENT_NEW:
-                    pa_operation_unref(pa_context_get_source_output_info(c, index, add_source_output_cb, mis->source_outputs));
-                    break;
-                case PA_SUBSCRIPTION_EVENT_REMOVE:
-                    // remove_source_output
+                case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
+                    menu_info_item_remove(mis, MENU_OUTPUT, index);
                     break;
                 default:
                     break;
@@ -191,7 +183,8 @@ void print_event(pa_subscription_event_type_t t, uint32_t index)
 
 void add_server_cb(pa_context* c, const pa_server_info* i, void* userdata)
 {
-    systray_submenu_add_radio_item(userdata, i->host_name);
+    menu_info_t* mi = userdata;
+    menu_info_item_add(mi, 0, i->host_name, NULL);
 }
 
 void add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userdata)
@@ -206,17 +199,7 @@ void add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userda
         return;
 
     menu_info_t* mi = userdata;
-    menu_info_item_add(mi, i->index, i->description);
-}
-
-void remove_sink(menu_info_t* mi, uint32_t index)
-{
-    menu_info_item_t* mii = menu_info_item_get(mi, index);
-
-    if(!mii)
-        return;
-
-    menu_info_item_remove(mi, index);
+    menu_info_item_add(mi, i->index, i->description, NULL);
 }
 
 void add_source_cb(pa_context* c, const pa_source_info* i, int is_last, void* userdata)
@@ -236,12 +219,7 @@ void add_source_cb(pa_context* c, const pa_source_info* i, int is_last, void* us
         return;
 
     menu_info_t* mi = userdata;
-    menu_info_item_add(mi, i->index, i->description);
-}
-
-void remove_source(menu_info_t* mi, uint32_t index)
-{
-    menu_info_item_remove(mi, index);
+    menu_info_item_add(mi, i->index, i->description, NULL);
 }
 
 void add_sink_input_cb(pa_context* c, const pa_sink_input_info* i, int is_last, void* userdata)
@@ -259,8 +237,7 @@ void add_sink_input_cb(pa_context* c, const pa_sink_input_info* i, int is_last, 
     const char* app_icon = pa_proplist_gets(i->proplist, PA_PROP_APPLICATION_ICON_NAME);
 
     menu_info_t* mi = userdata;
-    //menu_info_item_add(mi, i->name, i->description);
-    systray_submenu_add_menu_item(mi, app_name, app_icon);
+    menu_info_item_add(mi, i->index, app_name ? app_name : i->name, app_icon);
 }
 
 void add_source_output_cb(pa_context* c, const pa_source_output_info* i, int is_last, void* userdata)
@@ -278,8 +255,7 @@ void add_source_output_cb(pa_context* c, const pa_source_output_info* i, int is_
     const char* app_icon = pa_proplist_gets(i->proplist, PA_PROP_APPLICATION_ICON_NAME);
 
     menu_info_t* mi = userdata;
-    //menu_info_item_add(mi, i->name, i->description);
-    systray_submenu_add_menu_item(mi, app_name ? app_name : i->name, app_icon);
+    menu_info_item_add(mi, i->index, app_name ? app_name : i->name, app_icon);
 }
 
 void quit(const char* msg)

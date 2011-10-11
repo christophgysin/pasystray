@@ -8,15 +8,16 @@ int main(int argc, char *argv[])
 {
     gtk_init(&argc, &argv);
 
-    menu_infos_t* mi = menu_infos_create();
-    systray_create(mi);
+    menu_infos_t* mis = menu_infos_create();
 
-    pulseaudio_init();
-    pulseaudio_connect(mi);
+    systray_create(mis);
+
+    pulseaudio_init(mis);
+    pulseaudio_connect();
     pulseaudio_start();
 
     gtk_main();
 
-    menu_infos_destroy(mi);
+    menu_infos_destroy(mis);
     return 0;
 }
