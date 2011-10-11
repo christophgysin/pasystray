@@ -1,0 +1,2 @@
+set default sink/source
+move stream to different sink/source

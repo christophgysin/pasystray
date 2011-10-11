@@ -42,13 +42,13 @@ void menu_infos_destroy(menu_infos_t* mis)
     g_free(mis);
 }
 
-void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* desc, const char* icon)
+void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, const char* desc, const char* icon)
 {
     menu_info_item_t* item = g_new(menu_info_item_t, 1);
 
     fprintf(stderr, "[menu_info] adding %s %u %p\n", MENU_NAME[mi->type], index, item);
 
-    item->desc = g_strdup(desc);
+    item->name = g_strdup(name);
     item->icon = g_strdup(icon);
 
     switch(mi->type)
@@ -56,11 +56,11 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* desc, const
         case MENU_SERVER:
         case MENU_SINK:
         case MENU_SOURCE:
-            item->widget = systray_add_radio_item(mi, desc);
+            item->widget = systray_add_radio_item(mi, name, desc);
             break;
         case MENU_INPUT:
         case MENU_OUTPUT:
-            item->widget = systray_add_menu_item(mi->menu, desc, icon);
+            item->widget = systray_add_menu_item(mi->menu, name, desc, icon);
             break;
     }
 
@@ -100,7 +100,7 @@ void menu_info_item_remove(menu_infos_t* mis, menu_type_t type, uint32_t index)
 
 void menu_info_item_destroy(menu_info_item_t* mii)
 {
-    g_free(mii->desc);
+    g_free(mii->name);
     g_free(mii->icon);
     g_free(mii);
 }

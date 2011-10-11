@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "pulseaudio.h"
+#include "pulseaudio_info.h"
 #include "systray.h"
 
 static pa_threaded_mainloop* m = NULL;
@@ -58,6 +59,12 @@ void context_state_cb(pa_context* c, void* userdata)
             break;
 
         case PA_CONTEXT_READY:
+        {
+            /* connected, update systray tooltip */
+            char* desc = context_info_str(context);
+            gtk_status_icon_set_tooltip_text(mis->icon, desc);
+            g_free(desc);
+
             pa_context_set_subscribe_callback(c, event_cb, mis);
             pa_operation_unref(pa_context_subscribe(c,
                         PA_SUBSCRIPTION_MASK_SINK |
@@ -67,6 +74,7 @@ void context_state_cb(pa_context* c, void* userdata)
                         PA_SUBSCRIPTION_MASK_SERVER,
                         subscribed_cb, mis));
             break;
+        }
 
         case PA_CONTEXT_FAILED:
             fprintf(stderr, "PulseAudio connection failure: %s\n", pa_strerror(pa_context_errno(c)));
@@ -184,7 +192,9 @@ void print_event(pa_subscription_event_type_t t, uint32_t index)
 void add_server_cb(pa_context* c, const pa_server_info* i, void* userdata)
 {
     menu_info_t* mi = userdata;
-    menu_info_item_add(mi, 0, i->host_name, NULL);
+    char* desc = server_info_str(i);
+    menu_info_item_add(mi, 0, i->host_name, desc, NULL);
+    g_free(desc);
 }
 
 void add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userdata)
@@ -199,7 +209,9 @@ void add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userda
         return;
 
     menu_info_t* mi = userdata;
-    menu_info_item_add(mi, i->index, i->description, NULL);
+    char* desc = sink_info_str(i);
+    menu_info_item_add(mi, i->index, i->description, desc, NULL);
+    g_free(desc);
 }
 
 void add_source_cb(pa_context* c, const pa_source_info* i, int is_last, void* userdata)
@@ -219,7 +231,9 @@ void add_source_cb(pa_context* c, const pa_source_info* i, int is_last, void* us
         return;
 
     menu_info_t* mi = userdata;
-    menu_info_item_add(mi, i->index, i->description, NULL);
+    char* desc = source_info_str(i);
+    menu_info_item_add(mi, i->index, i->description, desc, NULL);
+    g_free(desc);
 }
 
 void add_sink_input_cb(pa_context* c, const pa_sink_input_info* i, int is_last, void* userdata)
@@ -237,7 +251,9 @@ void add_sink_input_cb(pa_context* c, const pa_sink_input_info* i, int is_last, 
     const char* app_icon = pa_proplist_gets(i->proplist, PA_PROP_APPLICATION_ICON_NAME);
 
     menu_info_t* mi = userdata;
-    menu_info_item_add(mi, i->index, app_name ? app_name : i->name, app_icon);
+    char* desc = input_info_str(i);
+    menu_info_item_add(mi, i->index, app_name ? app_name : i->name, desc, app_icon);
+    g_free(desc);
 }
 
 void add_source_output_cb(pa_context* c, const pa_source_output_info* i, int is_last, void* userdata)
@@ -255,7 +271,9 @@ void add_source_output_cb(pa_context* c, const pa_source_output_info* i, int is_
     const char* app_icon = pa_proplist_gets(i->proplist, PA_PROP_APPLICATION_ICON_NAME);
 
     menu_info_t* mi = userdata;
-    menu_info_item_add(mi, i->index, app_name ? app_name : i->name, app_icon);
+    char* desc = output_info_str(i);
+    menu_info_item_add(mi, i->index, app_name ? app_name : i->name, desc, app_icon);
+    g_free(desc);
 }
 
 void quit(const char* msg)
