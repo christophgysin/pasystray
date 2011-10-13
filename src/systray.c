@@ -49,7 +49,7 @@ void systray_menu_add_separator(GtkMenuShell* menu)
     gtk_widget_show(item);
 }
 
-void systray_menu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* name, const char* desc, const char* icon)
+void systray_menu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* name, char* desc, const char* icon)
 {
     GtkMenuShell* menu = mis->menu;
     menu_info_t* mi = &mis->menu_info[type];
@@ -62,14 +62,14 @@ void systray_menu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* n
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
 }
 
-GtkWidget* systray_add_menu_item(GtkMenuShell* menu, const char* name, const char* desc, const char* icon)
+GtkWidget* systray_add_menu_item(GtkMenuShell* menu, const char* name, char* desc, const char* icon)
 {
     GtkWidget* item = gtk_image_menu_item_new_with_mnemonic(name);
     gtk_menu_shell_append(menu, item);
 
     if(desc)
     {
-        char* markup = g_strdup_printf("<span face=\"monospace\">%s</span>", desc);
+        char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"20\">%s</span>", desc);
         gtk_widget_set_tooltip_markup(item, markup);
         g_free(markup);
     }
@@ -88,7 +88,7 @@ void systray_remove_menu_item(menu_info_t* mi, GtkWidget* item)
     gtk_container_remove(GTK_CONTAINER(mi->menu), item);
 }
 
-GtkWidget* systray_add_radio_item(menu_info_t* mi, const char* name, const char* desc)
+GtkWidget* systray_add_radio_item(menu_info_t* mi, const char* name, char* desc)
 {
     GtkWidget* item = gtk_radio_menu_item_new_with_label(mi->group, name);
 
@@ -97,7 +97,7 @@ GtkWidget* systray_add_radio_item(menu_info_t* mi, const char* name, const char*
 
     if(desc)
     {
-        char* markup = g_strdup_printf("<span face=\"monospace\">%s</span>", desc);
+        char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", desc);
         gtk_widget_set_tooltip_markup(item, markup);
         g_free(markup);
     }
@@ -113,6 +113,13 @@ void systray_remove_radio_item(menu_info_t* mi, GtkWidget* item)
 {
     gtk_radio_menu_item_set_group(GTK_RADIO_MENU_ITEM(item), NULL);
     gtk_container_remove(GTK_CONTAINER(mi->menu), item);
+
+    /* update group */
+    GList* children = gtk_container_get_children(GTK_CONTAINER(mi->menu));
+    if(children)
+        mi->group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(children->data));
+    else
+        mi->group = NULL;
 }
 
 void systray_menu_add_application(GtkMenuShell* menu, const char* name, const char* icon, const char* command)

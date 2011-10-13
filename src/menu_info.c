@@ -32,7 +32,30 @@ void menu_infos_clear(menu_infos_t* mis)
     size_t i;
     for(i=0; i<MENU_COUNT; ++i)
     {
-        g_hash_table_remove_all(mis->menu_info[i].items);
+        menu_info_t* mi = &mis->menu_info[i];
+
+        GHashTableIter iter;
+        gpointer key;
+        menu_info_item_t* mii;
+
+        g_hash_table_iter_init(&iter, mi->items);
+
+        while(g_hash_table_iter_next(&iter, &key, (gpointer*)&mii))
+        {
+            switch(mi->type)
+            {
+                case MENU_SERVER:
+                case MENU_SINK:
+                case MENU_SOURCE:
+                    systray_remove_radio_item(mi, mii->widget);
+                    break;
+                case MENU_INPUT:
+                case MENU_OUTPUT:
+                    systray_remove_menu_item(mi, mii->widget);
+                    break;
+            }
+            g_hash_table_iter_remove(&iter);
+        }
         mis->menu_info[i].group = NULL;
     }
 }
@@ -42,11 +65,13 @@ void menu_infos_destroy(menu_infos_t* mis)
     g_free(mis);
 }
 
-void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, const char* desc, const char* icon)
+void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, char* desc, const char* icon)
 {
     menu_info_item_t* item = g_new(menu_info_item_t, 1);
 
+    /*
     fprintf(stderr, "[menu_info] adding %s %u %p\n", MENU_NAME[mi->type], index, item);
+    */
 
     item->name = g_strdup(name);
     item->icon = g_strdup(icon);
@@ -80,7 +105,9 @@ void menu_info_item_remove(menu_infos_t* mis, menu_type_t type, uint32_t index)
     if(!mii)
         return;
 
+    /*
     fprintf(stderr, "[menu_info] removing %s %u\n", MENU_NAME[type], index);
+    */
 
     switch(mi->type)
     {

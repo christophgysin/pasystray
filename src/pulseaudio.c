@@ -60,10 +60,11 @@ void context_state_cb(pa_context* c, void* userdata)
 
         case PA_CONTEXT_READY:
         {
-            /* connected, update systray tooltip */
             char* desc = context_info_str(context);
-            gtk_status_icon_set_tooltip_text(mis->icon, desc);
+            char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", desc);
             g_free(desc);
+            gtk_status_icon_set_tooltip_markup(mis->icon, markup);
+            g_free(markup);
 
             pa_context_set_subscribe_callback(c, event_cb, mis);
             pa_operation_unref(pa_context_subscribe(c,
@@ -77,18 +78,12 @@ void context_state_cb(pa_context* c, void* userdata)
         }
 
         case PA_CONTEXT_FAILED:
-            fprintf(stderr, "PulseAudio connection failure: %s\n", pa_strerror(pa_context_errno(c)));
-            fprintf(stderr, "reconnecting...\n");
-            menu_infos_clear(mis);
-            pulseaudio_connect(mis);
-            break;
-
         case PA_CONTEXT_TERMINATED:
             fprintf(stderr, "PulseAudio terminated!\n");
-            fprintf(stderr, "reconnecting...\n");
             menu_infos_clear(mis);
             pa_context_unref(context);
             pulseaudio_prepare_context();
+            fprintf(stderr, "reconnecting...\n");
             pulseaudio_connect(mis);
             break;
 

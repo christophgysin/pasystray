@@ -8,14 +8,14 @@
 void systray_create(menu_infos_t* mis);
 
 void systray_menu_create(menu_infos_t* mis);
-void systray_menu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* name, const char* desc, const char* icon);
+void systray_menu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* name, char* desc, const char* icon);
 void systray_menu_add_separator(GtkMenuShell* menu);
 void systray_menu_add_application(GtkMenuShell* menu, const char* text, const char* icon, const char* command);
 
-GtkWidget* systray_add_menu_item(GtkMenuShell* menu, const char* name, const char* desc, const char* icon);
+GtkWidget* systray_add_menu_item(GtkMenuShell* menu, const char* name, char* desc, const char* icon);
 void systray_remove_menu_item(menu_info_t* mi, GtkWidget* item);
 
-GtkWidget* systray_add_radio_item(menu_info_t* m, const char* name, const char* desc);
+GtkWidget* systray_add_radio_item(menu_info_t* m, const char* name, char* desc);
 void systray_remove_radio_item(menu_info_t* mi, GtkWidget* item);
 
 GtkWidget* systray_menu_item_quit();
