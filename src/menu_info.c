@@ -2,7 +2,9 @@
 
 #include "menu_info.h"
 #include "systray.h"
+#include "pulseaudio_action.h"
 
+#ifdef DEBUG
 static const char* MENU_NAME[] = {
     [MENU_SERVER] = "server",
     [MENU_SINK]   = "sink",
@@ -10,6 +12,7 @@ static const char* MENU_NAME[] = {
     [MENU_INPUT]  = "input",
     [MENU_OUTPUT]  = "output",
 };
+#endif /* DEBUG */
 
 menu_infos_t* menu_infos_create()
 {
@@ -65,15 +68,17 @@ void menu_infos_destroy(menu_infos_t* mis)
     g_free(mis);
 }
 
-void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, char* desc, const char* icon)
+void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, const char* desc, char* tooltip, const char* icon)
 {
     menu_info_item_t* item = g_new(menu_info_item_t, 1);
+    item->menu_info = mi;
 
-    /*
+#ifdef DEBUG
     fprintf(stderr, "[menu_info] adding %s %u %p\n", MENU_NAME[mi->type], index, item);
-    */
+#endif
 
     item->name = g_strdup(name);
+    item->desc = g_strdup(desc);
     item->icon = g_strdup(icon);
 
     switch(mi->type)
@@ -81,20 +86,65 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, char*
         case MENU_SERVER:
         case MENU_SINK:
         case MENU_SOURCE:
-            item->widget = systray_add_radio_item(mi, name, desc);
+            item->widget = systray_add_radio_item(mi, desc, tooltip);
             break;
         case MENU_INPUT:
         case MENU_OUTPUT:
-            item->widget = systray_add_menu_item(mi->menu, name, desc, icon);
+            item->widget = systray_add_menu_item(mi->menu, desc, tooltip, icon);
             break;
     }
 
+    g_signal_connect(item->widget, "activate", G_CALLBACK(menu_info_item_activated), item);
     g_hash_table_insert(mi->items, GUINT_TO_POINTER(index), item);
 }
 
 menu_info_item_t* menu_info_item_get(menu_info_t* mi, uint32_t index)
 {
     return g_hash_table_lookup(mi->items, GUINT_TO_POINTER(index));
+}
+
+void menu_info_item_activated(GtkMenuItem* item, gpointer userdata)
+{
+    menu_info_item_t* mii = (menu_info_item_t*) userdata;
+
+    /* filter signal "activate" from radio items that got deselected */
+    switch(mii->menu_info->type)
+    {
+        case MENU_SERVER:
+        case MENU_SINK:
+        case MENU_SOURCE:
+            if(!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(item)))
+                return;
+        default:
+            break;
+    }
+    menu_info_item_clicked(mii);
+}
+
+void menu_info_item_clicked(menu_info_item_t* mii)
+{
+#ifdef DEBUG
+    fprintf(stderr, "clicked %s %s (%s)\n", MENU_NAME[mii->menu_info->type], mii->desc, mii->name);
+#endif
+
+    switch(mii->menu_info->type)
+    {
+        case MENU_SERVER:
+            /* TODO: connect to different server */
+            break;
+        case MENU_SINK:
+            pulseaudio_set_sink(mii);
+            break;
+        case MENU_SOURCE:
+            pulseaudio_set_source(mii);
+            break;
+        case MENU_INPUT:
+            /* TODO: move input to different sink */
+            break;
+        case MENU_OUTPUT:
+            /* TODO: move output to different source */
+            break;
+    }
 }
 
 void menu_info_item_remove(menu_infos_t* mis, menu_type_t type, uint32_t index)
@@ -105,9 +155,9 @@ void menu_info_item_remove(menu_infos_t* mis, menu_type_t type, uint32_t index)
     if(!mii)
         return;
 
-    /*
+#ifdef DEBUG
     fprintf(stderr, "[menu_info] removing %s %u\n", MENU_NAME[type], index);
-    */
+#endif
 
     switch(mi->type)
     {

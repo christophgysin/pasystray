@@ -13,11 +13,11 @@ void systray_menu_create(menu_infos_t* mis)
 {
     mis->menu = GTK_MENU_SHELL(gtk_menu_new());
 
-    systray_menu_add_submenu(mis, MENU_SERVER, "Default Server",    NULL, "network-wired");
-    systray_menu_add_submenu(mis, MENU_SINK,   "Default Sink",      NULL, "audio-card");
-    systray_menu_add_submenu(mis, MENU_SOURCE, "Default Source",    NULL, "audio-input-microphone");
-    systray_menu_add_submenu(mis, MENU_INPUT,  "Playback Streams",  NULL, "player_play");
-    systray_menu_add_submenu(mis, MENU_OUTPUT, "Recording Streams", NULL, "player_record");
+    systray_menu_add_submenu(mis, MENU_SERVER, "Default Server", "network-wired");
+    systray_menu_add_submenu(mis, MENU_SINK, "Default Sink", "audio-card");
+    systray_menu_add_submenu(mis, MENU_SOURCE, "Default Source", "audio-input-microphone");
+    systray_menu_add_submenu(mis, MENU_INPUT, "Playback Streams", "player_play");
+    systray_menu_add_submenu(mis, MENU_OUTPUT, "Recording Streams", "player_record");
     systray_menu_add_separator(mis->menu);
 
     static const char* COMMAND_PAMAN = "paman";
@@ -49,7 +49,7 @@ void systray_menu_add_separator(GtkMenuShell* menu)
     gtk_widget_show(item);
 }
 
-void systray_menu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* name, char* desc, const char* icon)
+void systray_menu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* name, const char* icon)
 {
     GtkMenuShell* menu = mis->menu;
     menu_info_t* mi = &mis->menu_info[type];
@@ -58,18 +58,18 @@ void systray_menu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* n
     mi->menu = GTK_MENU_SHELL(submenu);
     mi->group = NULL;
 
-    GtkWidget* item = systray_add_menu_item(menu, name, desc, icon);
+    GtkWidget* item = systray_add_menu_item(menu, name, NULL, icon);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
 }
 
-GtkWidget* systray_add_menu_item(GtkMenuShell* menu, const char* name, char* desc, const char* icon)
+GtkWidget* systray_add_menu_item(GtkMenuShell* menu, const char* desc, const char* tooltip, const char* icon)
 {
-    GtkWidget* item = gtk_image_menu_item_new_with_mnemonic(name);
+    GtkWidget* item = gtk_image_menu_item_new_with_mnemonic(desc);
     gtk_menu_shell_append(menu, item);
 
-    if(desc)
+    if(tooltip)
     {
-        char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"20\">%s</span>", desc);
+        char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", tooltip);
         gtk_widget_set_tooltip_markup(item, markup);
         g_free(markup);
     }
@@ -88,16 +88,16 @@ void systray_remove_menu_item(menu_info_t* mi, GtkWidget* item)
     gtk_container_remove(GTK_CONTAINER(mi->menu), item);
 }
 
-GtkWidget* systray_add_radio_item(menu_info_t* mi, const char* name, char* desc)
+GtkWidget* systray_add_radio_item(menu_info_t* mi, const char* desc, const char* tooltip)
 {
-    GtkWidget* item = gtk_radio_menu_item_new_with_label(mi->group, name);
+    GtkWidget* item = gtk_radio_menu_item_new_with_label(mi->group, desc);
 
     if(!mi->group)
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), TRUE);
 
-    if(desc)
+    if(tooltip)
     {
-        char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", desc);
+        char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", tooltip);
         gtk_widget_set_tooltip_markup(item, markup);
         g_free(markup);
     }

@@ -7,8 +7,9 @@
 #include "pulseaudio_info.h"
 #include "systray.h"
 
+pa_context* context = NULL;
+
 static pa_threaded_mainloop* m = NULL;
-static pa_context* context = NULL;
 static pa_proplist* context_proplist = NULL;
 static char* server = NULL;
 
@@ -60,9 +61,9 @@ void context_state_cb(pa_context* c, void* userdata)
 
         case PA_CONTEXT_READY:
         {
-            char* desc = context_info_str(context);
-            char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", desc);
-            g_free(desc);
+            char* tooltip = context_info_str(context);
+            char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", tooltip);
+            g_free(tooltip);
             gtk_status_icon_set_tooltip_markup(mis->icon, markup);
             g_free(markup);
 
@@ -128,6 +129,7 @@ void event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, voi
                     pa_operation_unref(pa_context_get_source_info_by_index(c, index, add_source_cb, &mis->menu_info[MENU_SOURCE]));
                     break;
                 case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
+                    fprintf(stderr, "pa_context_get_sink_input_info(%i)\n", index);
                     pa_operation_unref(pa_context_get_sink_input_info(c, index, add_sink_input_cb, &mis->menu_info[MENU_INPUT]));
                     break;
                 case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
@@ -187,9 +189,9 @@ void print_event(pa_subscription_event_type_t t, uint32_t index)
 void add_server_cb(pa_context* c, const pa_server_info* i, void* userdata)
 {
     menu_info_t* mi = userdata;
-    char* desc = server_info_str(i);
-    menu_info_item_add(mi, 0, i->host_name, desc, NULL);
-    g_free(desc);
+    char* tooltip = server_info_str(i);
+    menu_info_item_add(mi, 0, NULL, i->host_name, tooltip, NULL);
+    g_free(tooltip);
 }
 
 void add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userdata)
@@ -204,9 +206,9 @@ void add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userda
         return;
 
     menu_info_t* mi = userdata;
-    char* desc = sink_info_str(i);
-    menu_info_item_add(mi, i->index, i->description, desc, NULL);
-    g_free(desc);
+    char* tooltip = sink_info_str(i);
+    menu_info_item_add(mi, i->index, i->name, i->description, tooltip, NULL);
+    g_free(tooltip);
 }
 
 void add_source_cb(pa_context* c, const pa_source_info* i, int is_last, void* userdata)
@@ -226,9 +228,9 @@ void add_source_cb(pa_context* c, const pa_source_info* i, int is_last, void* us
         return;
 
     menu_info_t* mi = userdata;
-    char* desc = source_info_str(i);
-    menu_info_item_add(mi, i->index, i->description, desc, NULL);
-    g_free(desc);
+    char* tooltip = source_info_str(i);
+    menu_info_item_add(mi, i->index, i->name, i->description, tooltip, NULL);
+    g_free(tooltip);
 }
 
 void add_sink_input_cb(pa_context* c, const pa_sink_input_info* i, int is_last, void* userdata)
@@ -242,13 +244,18 @@ void add_sink_input_cb(pa_context* c, const pa_sink_input_info* i, int is_last, 
     if(is_last)
         return;
 
+    // ignore filters
+    const char* media_role = pa_proplist_gets(i->proplist, PA_PROP_MEDIA_ROLE);
+    if(media_role && g_str_equal(media_role, "filter"))
+        return;
+
     const char* app_name = pa_proplist_gets(i->proplist, PA_PROP_APPLICATION_NAME);
     const char* app_icon = pa_proplist_gets(i->proplist, PA_PROP_APPLICATION_ICON_NAME);
 
     menu_info_t* mi = userdata;
-    char* desc = input_info_str(i);
-    menu_info_item_add(mi, i->index, app_name ? app_name : i->name, desc, app_icon);
-    g_free(desc);
+    char* tooltip = input_info_str(i);
+    menu_info_item_add(mi, i->index, NULL, app_name ? app_name : i->name, tooltip, app_icon);
+    g_free(tooltip);
 }
 
 void add_source_output_cb(pa_context* c, const pa_source_output_info* i, int is_last, void* userdata)
@@ -266,9 +273,9 @@ void add_source_output_cb(pa_context* c, const pa_source_output_info* i, int is_
     const char* app_icon = pa_proplist_gets(i->proplist, PA_PROP_APPLICATION_ICON_NAME);
 
     menu_info_t* mi = userdata;
-    char* desc = output_info_str(i);
-    menu_info_item_add(mi, i->index, app_name ? app_name : i->name, desc, app_icon);
-    g_free(desc);
+    char* tooltip = output_info_str(i);
+    menu_info_item_add(mi, i->index, NULL, app_name ? app_name : i->name, tooltip, app_icon);
+    g_free(tooltip);
 }
 
 void quit(const char* msg)
