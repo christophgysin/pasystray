@@ -38,6 +38,7 @@ menu_infos_t* menu_infos_create();
 void menu_infos_clear(menu_infos_t* mi);
 void menu_infos_destroy(menu_infos_t* mi);
 
+const char* menu_info_type_name(menu_type_t type);
 void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, const char* desc, char* tooltip, const char* icon);
 menu_info_item_t* menu_info_item_get(menu_info_t* mi, uint32_t index);
 void menu_info_item_activated(GtkMenuItem* item, gpointer userdata);

@@ -112,8 +112,9 @@ void event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, voi
     pa_subscription_event_type_t type = t & PA_SUBSCRIPTION_EVENT_TYPE_MASK;
     pa_subscription_event_type_t facility = t & PA_SUBSCRIPTION_EVENT_FACILITY_MASK;
 
-    /* print_event(pa_subscription_event_type_t t, uint32_t index); */
-
+#ifdef DEBUG
+    print_event(t, index);
+#endif
     switch(type)
     {
         case PA_SUBSCRIPTION_EVENT_NEW:
@@ -129,7 +130,6 @@ void event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, voi
                     pa_operation_unref(pa_context_get_source_info_by_index(c, index, add_source_cb, &mis->menu_info[MENU_SOURCE]));
                     break;
                 case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
-                    fprintf(stderr, "pa_context_get_sink_input_info(%i)\n", index);
                     pa_operation_unref(pa_context_get_sink_input_info(c, index, add_sink_input_cb, &mis->menu_info[MENU_INPUT]));
                     break;
                 case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
@@ -167,6 +167,7 @@ void event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, voi
     }
 }
 
+#ifdef DEBUG
 void print_event(pa_subscription_event_type_t t, uint32_t index)
 {
     pa_subscription_event_type_t type = t & PA_SUBSCRIPTION_EVENT_TYPE_MASK;
@@ -185,6 +186,7 @@ void print_event(pa_subscription_event_type_t t, uint32_t index)
         "unknown",
         index);
 }
+#endif
 
 void add_server_cb(pa_context* c, const pa_server_info* i, void* userdata)
 {

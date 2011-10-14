@@ -27,4 +27,8 @@ void remove_source_input(menu_info_t* mi, uint32_t idx);
 
 void quit(const char* msg);
 
+#ifdef DEBUG
+void print_event(pa_subscription_event_type_t t, uint32_t index);
+#endif
+
 #endif /* PASYSTRAY_PULSEAUDIO_H */

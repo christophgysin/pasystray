@@ -4,16 +4,6 @@
 #include "systray.h"
 #include "pulseaudio_action.h"
 
-#ifdef DEBUG
-static const char* MENU_NAME[] = {
-    [MENU_SERVER] = "server",
-    [MENU_SINK]   = "sink",
-    [MENU_SOURCE] = "source",
-    [MENU_INPUT]  = "input",
-    [MENU_OUTPUT]  = "output",
-};
-#endif /* DEBUG */
-
 menu_infos_t* menu_infos_create()
 {
     menu_infos_t* mis = g_new(menu_infos_t, 1);
@@ -68,13 +58,26 @@ void menu_infos_destroy(menu_infos_t* mis)
     g_free(mis);
 }
 
+const char* menu_info_type_name(menu_type_t type)
+{
+    static const char* MENU_NAME[] = {
+        [MENU_SERVER] = "server",
+        [MENU_SINK]   = "sink",
+        [MENU_SOURCE] = "source",
+        [MENU_INPUT]  = "input",
+        [MENU_OUTPUT] = "output",
+    };
+
+    return MENU_NAME[type];
+}
+
 void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, const char* desc, char* tooltip, const char* icon)
 {
     menu_info_item_t* item = g_new(menu_info_item_t, 1);
     item->menu_info = mi;
 
 #ifdef DEBUG
-    fprintf(stderr, "[menu_info] adding %s %u %p\n", MENU_NAME[mi->type], index, item);
+    fprintf(stderr, "[menu_info] adding %s %u %p\n", menu_info_type_name(mi->type), index, item);
 #endif
 
     item->name = g_strdup(name);
@@ -124,7 +127,7 @@ void menu_info_item_activated(GtkMenuItem* item, gpointer userdata)
 void menu_info_item_clicked(menu_info_item_t* mii)
 {
 #ifdef DEBUG
-    fprintf(stderr, "clicked %s %s (%s)\n", MENU_NAME[mii->menu_info->type], mii->desc, mii->name);
+    fprintf(stderr, "clicked %s %s (%s)\n", menu_info_type_name(mii->menu_info->type), mii->desc, mii->name);
 #endif
 
     switch(mii->menu_info->type)
@@ -156,7 +159,7 @@ void menu_info_item_remove(menu_infos_t* mis, menu_type_t type, uint32_t index)
         return;
 
 #ifdef DEBUG
-    fprintf(stderr, "[menu_info] removing %s %u\n", MENU_NAME[type], index);
+    fprintf(stderr, "[menu_info] removing %s %u\n", menu_info_type_name(type), index);
 #endif
 
     switch(mi->type)
