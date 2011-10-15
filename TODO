@@ -1,2 +1,7 @@
-set default sink/source
+get and activate current default sink/source
 move stream to different sink/source
+fill empty menus
+load tooltip only on request
+
+libnotify
+settings
