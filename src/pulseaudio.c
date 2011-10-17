@@ -115,6 +115,7 @@ void event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, voi
 #ifdef DEBUG
     print_event(t, index);
 #endif
+
     switch(type)
     {
         case PA_SUBSCRIPTION_EVENT_NEW:
@@ -144,19 +145,19 @@ void event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, voi
             switch(facility)
             {
                 case PA_SUBSCRIPTION_EVENT_SERVER:
-                    menu_info_item_remove(mis, MENU_SERVER, index);
+                    menu_info_item_remove(&mis->menu_info[MENU_SERVER], index);
                     break;
                 case PA_SUBSCRIPTION_EVENT_SINK:
-                    menu_info_item_remove(mis, MENU_SINK, index);
+                    menu_info_item_remove(&mis->menu_info[MENU_SINK], index);
                     break;
                 case PA_SUBSCRIPTION_EVENT_SOURCE:
-                    menu_info_item_remove(mis, MENU_SOURCE, index);
+                    menu_info_item_remove(&mis->menu_info[MENU_SOURCE], index);
                     break;
                 case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
-                    menu_info_item_remove(mis, MENU_INPUT, index);
+                    menu_info_item_remove(&mis->menu_info[MENU_INPUT], index);
                     break;
                 case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
-                    menu_info_item_remove(mis, MENU_OUTPUT, index);
+                    menu_info_item_remove(&mis->menu_info[MENU_OUTPUT], index);
                     break;
                 default:
                     break;

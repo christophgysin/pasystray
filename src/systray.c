@@ -13,11 +13,11 @@ void systray_menu_create(menu_infos_t* mis)
 {
     mis->menu = GTK_MENU_SHELL(gtk_menu_new());
 
-    systray_menu_add_submenu(mis, MENU_SERVER, "Default Server", "network-wired");
-    systray_menu_add_submenu(mis, MENU_SINK, "Default Sink", "audio-card");
-    systray_menu_add_submenu(mis, MENU_SOURCE, "Default Source", "audio-input-microphone");
-    systray_menu_add_submenu(mis, MENU_INPUT, "Playback Streams", "player_play");
-    systray_menu_add_submenu(mis, MENU_OUTPUT, "Recording Streams", "player_record");
+    systray_rootmenu_add_submenu(mis, MENU_SERVER, "Default Server", "network-wired");
+    systray_rootmenu_add_submenu(mis, MENU_SINK, "Default Sink", "audio-card");
+    systray_rootmenu_add_submenu(mis, MENU_SOURCE, "Default Source", "audio-input-microphone");
+    systray_rootmenu_add_submenu(mis, MENU_INPUT, "Playback Streams", "player_play");
+    systray_rootmenu_add_submenu(mis, MENU_OUTPUT, "Recording Streams", "player_record");
     systray_menu_add_separator(mis->menu);
 
     static const char* COMMAND_PAMAN = "paman";
@@ -49,17 +49,24 @@ void systray_menu_add_separator(GtkMenuShell* menu)
     gtk_widget_show(item);
 }
 
-void systray_menu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* name, const char* icon)
+void systray_rootmenu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* name, const char* icon)
 {
     GtkMenuShell* menu = mis->menu;
     menu_info_t* mi = &mis->menu_info[type];
 
+    systray_menu_add_submenu(menu, mi, name, NULL, icon);
+}
+
+GtkWidget* systray_menu_add_submenu(GtkMenuShell* menu, menu_info_t* mi, const char* name, const char* tooltip, const char* icon)
+{
     GtkWidget* submenu = gtk_menu_new();
     mi->menu = GTK_MENU_SHELL(submenu);
     mi->group = NULL;
 
-    GtkWidget* item = systray_add_menu_item(menu, name, NULL, icon);
+    GtkWidget* item = systray_add_menu_item(menu, name, tooltip, icon);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
+
+    return item;
 }
 
 GtkWidget* systray_add_menu_item(GtkMenuShell* menu, const char* desc, const char* tooltip, const char* icon)
@@ -91,9 +98,6 @@ void systray_remove_menu_item(menu_info_t* mi, GtkWidget* item)
 GtkWidget* systray_add_radio_item(menu_info_t* mi, const char* desc, const char* tooltip)
 {
     GtkWidget* item = gtk_radio_menu_item_new_with_label(mi->group, desc);
-
-    if(!mi->group)
-        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), TRUE);
 
     if(tooltip)
     {
@@ -135,9 +139,52 @@ void systray_menu_add_application(GtkMenuShell* menu, const char* name, const ch
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(start_application_cb), (gpointer)command);
 }
 
-void start_application_cb(GtkMenuItem* item, const char* command)
+void systray_add_all_items_to_submenu(menu_info_t* submenu, menu_info_item_t* item)
 {
-    g_spawn_command_line_async(command, NULL);
+    GHashTableIter iter;
+    gpointer key;
+    menu_info_item_t* mii;
+
+    g_hash_table_iter_init(&iter, submenu->items);
+
+    while(g_hash_table_iter_next(&iter, &key, (gpointer*)&mii))
+        menu_info_subitem_add(item->submenu, mii->index, mii->name, mii->desc, NULL, NULL);
+}
+
+void systray_remove_all_items_from_submenu(menu_info_t* submenu)
+{
+    GHashTableIter iter;
+    gpointer key;
+    menu_info_item_t* mii;
+
+    g_hash_table_iter_init(&iter, submenu->items);
+
+    while(g_hash_table_iter_next(&iter, &key, (gpointer*)&mii))
+        systray_remove_menu_item(submenu, mii->widget);
+}
+
+void systray_add_item_to_all_submenus(menu_info_item_t* item, menu_info_t* submenu)
+{
+    GHashTableIter iter;
+    gpointer key;
+    menu_info_item_t* mii;
+
+    g_hash_table_iter_init(&iter, submenu->items);
+
+    while(g_hash_table_iter_next(&iter, &key, (gpointer*)&mii))
+        menu_info_subitem_add(mii->submenu, mii->index, mii->name, mii->desc, NULL, NULL);
+}
+
+void systray_remove_item_from_all_submenus(menu_info_item_t* item, menu_info_t* submenu)
+{
+    GHashTableIter iter;
+    gpointer key;
+    menu_info_item_t* mii;
+
+    g_hash_table_iter_init(&iter, submenu->items);
+
+    while(g_hash_table_iter_next(&iter, &key, (gpointer*)&mii))
+        menu_info_item_remove(mii->submenu, item->index);
 }
 
 GtkWidget* systray_menu_item_quit()
@@ -152,4 +199,9 @@ void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata
 {
     menu_infos_t* mis = userdata;
     gtk_menu_popup(GTK_MENU(mis->menu), NULL, NULL, gtk_status_icon_position_menu, icon, ev->button, ev->time);
+}
+
+void start_application_cb(GtkMenuItem* item, const char* command)
+{
+    g_spawn_command_line_async(command, NULL);
 }
