@@ -193,7 +193,7 @@ void systray_add_item_to_all_submenus(menu_info_item_t* item, menu_info_t* subme
     g_hash_table_iter_init(&iter, submenu->items);
 
     while(g_hash_table_iter_next(&iter, &key, (gpointer*)&mii))
-        menu_info_subitem_add(mii->submenu, mii->index, mii->name, mii->desc, NULL, NULL);
+        menu_info_subitem_add(mii->submenu, item->index, item->name, item->desc, NULL, NULL);
 }
 
 void systray_remove_item_from_all_submenus(menu_info_item_t* item, menu_info_t* submenu)

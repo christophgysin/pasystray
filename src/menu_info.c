@@ -88,6 +88,7 @@ void menu_info_init(menu_infos_t* mis, menu_info_t* mi, menu_type_t type)
     mi->group = NULL;
     mi->items = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)menu_info_item_destroy);
     mi->menu_infos = mis;
+    mi->parent = NULL;
 }
 
 void menu_info_item_init(menu_info_item_t* mii)
@@ -248,17 +249,21 @@ void menu_info_item_remove(menu_info_t* mi, uint32_t index)
     fprintf(stderr, "[menu_info] removing %s %u\n", menu_info_type_name(mi->type), index);
 #endif
 
+
+
     switch(mi->type)
     {
         case MENU_SERVER:
             systray_remove_radio_item(mi, mii->widget);
             break;
         case MENU_SINK:
-            systray_remove_item_from_all_submenus(mii, &mis->menu_info[MENU_INPUT]);
+            if(!mii->menu_info->parent)
+                systray_remove_item_from_all_submenus(mii, &mis->menu_info[MENU_INPUT]);
             systray_remove_radio_item(mi, mii->widget);
             break;
         case MENU_SOURCE:
-            systray_remove_item_from_all_submenus(mii, &mis->menu_info[MENU_OUTPUT]);
+            if(!mii->menu_info->parent)
+                systray_remove_item_from_all_submenus(mii, &mis->menu_info[MENU_OUTPUT]);
             systray_remove_radio_item(mi, mii->widget);
             break;
         case MENU_INPUT:
@@ -267,6 +272,7 @@ void menu_info_item_remove(menu_info_t* mi, uint32_t index)
             systray_remove_menu_item(mi, mii->widget);
             break;
     }
+
 
     g_hash_table_remove(mi->items, GUINT_TO_POINTER(index));
 }
