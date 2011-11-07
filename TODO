@@ -1,5 +1,4 @@
 get and activate current default sink/source
-fill empty menus
 load tooltip only on request
 
 libnotify
