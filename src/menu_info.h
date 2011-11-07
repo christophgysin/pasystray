@@ -79,6 +79,7 @@ const char* menu_info_type_name(menu_type_t type);
 void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, const char* desc, char* tooltip, const char* icon);
 void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name, const char* desc, char* tooltip, const char* icon);
 menu_info_item_t* menu_info_item_get(menu_info_t* mi, uint32_t index);
+menu_info_item_t* menu_info_item_get_by_name(menu_info_t* mi, const char* name);
 void menu_info_item_clicked(GtkWidget* item, GdkEvent* event, menu_info_item_t* mii);
 void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event, menu_info_item_t* mii);
 void menu_info_item_remove(menu_info_t* mi, uint32_t index);

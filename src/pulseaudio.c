@@ -162,6 +162,25 @@ void event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, voi
             }
             break;
 
+        case PA_SUBSCRIPTION_EVENT_CHANGE:
+            switch(facility)
+            {
+                case PA_SUBSCRIPTION_EVENT_SERVER:
+                    pa_operation_unref(pa_context_get_server_info(c, server_changed_cb, &mis->menu_info[MENU_SERVER]));
+                    break;
+                case PA_SUBSCRIPTION_EVENT_SINK:
+                    break;
+                case PA_SUBSCRIPTION_EVENT_SOURCE:
+                    break;
+                case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
+                    break;
+                case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
+                    break;
+                default:
+                    break;
+            }
+            break;
+
         case PA_SUBSCRIPTION_EVENT_REMOVE:
             switch(facility)
             {
@@ -220,6 +239,29 @@ void add_server_cb(pa_context* c, const pa_server_info* i, void* userdata)
     /* save default sink/source */
     mi->menu_infos->menu_info[MENU_SINK].default_name = g_strdup(i->default_sink_name);
     mi->menu_infos->menu_info[MENU_SOURCE].default_name = g_strdup(i->default_source_name);
+}
+
+void server_changed_cb(pa_context* c, const pa_server_info* i, void* userdata)
+{
+    menu_info_t* mi = userdata;
+
+    /* update default sink/source */
+    change_default_item(&mi->menu_infos->menu_info[MENU_SINK], i->default_sink_name);
+    change_default_item(&mi->menu_infos->menu_info[MENU_SOURCE], i->default_source_name);
+}
+
+void change_default_item(menu_info_t* mi, const char* new_default)
+{
+    if(g_str_equal(mi->default_name, new_default))
+        return;
+
+    g_free(mi->default_name);
+    mi->default_name = g_strdup(new_default);
+
+    menu_info_item_t* item = menu_info_item_get_by_name(mi, new_default);
+
+    if(item)
+        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget), true);
 }
 
 void add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userdata)

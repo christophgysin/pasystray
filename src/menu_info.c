@@ -204,6 +204,18 @@ menu_info_item_t* menu_info_item_get(menu_info_t* mi, uint32_t index)
     return g_hash_table_lookup(mi->items, GUINT_TO_POINTER(index));
 }
 
+gboolean name_equal(gpointer key, gpointer value, gpointer user_data)
+{
+    menu_info_item_t* mii = value;
+    const char* name = user_data;
+    return g_str_equal(mii->name, name);
+}
+
+menu_info_item_t* menu_info_item_get_by_name(menu_info_t* mi, const char* name)
+{
+    return g_hash_table_find(mi->items, name_equal, (gpointer)name);
+}
+
 void menu_info_item_clicked(GtkWidget* item, GdkEvent* event, menu_info_item_t* mii)
 {
 #ifdef DEBUG
