@@ -3,3 +3,10 @@ load tooltip only on request
 
 libnotify
 settings
+
+catch scroll wheel events:
+- if hovering over systray icon: default sink volume
+- if hovering over sink/source: sink/source volume
+
+right-click menu source/sinks:
+- rename sink
