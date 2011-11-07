@@ -71,6 +71,10 @@ void menu_infos_clear(menu_infos_t* mis)
 
 void menu_infos_destroy(menu_infos_t* mis)
 {
+    size_t i;
+    for(i=0; i<MENU_COUNT; ++i)
+        menu_info_destroy(&mis->menu_info[i]);
+
     g_free(mis);
 }
 
@@ -89,6 +93,14 @@ void menu_info_init(menu_infos_t* mis, menu_info_t* mi, menu_type_t type)
     mi->items = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)menu_info_item_destroy);
     mi->menu_infos = mis;
     mi->parent = NULL;
+
+    mi->default_name = NULL;
+}
+
+void menu_info_destroy(menu_info_t* mi)
+{
+    g_hash_table_destroy(mi->items);
+    g_free(mi->default_name);
 }
 
 void menu_info_item_init(menu_info_item_t* mii)
@@ -151,10 +163,12 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, const
             break;
         case MENU_SINK:
             item->widget = systray_add_radio_item(mi, desc, tooltip);
+            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget), g_str_equal(mi->default_name, item->name));
             systray_add_item_to_all_submenus(item, &mis->menu_info[MENU_INPUT]);
             break;
         case MENU_SOURCE:
             item->widget = systray_add_radio_item(mi, desc, tooltip);
+            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget), g_str_equal(mi->default_name, item->name));
             systray_add_item_to_all_submenus(item, &mis->menu_info[MENU_OUTPUT]);
             break;
         case MENU_INPUT:

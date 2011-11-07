@@ -1,4 +1,4 @@
-get and activate current default sink/source
+update current default source/sink on change
 load tooltip only on request
 
 libnotify

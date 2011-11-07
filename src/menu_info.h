@@ -45,6 +45,8 @@ struct menu_info_t_ {
     GHashTable* items;
     menu_infos_t* menu_infos;
     menu_info_item_t* parent;
+
+    char* default_name;
 };
 
 struct menu_infos_t_ {
@@ -71,6 +73,7 @@ menu_info_t* menu_info_create(menu_infos_t* mis, menu_type_t type);
 void menu_info_init(menu_infos_t* mis, menu_info_t* mi, menu_type_t type);
 
 void menu_info_item_init(menu_info_item_t* mii);
+void menu_info_destroy(menu_info_t* mi);
 
 const char* menu_info_type_name(menu_type_t type);
 void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, const char* desc, char* tooltip, const char* icon);

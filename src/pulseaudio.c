@@ -216,6 +216,10 @@ void add_server_cb(pa_context* c, const pa_server_info* i, void* userdata)
     char* tooltip = server_info_str(i);
     menu_info_item_add(mi, 0, NULL, i->host_name, tooltip, NULL);
     g_free(tooltip);
+
+    /* save default sink/source */
+    mi->menu_infos->menu_info[MENU_SINK].default_name = g_strdup(i->default_sink_name);
+    mi->menu_infos->menu_info[MENU_SOURCE].default_name = g_strdup(i->default_source_name);
 }
 
 void add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userdata)
