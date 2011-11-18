@@ -83,9 +83,11 @@ void context_state_cb(pa_context* c, void* userdata)
         case PA_CONTEXT_READY:
         {
             char* tooltip = context_info_str(context);
-            char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", tooltip);
-            g_free(tooltip);
+            char* escaped = g_markup_escape(tooltip);
+            char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", escaped);
             gtk_status_icon_set_tooltip_markup(mis->icon, markup);
+            g_free(escaped);
+            g_free(tooltip);
             g_free(markup);
 
             pa_context_set_subscribe_callback(c, event_cb, mis);

@@ -110,8 +110,11 @@ GtkWidget* systray_add_menu_item(GtkMenuShell* menu, const char* desc, const cha
 
     if(tooltip)
     {
-        char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", tooltip);
+        gtk_status_icon_set_tooltip_markup(mis->icon, markup);
+        char* escaped = g_markup_escape(tooltip);
+        char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", escaped);
         gtk_widget_set_tooltip_markup(item, markup);
+        g_free(escaped);
         g_free(markup);
     }
 
@@ -140,8 +143,11 @@ GtkWidget* systray_add_radio_item(menu_info_t* mi, const char* desc, const char*
 
     if(tooltip)
     {
-        char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", tooltip);
+        gtk_status_icon_set_tooltip_markup(mis->icon, markup);
+        char* escaped = g_markup_escape(tooltip);
+        char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", escaped);
         gtk_widget_set_tooltip_markup(item, markup);
+        g_free(escaped);
         g_free(markup);
     }
 
