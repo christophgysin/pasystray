@@ -1,5 +1,5 @@
 AC_PREREQ([2.68])
-AC_INIT([pasystray], [0.0.1], [christoph.gysin@gmail.com])
+AC_INIT([pasystray], [0.1.1], [christoph.gysin@gmail.com])
 AC_CONFIG_SRCDIR([src/pasystray.c])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([foreign 1.9 -Wall])
