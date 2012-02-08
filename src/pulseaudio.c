@@ -270,7 +270,7 @@ void add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userda
 {
     if(is_last < 0)
     {
-        fprintf(stderr, "Failed to get sink information: %s", pa_strerror(pa_context_errno(c)));
+        fprintf(stderr, "Failed to get sink information: %s\n", pa_strerror(pa_context_errno(c)));
         return;
     }
 
@@ -287,7 +287,7 @@ void add_source_cb(pa_context* c, const pa_source_info* i, int is_last, void* us
 {
     if(is_last < 0)
     {
-        fprintf(stderr, "Failed to get source information: %s", pa_strerror(pa_context_errno(c)));
+        fprintf(stderr, "Failed to get source information: %s\n", pa_strerror(pa_context_errno(c)));
         return;
     }
 
@@ -309,7 +309,7 @@ void add_sink_input_cb(pa_context* c, const pa_sink_input_info* i, int is_last, 
 {
     if(is_last < 0)
     {
-        fprintf(stderr, "Failed to get sink information: %s", pa_strerror(pa_context_errno(c)));
+        fprintf(stderr, "Failed to get sink information: %s\n", pa_strerror(pa_context_errno(c)));
         return;
     }
 
@@ -334,7 +334,7 @@ void add_source_output_cb(pa_context* c, const pa_source_output_info* i, int is_
 {
     if(is_last < 0)
     {
-        fprintf(stderr, "Failed to get source information: %s", pa_strerror(pa_context_errno(c)));
+        fprintf(stderr, "Failed to get source information: %s\n", pa_strerror(pa_context_errno(c)));
         return;
     }
 
