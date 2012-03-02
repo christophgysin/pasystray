@@ -12,6 +12,9 @@ AC_SUBST(GUILIBS_LIBS)
 PKG_CHECK_MODULES(PULSEAUDIO, [ libpulse >= 1.0 libpulse-mainloop-glib >= 1.0 ])
 AC_SUBST(PULSEAUDIO_CFLAGS)
 AC_SUBST(PULSEAUDIO_LIBS)
+PKG_CHECK_MODULES(AVAHI, [ avahi-client >= 0.6 ])
+AC_SUBST(AVAHI_CFLAGS)
+AC_SUBST(AVAHI_LIBS)
 if test "x$GCC" = "xyes" -o "x$CLANG" = "xyes"; then
     CFLAGS="$CFLAGS -pipe -Wall -W -Wno-unused-parameter"
 fi

@@ -23,7 +23,7 @@
 
 void systray_create(menu_infos_t* mis)
 {
-    mis->icon = gtk_status_icon_new_from_icon_name("pulseaudio");
+    mis->icon = gtk_status_icon_new_from_icon_name("pasystray");
     systray_menu_create(mis);
     g_signal_connect(mis->icon, "button-press-event", G_CALLBACK(systray_click_cb), mis);
     gtk_status_icon_set_tooltip_text(mis->icon, "connecting to server...");
