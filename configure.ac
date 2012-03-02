@@ -9,7 +9,7 @@ AC_CHECK_HEADERS([stdlib.h unistd.h])
 PKG_CHECK_MODULES(GUILIBS, [ gtk+-3.0 ])
 AC_SUBST(GUILIBS_CFLAGS)
 AC_SUBST(GUILIBS_LIBS)
-PKG_CHECK_MODULES(PULSE, [ libpulse >= 1.0 libpulse-mainloop-glib >= 1.0 ])
+PKG_CHECK_MODULES(PULSEAUDIO, [ libpulse >= 1.0 libpulse-mainloop-glib >= 1.0 ])
 AC_SUBST(PULSEAUDIO_CFLAGS)
 AC_SUBST(PULSEAUDIO_LIBS)
 if test "x$GCC" = "xyes" -o "x$CLANG" = "xyes"; then
