@@ -19,8 +19,7 @@
   USA.
 ***/
 
-#include <glib/gstrfuncs.h>
-#include <glib/gutils.h>
+#include <glib.h>
 
 #include "pulseaudio_info.h"
 
