@@ -19,29 +19,11 @@
   USA.
 ***/
 
-#include <gtk/gtk.h>
+#ifndef PASYSTRAY_OPTIONS_H
+#define PASYSTRAY_OPTIONS_H
 
-#include "options.h"
-#include "menu_info.h"
-#include "systray.h"
-#include "pulseaudio.h"
+extern gboolean version;
 
-int main(int argc, char *argv[])
-{
-    parse_options(argc, argv);
+void parse_options(int argc, char *argv[]);
 
-    gtk_init(&argc, &argv);
-
-    menu_infos_t* mis = menu_infos_create();
-
-    systray_create(mis);
-
-    pulseaudio_init(mis);
-    pulseaudio_connect();
-    pulseaudio_start();
-
-    gtk_main();
-
-    menu_infos_destroy(mis);
-    return 0;
-}
+#endif /* PASYSTRAY_OPTIONS_H */

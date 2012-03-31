@@ -19,29 +19,36 @@
   USA.
 ***/
 
+#include <stdlib.h>
+#include <glib.h>
 #include <gtk/gtk.h>
+#include "config.h"
 
-#include "options.h"
-#include "menu_info.h"
-#include "systray.h"
-#include "pulseaudio.h"
+static gboolean version = FALSE;
 
-int main(int argc, char *argv[])
+static GOptionEntry entries[] =
 {
-    parse_options(argc, argv);
+    { "version", 'V', 0, G_OPTION_ARG_NONE, &version, "print version and exit", NULL },
+    { NULL }
+};
 
-    gtk_init(&argc, &argv);
+void parse_options(int argc, char *argv[])
+{
+    GError *error = NULL;
+    GOptionContext *context;
 
-    menu_infos_t* mis = menu_infos_create();
+    context = g_option_context_new(NULL);
+    g_option_context_add_main_entries(context, entries, NULL);
+    g_option_context_add_group(context, gtk_get_option_group(TRUE));
+    if(!g_option_context_parse(context, &argc, &argv, &error))
+    {
+        g_print("option parsing failed: %s\n", error->message);
+        exit(1);
+    }
 
-    systray_create(mis);
-
-    pulseaudio_init(mis);
-    pulseaudio_connect();
-    pulseaudio_start();
-
-    gtk_main();
-
-    menu_infos_destroy(mis);
-    return 0;
+    if(version)
+    {
+        g_print("%s\n", VERSION);
+        exit(1);
+    }
 }

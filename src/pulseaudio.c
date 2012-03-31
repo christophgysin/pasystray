@@ -19,11 +19,6 @@
   USA.
 ***/
 
-#include <stdio.h>
-#include <unistd.h>
-#include <signal.h>
-#include <string.h>
-
 #include "pulseaudio.h"
 #include "pulseaudio_info.h"
 #include "systray.h"

@@ -3,8 +3,6 @@ Makefile.in
 aclocal.m4
 autom4te.cache/
 compile
-config.h
-config.h.in
 config.log
 config.status
 configure
@@ -17,5 +15,7 @@ src/Makefile
 src/Makefile.in
 src/pasystray
 src/*.o
+src/config.h.in
+src/config.h
 stamp-h1
 tags

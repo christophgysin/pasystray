@@ -1,11 +1,10 @@
 AC_PREREQ([2.68])
 AC_INIT([pasystray], [0.1.2], [christoph.gysin@gmail.com])
 AC_CONFIG_SRCDIR([src/pasystray.c])
-AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADERS([src/config.h])
 AM_INIT_AUTOMAKE([foreign 1.9 -Wall])
 AC_PROG_CC
 AM_PROG_CC_C_O
-AC_CHECK_HEADERS([stdlib.h unistd.h])
 PKG_CHECK_MODULES(GUILIBS, [ gtk+-3.0 ])
 AC_SUBST(GUILIBS_CFLAGS)
 AC_SUBST(GUILIBS_LIBS)
