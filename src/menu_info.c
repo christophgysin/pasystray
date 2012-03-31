@@ -341,7 +341,7 @@ void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event, menu_i
     {
         const char* name = gtk_entry_get_text(GTK_ENTRY(entry));
 
-        if(g_strcmp0(name, mii->desc))
+        if(!g_str_equal(name, mii->desc))
             pulseaudio_rename_device(mii, name);
     }
 

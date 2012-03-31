@@ -278,7 +278,7 @@ void add_source_cb(pa_context* c, const pa_source_info* i, int is_last, void* us
 
     const char* class = pa_proplist_gets(i->proplist, PA_PROP_DEVICE_CLASS);
 
-    if(class && (strcmp(class, "monitor") == 0))
+    if(class && g_str_equal(class, "monitor"))
         return;
 
     menu_info_t* mi = userdata;
