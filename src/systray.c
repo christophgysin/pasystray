@@ -20,6 +20,7 @@
 ***/
 
 #include "systray.h"
+#include "config.h"
 
 void systray_create(menu_infos_t* mis)
 {
@@ -60,6 +61,7 @@ void systray_menu_create(menu_infos_t* mis)
     */
 
     systray_menu_add_separator(mis->menu);
+    gtk_menu_shell_append(GTK_MENU_SHELL(mis->menu), systray_menu_item_about());
     gtk_menu_shell_append(GTK_MENU_SHELL(mis->menu), systray_menu_item_quit());
 }
 
@@ -230,6 +232,30 @@ void systray_remove_item_from_all_submenus(menu_info_item_t* item, menu_info_t* 
 
     while(g_hash_table_iter_next(&iter, &key, (gpointer*)&mii))
         menu_info_item_remove(mii->submenu, item->index);
+}
+
+GtkWidget* systray_menu_item_about()
+{
+    GtkWidget* item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ABOUT, NULL);
+    g_signal_connect(item, "activate", G_CALLBACK(systray_about_dialog), NULL);
+    gtk_widget_show(item);
+    return item;
+}
+
+void systray_about_dialog()
+{
+    char* title = g_strdup_printf("About %s", PACKAGE_NAME);
+    char* about = g_strdup_printf( "<big><b>PulseAudio system tray</b></big>\n\nversion: %s\n\nwritten by:\n%s\n",
+            PACKAGE_VERSION, "<a href='mailto:christoph.gysin@gmail.com'>Christoph Gysin</a>");
+
+    GtkWidget* dialog = gtk_dialog_new_with_buttons(title, NULL, 0, GTK_STOCK_OK, GTK_RESPONSE_NONE, NULL);
+    GtkWidget* content_area = gtk_dialog_get_content_area(GTK_DIALOG (dialog));
+    GtkWidget* label = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(label), about);
+    gtk_container_add(GTK_CONTAINER(content_area), label);
+
+    g_signal_connect_swapped(dialog, "response", G_CALLBACK (gtk_widget_destroy), dialog);
+    gtk_widget_show_all(dialog);
 }
 
 GtkWidget* systray_menu_item_quit()

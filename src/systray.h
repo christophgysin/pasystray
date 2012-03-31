@@ -47,6 +47,8 @@ void systray_remove_all_items_from_submenu(menu_info_t* submenu);
 void systray_add_item_to_all_submenus(menu_info_item_t* item, menu_info_t* submenu);
 void systray_remove_item_from_all_submenus(menu_info_item_t* item, menu_info_t* submenu);
 
+GtkWidget* systray_menu_item_about();
+void systray_about_dialog();
 GtkWidget* systray_menu_item_quit();
 
 void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata);
