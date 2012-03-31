@@ -1,3 +1,5 @@
+fix: server change event adds new server
+
 load tooltip only on request
 
 libnotify
@@ -9,8 +11,5 @@ switch servers by setting X properties
 catch scroll wheel events:
 - if hovering over systray icon: default sink volume
 - if hovering over sink/source: sink/source volume
-
-right-click menu source/sinks:
-- rename sink
 
 gettext and translations
