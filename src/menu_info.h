@@ -63,6 +63,7 @@ struct menu_info_item_t_ {
     GtkWidget* widget;
     menu_info_t* menu_info;
     menu_info_t* submenu;
+    GtkMenuShell* context;
 };
 
 menu_infos_t* menu_infos_create();
@@ -82,8 +83,11 @@ GtkMenuShell* menu_info_item_context_menu(menu_info_item_t* mii);
 void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name, const char* desc, char* tooltip, const char* icon);
 menu_info_item_t* menu_info_item_get(menu_info_t* mi, uint32_t index);
 menu_info_item_t* menu_info_item_get_by_name(menu_info_t* mi, const char* name);
-void menu_info_item_clicked(GtkWidget* item, GdkEvent* event, menu_info_item_t* mii);
+void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event, menu_info_item_t* mii);
 void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event, menu_info_item_t* mii);
+
+void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event, menu_info_item_t* mii);
+
 void menu_info_item_remove(menu_info_t* mi, uint32_t index);
 void menu_info_item_destroy(menu_info_item_t* mii);
 
