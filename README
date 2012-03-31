@@ -1,3 +1,16 @@
-PulseAudio system tray
+PulseAudio system tray - A replacement for the deprecated padevchooser.
 
-A replacement for the deprecated padevchooser.
+Pasystray allows setting the default PulseAudio source/sink and moving
+streams on the fly between sources/sinks without restarting the client
+application. It does not (yet) support setting X properties.
+
+Devices can be renamed by right-clicking on the respective menu entry (needs
+module-device-manager to be loaded).
+
+To detect remote sinks/sources you need to enable module-zeroconf-discover on
+the local PulseAudio instance and module-zeroconf-publish on the remote side.
+Pasystray does not (yet) browse the network for available PulseAudio servers.
+
+To control a different server than the local instance, run pasystray as:
+
+$ PULSE_SERVER=remote_host pasystray
