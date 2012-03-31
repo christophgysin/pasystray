@@ -37,7 +37,6 @@ void subscribed_cb(pa_context* c, int success, void* userdata);
 void event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t idx, void* userdata);
 
 void add_server_cb(pa_context* c, const pa_server_info* i, void* userdata);
-void server_changed_cb(pa_context* c, const pa_server_info* i, void* userdata);
 void change_default_item(menu_info_t* mi, const char* new_default);
 
 void add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userdata);

@@ -220,25 +220,13 @@ void add_server_cb(pa_context* c, const pa_server_info* i, void* userdata)
     menu_info_item_update(mi, 0, NULL, i->host_name, tooltip, NULL);
     g_free(tooltip);
 
-    /* save default sink/source */
-    mi->menu_infos->menu_info[MENU_SINK].default_name = g_strdup(i->default_sink_name);
-    mi->menu_infos->menu_info[MENU_SOURCE].default_name = g_strdup(i->default_source_name);
-}
-
-void server_changed_cb(pa_context* c, const pa_server_info* i, void* userdata)
-{
-    menu_info_t* mi = userdata;
-
-    /* update default sink/source */
+    /* set default sink/source */
     change_default_item(&mi->menu_infos->menu_info[MENU_SINK], i->default_sink_name);
     change_default_item(&mi->menu_infos->menu_info[MENU_SOURCE], i->default_source_name);
 }
 
 void change_default_item(menu_info_t* mi, const char* new_default)
 {
-    if(g_str_equal(mi->default_name, new_default))
-        return;
-
     g_free(mi->default_name);
     mi->default_name = g_strdup(new_default);
 

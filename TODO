@@ -1,5 +1,3 @@
-fix: server change event adds new server
-
 load tooltip only on request
 
 libnotify
