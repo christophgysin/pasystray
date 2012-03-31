@@ -142,6 +142,7 @@ void event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, voi
     switch(type)
     {
         case PA_SUBSCRIPTION_EVENT_NEW:
+        case PA_SUBSCRIPTION_EVENT_CHANGE:
             switch(facility)
             {
                 case PA_SUBSCRIPTION_EVENT_SERVER:
@@ -158,25 +159,6 @@ void event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, voi
                     break;
                 case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
                     pa_operation_unref(pa_context_get_source_output_info(c, index, add_source_output_cb, &mis->menu_info[MENU_OUTPUT]));
-                    break;
-                default:
-                    break;
-            }
-            break;
-
-        case PA_SUBSCRIPTION_EVENT_CHANGE:
-            switch(facility)
-            {
-                case PA_SUBSCRIPTION_EVENT_SERVER:
-                    pa_operation_unref(pa_context_get_server_info(c, server_changed_cb, &mis->menu_info[MENU_SERVER]));
-                    break;
-                case PA_SUBSCRIPTION_EVENT_SINK:
-                    break;
-                case PA_SUBSCRIPTION_EVENT_SOURCE:
-                    break;
-                case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
-                    break;
-                case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
                     break;
                 default:
                     break;
@@ -235,7 +217,7 @@ void add_server_cb(pa_context* c, const pa_server_info* i, void* userdata)
 {
     menu_info_t* mi = userdata;
     char* tooltip = server_info_str(i);
-    menu_info_item_add(mi, 0, NULL, i->host_name, tooltip, NULL);
+    menu_info_item_update(mi, 0, NULL, i->host_name, tooltip, NULL);
     g_free(tooltip);
 
     /* save default sink/source */
@@ -279,7 +261,7 @@ void add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userda
 
     menu_info_t* mi = userdata;
     char* tooltip = sink_info_str(i);
-    menu_info_item_add(mi, i->index, i->name, i->description, tooltip, NULL);
+    menu_info_item_update(mi, i->index, i->name, i->description, tooltip, NULL);
     g_free(tooltip);
 }
 
@@ -301,7 +283,7 @@ void add_source_cb(pa_context* c, const pa_source_info* i, int is_last, void* us
 
     menu_info_t* mi = userdata;
     char* tooltip = source_info_str(i);
-    menu_info_item_add(mi, i->index, i->name, i->description, tooltip, NULL);
+    menu_info_item_update(mi, i->index, i->name, i->description, tooltip, NULL);
     g_free(tooltip);
 }
 
@@ -326,7 +308,7 @@ void add_sink_input_cb(pa_context* c, const pa_sink_input_info* i, int is_last, 
 
     menu_info_t* mi = userdata;
     char* tooltip = input_info_str(i);
-    menu_info_item_add(mi, i->index, NULL, app_name ? app_name : i->name, tooltip, app_icon);
+    menu_info_item_update(mi, i->index, NULL, app_name ? app_name : i->name, tooltip, app_icon);
     g_free(tooltip);
 }
 
@@ -346,7 +328,7 @@ void add_source_output_cb(pa_context* c, const pa_source_output_info* i, int is_
 
     menu_info_t* mi = userdata;
     char* tooltip = output_info_str(i);
-    menu_info_item_add(mi, i->index, NULL, app_name ? app_name : i->name, tooltip, app_icon);
+    menu_info_item_update(mi, i->index, NULL, app_name ? app_name : i->name, tooltip, app_icon);
     g_free(tooltip);
 }
 

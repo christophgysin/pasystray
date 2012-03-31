@@ -109,13 +109,7 @@ GtkWidget* systray_add_menu_item(GtkMenuShell* menu, const char* desc, const cha
     gtk_menu_shell_append(menu, item);
 
     if(tooltip)
-    {
-        char* escaped = g_markup_escape_text(tooltip, -1);
-        char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", escaped);
-        gtk_widget_set_tooltip_markup(item, markup);
-        g_free(escaped);
-        g_free(markup);
-    }
+        systray_set_tooltip(item, tooltip);
 
     if(icon)
         gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
@@ -141,13 +135,7 @@ GtkWidget* systray_add_radio_item(menu_info_t* mi, const char* desc, const char*
     GtkWidget* item = gtk_radio_menu_item_new_with_label(mi->group, desc);
 
     if(tooltip)
-    {
-        char* escaped = g_markup_escape_text(tooltip, -1);
-        char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", escaped);
-        gtk_widget_set_tooltip_markup(item, markup);
-        g_free(escaped);
-        g_free(markup);
-    }
+        systray_set_tooltip(item, tooltip);
 
     mi->group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(item));
 
@@ -262,3 +250,13 @@ void start_application_cb(GtkMenuItem* item, const char* command)
 {
     g_spawn_command_line_async(command, NULL);
 }
+
+void systray_set_tooltip(GtkWidget* item, const char* tooltip)
+{
+    char* escaped = g_markup_escape_text(tooltip, -1);
+    char* markup = g_strdup_printf("<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", escaped);
+    gtk_widget_set_tooltip_markup(item, markup);
+    g_free(escaped);
+    g_free(markup);
+}
+
