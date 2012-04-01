@@ -132,16 +132,12 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name, co
     menu_info_item_t* mii = menu_info_item_get(mi, index);
 
    if(mii == NULL)
-   {
-       menu_info_item_add(mi, index, name, desc, tooltip, icon);
-       return;
-   }
+       return menu_info_item_add(mi, index, name, desc, tooltip, icon);
 
 #ifdef DEBUG
     fprintf(stderr, "[menu_info] updating %s %u %s\n", menu_info_type_name(mii->menu_info->type), index, desc);
 #endif
 
-    // TODO update
     g_free(mii->name);
     mii->name = g_strdup(name);
     g_free(mii->desc);
