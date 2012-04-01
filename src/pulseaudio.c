@@ -103,7 +103,7 @@ void context_state_cb(pa_context* c, void* userdata)
             pa_context_unref(context);
             pulseaudio_prepare_context();
             fprintf(stderr, "reconnecting...\n");
-            pulseaudio_connect(mis);
+            pulseaudio_connect();
             break;
 
         case PA_CONTEXT_CONNECTING:
