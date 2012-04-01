@@ -29,7 +29,7 @@ static gboolean version = FALSE;
 static GOptionEntry entries[] =
 {
     { "version", 'V', 0, G_OPTION_ARG_NONE, &version, "print version and exit", NULL },
-    { NULL }
+    { .long_name = NULL }
 };
 
 void parse_options(int argc, char *argv[])
