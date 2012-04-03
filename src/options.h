@@ -1,7 +1,7 @@
 /***
   This file is part of PaSystray
 
-  Copyright 2011 Christoph Gysin
+  Copyright (C) 2011, 2012 Christoph Gysin
 
   PaSystray is free software; you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License as
