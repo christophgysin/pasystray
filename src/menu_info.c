@@ -150,11 +150,42 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name, co
         case MENU_SOURCE:
             gtk_menu_item_set_label(GTK_MENU_ITEM(mii->widget), desc);
             systray_set_tooltip(GTK_WIDGET(mii->widget), tooltip);
-            // TODO change labels in stream submenus
+
+            // submenu to update (if any)
+            menu_info_t* submenu = NULL;
+            switch(mi->type)
+            {
+                case MENU_SINK:
+                    submenu = &mi->menu_infos->menu_info[MENU_INPUT];
+                    break;
+                case MENU_SOURCE:
+                    submenu = &mi->menu_infos->menu_info[MENU_OUTPUT];
+                    break;
+                default:
+                    break;
+            }
+
+            // change labels in stream submenus
+            if(submenu)
+            {
+                GHashTableIter iter;
+                gpointer key;
+                menu_info_item_t* item;
+                menu_info_item_t* subitem;
+
+                g_hash_table_iter_init(&iter, submenu->items);
+                while(g_hash_table_iter_next(&iter, &key, (gpointer*)&item))
+                    if((subitem = g_hash_table_lookup(item->submenu->items, GUINT_TO_POINTER(mii->index))))
+                        if(!g_str_equal(subitem->desc, desc))
+                            gtk_menu_item_set_label(GTK_MENU_ITEM(subitem->widget), desc);
+            }
+
             break;
+
        case MENU_INPUT:
        case MENU_OUTPUT:
-            // TODO change stream labels
+            gtk_menu_item_set_label(GTK_MENU_ITEM(mii->widget), desc);
+            systray_set_tooltip(GTK_WIDGET(mii->widget), tooltip);
             break;
     }
 }
