@@ -66,14 +66,14 @@ void pulseaudio_move_success_cb(pa_context *c, int success, void *userdata)
 void pulseaudio_rename_device(menu_info_item_t* mii, const char* name)
 {
 #ifdef DEBUG
-    g_message("rename %s %s to %s\n",
+    g_message("rename %s %s to %s",
             menu_info_type_name(mii->menu_info->type), mii->desc, name);
 #endif
     char *key = g_markup_printf_escaped("%s:%s", menu_info_type_name(mii->menu_info->type), mii->name);
 
     pa_operation* o;
     if(!(o = pa_ext_device_manager_set_device_description(context, key, name, NULL, NULL))) {
-        g_message("pa_ext_device_manager_set_device_description(context, %s, %s) failed\n", key, name);
+        g_message("pa_ext_device_manager_set_device_description(context, %s, %s) failed", key, name);
         return;
     }
     pa_operation_unref(o);

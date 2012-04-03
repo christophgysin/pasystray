@@ -135,7 +135,7 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name, co
        return menu_info_item_add(mi, index, name, desc, tooltip, icon);
 
 #ifdef DEBUG
-    g_message("[menu_info] updating %s %u %s\n", menu_info_type_name(mii->menu_info->type), index, desc);
+    g_message("[menu_info] updating %s %u %s", menu_info_type_name(mii->menu_info->type), index, desc);
 #endif
 
     g_free(mii->name);
@@ -167,7 +167,7 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, const
     item->menu_info = mi;
 
 #ifdef DEBUG
-    g_message("[menu_info] adding %s %u %p\n", menu_info_type_name(mi->type), index, item);
+    g_message("[menu_info] adding %s %u %p", menu_info_type_name(mi->type), index, item);
 #endif
 
     item->index = index;
@@ -295,7 +295,7 @@ void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event, menu_info_it
 void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event, menu_info_item_t* mii)
 {
 #ifdef DEBUG
-    g_message("move %s %s to %s %s\n",
+    g_message("move %s %s to %s %s",
             menu_info_type_name(mii->menu_info->parent->menu_info->type), mii->menu_info->parent->desc,
             menu_info_type_name(mii->menu_info->type), mii->desc);
 #endif
@@ -353,7 +353,7 @@ void menu_info_item_remove(menu_info_t* mi, uint32_t index)
         return;
 
 #ifdef DEBUG
-    g_message("[menu_info] removing %s %u\n", menu_info_type_name(mi->type), index);
+    g_message("[menu_info] removing %s %u", menu_info_type_name(mi->type), index);
 #endif
 
     switch(mi->type)

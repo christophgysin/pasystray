@@ -72,7 +72,7 @@ void context_state_cb(pa_context* c, void* userdata)
     switch(pa_context_get_state(c))
     {
         case PA_CONTEXT_UNCONNECTED:
-            g_message("PulseAudio context unconnected!\n");
+            g_message("PulseAudio context unconnected!");
             break;
 
         case PA_CONTEXT_READY:
@@ -98,11 +98,11 @@ void context_state_cb(pa_context* c, void* userdata)
 
         case PA_CONTEXT_FAILED:
         case PA_CONTEXT_TERMINATED:
-            g_message("PulseAudio terminated!\n");
+            g_message("PulseAudio terminated!");
             menu_infos_clear(mis);
             pa_context_unref(context);
             pulseaudio_prepare_context();
-            g_message("reconnecting...\n");
+            g_message("reconnecting...");
             pulseaudio_connect();
             break;
 
@@ -193,7 +193,7 @@ void print_event(pa_subscription_event_type_t t, uint32_t index)
     pa_subscription_event_type_t type = t & PA_SUBSCRIPTION_EVENT_TYPE_MASK;
     pa_subscription_event_type_t facility = t & PA_SUBSCRIPTION_EVENT_FACILITY_MASK;
 
-    g_message("event %s on %s (%u)\n",
+    g_message("event %s on %s (%u)",
         (type == PA_SUBSCRIPTION_EVENT_NEW) ? "new" :
         (type == PA_SUBSCRIPTION_EVENT_CHANGE) ? "change" :
         (type == PA_SUBSCRIPTION_EVENT_REMOVE) ? "remove" :
@@ -235,7 +235,7 @@ void add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userda
 {
     if(is_last < 0)
     {
-        g_message("Failed to get sink information: %s\n", pa_strerror(pa_context_errno(c)));
+        g_message("Failed to get sink information: %s", pa_strerror(pa_context_errno(c)));
         return;
     }
 
@@ -252,7 +252,7 @@ void add_source_cb(pa_context* c, const pa_source_info* i, int is_last, void* us
 {
     if(is_last < 0)
     {
-        g_message("Failed to get source information: %s\n", pa_strerror(pa_context_errno(c)));
+        g_message("Failed to get source information: %s", pa_strerror(pa_context_errno(c)));
         return;
     }
 
@@ -274,7 +274,7 @@ void add_sink_input_cb(pa_context* c, const pa_sink_input_info* i, int is_last, 
 {
     if(is_last < 0)
     {
-        g_message("Failed to get sink information: %s\n", pa_strerror(pa_context_errno(c)));
+        g_message("Failed to get sink information: %s", pa_strerror(pa_context_errno(c)));
         return;
     }
 
@@ -299,7 +299,7 @@ void add_source_output_cb(pa_context* c, const pa_source_output_info* i, int is_
 {
     if(is_last < 0)
     {
-        g_message("Failed to get source information: %s\n", pa_strerror(pa_context_errno(c)));
+        g_message("Failed to get source information: %s", pa_strerror(pa_context_errno(c)));
         return;
     }
 
@@ -318,7 +318,7 @@ void add_source_output_cb(pa_context* c, const pa_source_output_info* i, int is_
 void quit(const char* msg)
 {
     if(msg)
-        g_message("%s\n", msg);
+        g_message("%s", msg);
 
     if(context)
         pa_context_unref(context);
