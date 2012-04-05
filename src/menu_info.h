@@ -32,7 +32,7 @@ typedef enum {
     MENU_INPUT = 3,
     MENU_OUTPUT = 4,
 } menu_type_t;
-static const size_t MENU_COUNT = 5;
+enum { MENU_COUNT = 5 };
 
 typedef struct menu_infos_t_ menu_infos_t;
 typedef struct menu_info_t_ menu_info_t;
