@@ -21,12 +21,14 @@
 
 #include "systray.h"
 #include "config.h"
+#include "pulseaudio_action.h"
 
 void systray_create(menu_infos_t* mis)
 {
     mis->icon = gtk_status_icon_new_from_icon_name("pasystray");
     systray_menu_create(mis);
     g_signal_connect(mis->icon, "button-press-event", G_CALLBACK(systray_click_cb), mis);
+    g_signal_connect(mis->icon, "scroll-event", G_CALLBACK(systray_scroll_cb), mis);
     gtk_status_icon_set_tooltip_text(mis->icon, "connecting to server...");
     gtk_status_icon_set_visible(mis->icon, TRUE);
 }
@@ -54,7 +56,7 @@ void systray_menu_create(menu_infos_t* mis)
     systray_menu_add_application(mis->menu, "_Volume Meter (Recording)...", NULL, COMMAND_PAVUMETER_REC);
     systray_menu_add_application(mis->menu, "_Configure Local Sound Server...", NULL, COMMAND_PAPREFS);
 
-    /*
+    /* TODO: settings
     systray_menu_add_separator(mis->menu);
     item = append_menuitem(mis->menu, "_Preferences...", "gtk-preferences");
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(show_preferences), NULL);
@@ -269,7 +271,46 @@ GtkWidget* systray_menu_item_quit()
 void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata)
 {
     menu_infos_t* mis = userdata;
-    gtk_menu_popup(GTK_MENU(mis->menu), NULL, NULL, gtk_status_icon_position_menu, icon, ev->button, ev->time);
+
+    switch(ev->button)
+    {
+        case 1:
+        case 3:
+            gtk_menu_popup(GTK_MENU(mis->menu), NULL, NULL, gtk_status_icon_position_menu, icon, ev->button, ev->time);
+            break;
+        case 2:
+            {
+                menu_info_t* mi = &mis->menu_info[MENU_SINK];
+                menu_info_item_t* mii = menu_info_item_get_by_name(mi, mi->default_name);
+                if(mii)
+                    pulseaudio_toggle_mute(mii);
+            }
+            break;
+    }
+}
+
+void systray_scroll_cb(GtkStatusIcon* icon, GdkEventScroll* ev, gpointer userdata)
+{
+    int inc = 0;
+
+    switch(ev->direction)
+    {
+        case GDK_SCROLL_UP:
+            inc = 1;
+            break;
+        case GDK_SCROLL_DOWN:
+            inc = -1;
+            break;
+        default:
+            return;
+    }
+
+    menu_infos_t* mis = userdata;
+    menu_info_t* mi = &mis->menu_info[(ev->state & GDK_CONTROL_MASK) ? MENU_SOURCE : MENU_SINK];
+    menu_info_item_t* mii = menu_info_item_get_by_name(mi, mi->default_name);
+
+    if(mii)
+        pulseaudio_volume(mii, inc);
 }
 
 void start_application_cb(GtkMenuItem* item, const char* command)
@@ -285,4 +326,3 @@ void systray_set_tooltip(GtkWidget* item, const char* tooltip)
     g_free(escaped);
     g_free(markup);
 }
-

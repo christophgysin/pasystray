@@ -2,10 +2,6 @@ detect pulseaudio servers with libavahi-client
 switch servers by setting X properties
 allow manual adding of servers
 
-catch scroll wheel events:
-- if hovering over systray icon: default sink volume
-- if hovering over sink/source: sink/source volume
-
 libnotify
 settings
 gettext and translations

@@ -24,6 +24,7 @@
 
 #include <gtk/gtk.h>
 #include <stdint.h>
+#include <pulse/pulseaudio.h>
 
 typedef enum {
     MENU_SERVER = 0,
@@ -59,6 +60,8 @@ struct menu_info_item_t_ {
     int index;
     char* name;
     char* desc;
+    pa_cvolume* volume;
+    int mute;
     char* icon;
     GtkWidget* widget;
     menu_info_t* menu_info;
@@ -77,16 +80,27 @@ void menu_info_item_init(menu_info_item_t* mii);
 void menu_info_destroy(menu_info_t* mi);
 
 const char* menu_info_type_name(menu_type_t type);
-void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, const char* desc, char* tooltip, const char* icon);
-void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name, const char* desc, char* tooltip, const char* icon);
+void menu_info_item_add(menu_info_t* mi, uint32_t index,
+        const char* name, const char* desc, const pa_cvolume* vol, int mute,
+        char* tooltip, const char* icon);
+void menu_info_item_update(menu_info_t* mi, uint32_t index,
+        const char* name, const char* desc, const pa_cvolume* vol, int mute,
+        char* tooltip, const char* icon);
 GtkMenuShell* menu_info_item_context_menu(menu_info_item_t* mii);
-void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name, const char* desc, char* tooltip, const char* icon);
+void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name,
+        const char* desc, char* tooltip, const char* icon);
 menu_info_item_t* menu_info_item_get(menu_info_t* mi, uint32_t index);
 menu_info_item_t* menu_info_item_get_by_name(menu_info_t* mi, const char* name);
-void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event, menu_info_item_t* mii);
-void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event, menu_info_item_t* mii);
 
-void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event, menu_info_item_t* mii);
+void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
+        menu_info_item_t* mii);
+void menu_info_item_scrolled(GtkWidget* item, GdkEventScroll* event,
+        menu_info_item_t* mii);
+void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event,
+        menu_info_item_t* mii);
+
+void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event,
+        menu_info_item_t* mii);
 
 void menu_info_item_remove(menu_info_t* mi, uint32_t index);
 void menu_info_item_destroy(menu_info_item_t* mii);

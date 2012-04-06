@@ -90,7 +90,8 @@ void menu_info_init(menu_infos_t* mis, menu_info_t* mi, menu_type_t type)
     mi->type = type;
     mi->menu = NULL;
     mi->group = NULL;
-    mi->items = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)menu_info_item_destroy);
+    mi->items = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL,
+            (GDestroyNotify) menu_info_item_destroy);
     mi->menu_infos = mis;
     mi->parent = NULL;
 
@@ -107,6 +108,7 @@ void menu_info_item_init(menu_info_item_t* mii)
 {
     mii->name = NULL;
     mii->desc = NULL;
+    mii->volume = NULL;
     mii->icon = NULL;
     mii->widget = NULL;
     mii->menu_info = NULL;
@@ -127,21 +129,27 @@ const char* menu_info_type_name(menu_type_t type)
     return MENU_NAME[type];
 }
 
-void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name, const char* desc, char* tooltip, const char* icon)
+void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
+        const char* desc, const pa_cvolume* vol, int mute, char* tooltip,
+        const char* icon)
 {
     menu_info_item_t* mii = menu_info_item_get(mi, index);
 
    if(mii == NULL)
-       return menu_info_item_add(mi, index, name, desc, tooltip, icon);
+       return menu_info_item_add(mi, index, name, desc, vol, mute, tooltip, icon);
 
 #ifdef DEBUG
-    g_message("[menu_info] updating %s %u %s", menu_info_type_name(mii->menu_info->type), index, desc);
+    g_message("[menu_info] updating %s %u %s",
+            menu_info_type_name(mii->menu_info->type), index, desc);
 #endif
 
     g_free(mii->name);
     mii->name = g_strdup(name);
     g_free(mii->desc);
     mii->desc = g_strdup(desc);
+    g_free(mii->volume);
+    mii->volume = g_memdup(vol, sizeof(pa_cvolume));
+    mii->mute = mute;
 
     switch(mi->type)
     {
@@ -175,9 +183,11 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name, co
 
                 g_hash_table_iter_init(&iter, submenu->items);
                 while(g_hash_table_iter_next(&iter, &key, (gpointer*)&item))
-                    if((subitem = g_hash_table_lookup(item->submenu->items, GUINT_TO_POINTER(mii->index))))
+                    if((subitem = g_hash_table_lookup(item->submenu->items,
+                                    GUINT_TO_POINTER(mii->index))))
                         if(!g_str_equal(subitem->desc, desc))
-                            gtk_menu_item_set_label(GTK_MENU_ITEM(subitem->widget), desc);
+                            gtk_menu_item_set_label(
+                                    GTK_MENU_ITEM(subitem->widget), desc);
             }
 
             break;
@@ -190,7 +200,8 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name, co
     }
 }
 
-void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, const char* desc, char* tooltip, const char* icon)
+void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
+        const char* desc, const pa_cvolume* vol, int mute, char* tooltip, const char* icon)
 {
     menu_infos_t* mis = mi->menu_infos;
     menu_info_item_t* item = g_new(menu_info_item_t, 1);
@@ -204,6 +215,8 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, const
     item->index = index;
     item->name = g_strdup(name);
     item->desc = g_strdup(desc);
+    item->volume = g_memdup(vol, sizeof(pa_cvolume));
+    item->mute = mute;
     item->icon = g_strdup(icon);
 
     switch(item->menu_info->type)
@@ -228,26 +241,34 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name, const
         case MENU_SINK:
             item->context = menu_info_item_context_menu(item);
             item->widget = systray_add_radio_item(mi, desc, tooltip);
-            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget), g_str_equal(mi->default_name, item->name));
+            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget),
+                    g_str_equal(mi->default_name, item->name));
             systray_add_item_to_all_submenus(item, &mis->menu_info[MENU_INPUT]);
             break;
         case MENU_SOURCE:
             item->context = menu_info_item_context_menu(item);
             item->widget = systray_add_radio_item(mi, desc, tooltip);
-            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget), g_str_equal(mi->default_name, item->name));
+            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget),
+                    g_str_equal(mi->default_name, item->name));
             systray_add_item_to_all_submenus(item, &mis->menu_info[MENU_OUTPUT]);
             break;
         case MENU_INPUT:
-            item->widget = systray_menu_add_submenu(mi->menu, item->submenu, desc, tooltip, icon);
+            item->widget = systray_menu_add_submenu(mi->menu, item->submenu,
+                    desc, tooltip, icon);
             systray_add_all_items_to_submenu(&mis->menu_info[MENU_SINK], item);
             break;
         case MENU_OUTPUT:
-            item->widget = systray_menu_add_submenu(mi->menu, item->submenu, desc, tooltip, icon);
+            item->widget = systray_menu_add_submenu(mi->menu, item->submenu,
+                    desc, tooltip, icon);
             systray_add_all_items_to_submenu(&mis->menu_info[MENU_SOURCE], item);
             break;
     }
 
-    g_signal_connect(item->widget, "button-press-event", G_CALLBACK(menu_info_item_clicked), item);
+    g_signal_connect(item->widget, "button-press-event",
+            G_CALLBACK(menu_info_item_clicked), item);
+    g_signal_connect(item->widget, "scroll-event",
+            G_CALLBACK(menu_info_item_scrolled), item);
+
     g_hash_table_insert(mi->items, GUINT_TO_POINTER(index), item);
 }
 
@@ -256,14 +277,16 @@ GtkMenuShell* menu_info_item_context_menu(menu_info_item_t* mii)
     GtkMenuShell* menu = GTK_MENU_SHELL(gtk_menu_new());
     GtkWidget* item = gtk_menu_item_new_with_label("rename");
 
-    g_signal_connect(item, "button-press-event", G_CALLBACK(menu_info_item_rename_dialog), mii);
+    g_signal_connect(item, "button-press-event",
+            G_CALLBACK(menu_info_item_rename_dialog), mii);
 
     gtk_menu_shell_append(menu, item);
     gtk_widget_show_all(GTK_WIDGET(menu));
     return menu;
 }
 
-void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name, const char* desc, char* tooltip, const char* icon)
+void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name,
+        const char* desc, char* tooltip, const char* icon)
 {
     menu_info_item_t* subitem = g_new(menu_info_item_t, 1);
     menu_info_item_init(subitem);
@@ -274,7 +297,8 @@ void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name, co
     subitem->widget = systray_add_radio_item(mi, desc, tooltip);
 
     g_hash_table_insert(mi->items, GUINT_TO_POINTER(index), subitem);
-    g_signal_connect(subitem->widget, "button-press-event", G_CALLBACK(menu_info_subitem_clicked), subitem);
+    g_signal_connect(subitem->widget, "button-press-event",
+            G_CALLBACK(menu_info_subitem_clicked), subitem);
 }
 
 menu_info_item_t* menu_info_item_get(menu_info_t* mi, uint32_t index)
@@ -294,40 +318,80 @@ menu_info_item_t* menu_info_item_get_by_name(menu_info_t* mi, const char* name)
     return g_hash_table_find(mi->items, name_equal, (gpointer)name);
 }
 
-void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event, menu_info_item_t* mii)
+void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
+        menu_info_item_t* mii)
 {
-    /* on right-click, show context menu (if any) */
-    if(event->type == GDK_BUTTON_PRESS && event->button == 3)
+#ifdef DEBUG
+    g_message("[systray] button-presss-event mod:%s button:%i",
+            (event->state & GDK_CONTROL_MASK) ? "ctrl" : "", event->button);
+#endif
+
+    switch(event->button)
     {
-        if(mii->context)
-            gtk_menu_popup(GTK_MENU(mii->context), NULL, NULL, NULL, NULL,
-                    (event != NULL) ? event->button : 0,
-                    gdk_event_get_time((GdkEvent*)event));
-        return;
+        /* on left-click, set device as default */
+        case 1:
+            pulseaudio_set_default(mii);
+            break;
+        /* on middle-click, toggle mute device/stream */
+        case 2:
+            pulseaudio_toggle_mute(mii);
+            break;
+        /* on right-click, show context menu (if any) */
+        case 3:
+            if(mii->context)
+                gtk_menu_popup(GTK_MENU(mii->context), NULL, NULL, NULL, NULL,
+                        (event != NULL) ? event->button : 0,
+                        gdk_event_get_time((GdkEvent*)event));
+            break;
+    }
+}
+
+void menu_info_item_scrolled(GtkWidget* item, GdkEventScroll* event,
+        menu_info_item_t* mii)
+{
+#ifdef DEBUG
+    g_message("[systray] scroll-event mod:%s dir:%s",
+            (event->state & GDK_CONTROL_MASK) ? "ctrl" : "",
+            (event->direction == GDK_SCROLL_UP) ? "up" :
+            (event->direction == GDK_SCROLL_DOWN) ? "down" :
+            (event->direction == GDK_SCROLL_LEFT) ? "left" :
+            (event->direction == GDK_SCROLL_RIGHT) ? "right" : "???");
+#endif
+
+    int inc = 0;
+
+    switch(event->direction)
+    {
+        case GDK_SCROLL_UP:
+            inc = 1;
+            break;
+        case GDK_SCROLL_DOWN:
+            inc = -1;
+            break;
+        default:
+            return;
     }
 
     switch(mii->menu_info->type)
     {
         case MENU_SERVER:
-            /* TODO: connect to different server */
             break;
         case MENU_SINK:
-            pulseaudio_set_sink(mii);
-            break;
         case MENU_SOURCE:
-            pulseaudio_set_source(mii);
-            break;
         case MENU_INPUT:
         case MENU_OUTPUT:
+            pulseaudio_volume(mii, inc);
             break;
     }
 }
 
-void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event, menu_info_item_t* mii)
+void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event,
+        menu_info_item_t* mii)
 {
 #ifdef DEBUG
     g_message("move %s %s to %s %s",
-            menu_info_type_name(mii->menu_info->parent->menu_info->type), mii->menu_info->parent->desc,
+            menu_info_type_name(mii->menu_info->parent->menu_info->type),
+            mii->menu_info->parent->desc,
             menu_info_type_name(mii->menu_info->type), mii->desc);
 #endif
 
@@ -347,12 +411,15 @@ void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event, menu_info_item_
     }
 }
 
-void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event, menu_info_item_t* mii)
+void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event,
+        menu_info_item_t* mii)
 {
-    char* title = g_strdup_printf("Rename %s %s", menu_info_type_name(mii->menu_info->type), mii->desc);
+    char* title = g_strdup_printf("Rename %s %s",
+            menu_info_type_name(mii->menu_info->type), mii->desc);
 
     GtkWidget* dialog = gtk_dialog_new_with_buttons(title, NULL,
-        0, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+        0, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL,
+        GTK_RESPONSE_REJECT, NULL);
 
     GtkWidget* content_area = gtk_dialog_get_content_area(GTK_DIALOG (dialog));
     GtkWidget* label = gtk_label_new(g_strdup_printf("%s to:", title));
@@ -369,7 +436,7 @@ void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event, menu_i
         const char* name = gtk_entry_get_text(GTK_ENTRY(entry));
 
         if(!g_str_equal(name, mii->desc))
-            pulseaudio_rename_device(mii, name);
+            pulseaudio_rename(mii, name);
     }
 
     gtk_widget_destroy(dialog);
@@ -394,12 +461,14 @@ void menu_info_item_remove(menu_info_t* mi, uint32_t index)
             break;
         case MENU_SINK:
             if(!mii->menu_info->parent)
-                systray_remove_item_from_all_submenus(mii, &mis->menu_info[MENU_INPUT]);
+                systray_remove_item_from_all_submenus(mii,
+                        &mis->menu_info[MENU_INPUT]);
             systray_remove_radio_item(mi, mii->widget);
             break;
         case MENU_SOURCE:
             if(!mii->menu_info->parent)
-                systray_remove_item_from_all_submenus(mii, &mis->menu_info[MENU_OUTPUT]);
+                systray_remove_item_from_all_submenus(mii,
+                        &mis->menu_info[MENU_OUTPUT]);
             systray_remove_radio_item(mi, mii->widget);
             break;
         case MENU_INPUT:
@@ -414,6 +483,7 @@ void menu_info_item_remove(menu_info_t* mi, uint32_t index)
 void menu_info_item_destroy(menu_info_item_t* mii)
 {
     g_free(mii->name);
+    g_free(mii->volume);
     g_free(mii->icon);
     g_free(mii);
 }
