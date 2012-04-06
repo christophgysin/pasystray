@@ -261,6 +261,7 @@ void add_source_cb(pa_context* c, const pa_source_info* i, int is_last, void* us
 
     const char* class = pa_proplist_gets(i->proplist, PA_PROP_DEVICE_CLASS);
 
+    // ignore monitors
     if(class && g_str_equal(class, "monitor"))
         return;
 
@@ -304,6 +305,11 @@ void add_source_output_cb(pa_context* c, const pa_source_output_info* i, int is_
     }
 
     if(is_last)
+        return;
+
+    // ignore peak detects
+    const char* media_name = pa_proplist_gets(i->proplist, PA_PROP_MEDIA_NAME);
+    if(media_name && g_str_equal(media_name, "Peak detect"))
         return;
 
     const char* app_name = pa_proplist_gets(i->proplist, PA_PROP_APPLICATION_NAME);
