@@ -266,6 +266,9 @@ char* output_info_str(const pa_source_output_info* i)
     char f[PA_FORMAT_INFO_SNPRINT_MAX];
     char *pl;
 
+    g_snprintf(t, sizeof(t), "%u", i->owner_module);
+    g_snprintf(k, sizeof(k), "%u", i->client);
+
     char* str = g_strdup_printf(
             "Source Output #%u\n"
             "Driver: %s\n"
