@@ -280,7 +280,7 @@ void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata
             break;
         case 2:
             {
-                menu_info_t* mi = &mis->menu_info[MENU_SINK];
+                menu_info_t* mi = &mis->menu_info[(ev->state & GDK_CONTROL_MASK) ? MENU_SOURCE : MENU_SINK];
                 menu_info_item_t* mii = menu_info_item_get_by_name(mi, mi->default_name);
                 if(mii)
                     pulseaudio_toggle_mute(mii);
