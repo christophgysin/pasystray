@@ -28,7 +28,7 @@ extern pa_context* context;
 
 void pulseaudio_set_default(menu_info_item_t* mii)
 {
-    pa_operation* o;
+    pa_operation* o = NULL;
 
     switch(mii->menu_info->type)
     {
@@ -48,7 +48,8 @@ void pulseaudio_set_default(menu_info_item_t* mii)
             /* nothing to do here */
             break;
     }
-    pa_operation_unref(o);
+    if(o)
+        pa_operation_unref(o);
 }
 
 void pulseaudio_set_default_success_cb(pa_context *c, int success, void *userdata)
@@ -139,7 +140,8 @@ void pulseaudio_volume(menu_info_item_t* mii, int inc)
                     volume, pulseaudio_set_volume_success_cb, mii);
             break;
     }
-    pa_operation_unref(o);
+    if(o)
+        pa_operation_unref(o);
 }
 
 void pulseaudio_set_volume_success_cb(pa_context *c, int success, void *userdata)
@@ -183,7 +185,8 @@ void pulseaudio_toggle_mute(menu_info_item_t* mii)
                     mute, pulseaudio_set_volume_success_cb, mii);
             break;
     }
-    pa_operation_unref(o);
+    if(o)
+        pa_operation_unref(o);
 }
 
 void pulseaudio_toggle_mute_success_cb(pa_context *c, int success, void *userdata)
