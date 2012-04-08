@@ -5,6 +5,7 @@ AC_CONFIG_SRCDIR([src/pasystray.c])
 AC_CONFIG_HEADERS([src/config.h])
 AM_INIT_AUTOMAKE([foreign 1.9 -Wall])
 AC_PROG_CC
+AM_PROG_CC_C_O
 
 ### check for gtk3 ############################################################
 PKG_CHECK_MODULES(GUILIBS, [ gtk+-3.0 ])
