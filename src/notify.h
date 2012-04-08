@@ -19,29 +19,15 @@
   USA.
 ***/
 
-#include <gtk/gtk.h>
+#ifndef PASYSTRAY_NOTIFY_H
+#define PASYSTRAY_NOTIFY_H
 
-#include "options.h"
-#include "notify.h"
-#include "menu_info.h"
-#include "systray.h"
-#include "pulseaudio.h"
+#include "config.h"
 
-int main(int argc, char *argv[])
-{
-    parse_options(argc, argv);
-    gtk_init(&argc, &argv);
-    notify_initialize();
+typedef void* notify_handle_t;
 
-    menu_infos_t* mis = menu_infos_create();
-    systray_create(mis);
+void notify_initialize();
+notify_handle_t notify(const char* msg);
+void notify_update(notify_handle_t h, const char* msg);
 
-    pulseaudio_init(mis);
-    pulseaudio_connect();
-    pulseaudio_start();
-
-    gtk_main();
-
-    menu_infos_destroy(mis);
-    return 0;
-}
+#endif /* PASYSTRAY_NOTIFY_H */
