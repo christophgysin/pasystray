@@ -26,8 +26,8 @@
 #include "notify.h"
 
 void notify_initialize(){}
-notify_handle_t notify(const char* msg){ return 0; }
-void notify_update(notify_handle_t h, const char* msg){}
+notify_handle_t notify(const char* msg, const char* body, const char* icon){ return 0; }
+void notify_update(notify_handle_t h, const char* msg, const char* body, const char* icon){}
 
 #else
 
@@ -49,18 +49,18 @@ void notify_show(NotifyNotification* n)
                 error->code);
 }
 
-notify_handle_t notify(const char* msg)
+notify_handle_t notify(const char* msg, const char* body, const char* icon)
 {
-    NotifyNotification* n = notify_notification_new(msg, NULL, NULL);
+    NotifyNotification* n = notify_notification_new(msg, body, icon);
     notify_show(n);
     return (notify_handle_t) n;
 }
 
-void notify_update(notify_handle_t h, const char* msg)
+void notify_update(notify_handle_t h, const char* msg, const char* body, const char* icon)
 {
     NotifyNotification* n = (NotifyNotification*) h;
 
-    if(!notify_notification_update(n, msg, NULL, NULL))
+    if(!notify_notification_update(n, msg, body, icon))
         g_error("[notify] invalid arguments passed to notify_update()");
 
     notify_show(n);
