@@ -4,6 +4,5 @@ detect pulseaudio servers with libavahi-client
 switch servers by setting X properties
 allow manual adding of servers
 
-libnotify
 settings
 gettext and translations

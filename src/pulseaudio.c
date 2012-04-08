@@ -22,6 +22,7 @@
 #include "pulseaudio.h"
 #include "pulseaudio_info.h"
 #include "systray.h"
+#include "notify.h"
 
 pa_context* context = NULL;
 
@@ -118,15 +119,15 @@ void pulseaudio_subscribed_cb(pa_context* c, int success, void* userdata)
 {
     menu_infos_t* mis = userdata;
     pa_operation_unref(pa_context_get_server_info(context,
-                pulseaudio_add_server_cb, &mis->menu_info[MENU_SERVER]));
+                pulseaudio_server_init_cb, &mis->menu_info[MENU_SERVER]));
     pa_operation_unref(pa_context_get_sink_info_list(context,
-                pulseaudio_add_sink_cb, &mis->menu_info[MENU_SINK]));
+                pulseaudio_sink_init_cb, &mis->menu_info[MENU_SINK]));
     pa_operation_unref(pa_context_get_source_info_list(context,
-                pulseaudio_add_source_cb, &mis->menu_info[MENU_SOURCE]));
+                pulseaudio_source_init_cb, &mis->menu_info[MENU_SOURCE]));
     pa_operation_unref(pa_context_get_sink_input_info_list(context,
-                pulseaudio_add_sink_input_cb, &mis->menu_info[MENU_INPUT]));
+                pulseaudio_sink_input_init_cb, &mis->menu_info[MENU_INPUT]));
     pa_operation_unref(pa_context_get_source_output_info_list(context,
-                pulseaudio_add_source_output_cb, &mis->menu_info[MENU_OUTPUT]));
+                pulseaudio_source_output_init_cb, &mis->menu_info[MENU_OUTPUT]));
 }
 
 void pulseaudio_event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, void* userdata)
@@ -162,23 +163,23 @@ void pulseaudio_event_new(pa_subscription_event_type_t facility, uint32_t index,
     {
         case PA_SUBSCRIPTION_EVENT_SERVER:
             pa_operation_unref(pa_context_get_server_info(context,
-                        pulseaudio_add_server_cb, &mis->menu_info[MENU_SERVER]));
+                        pulseaudio_server_add_cb, &mis->menu_info[MENU_SERVER]));
             break;
         case PA_SUBSCRIPTION_EVENT_SINK:
             pa_operation_unref(pa_context_get_sink_info_by_index(context, index,
-                        pulseaudio_add_sink_cb, &mis->menu_info[MENU_SINK]));
+                        pulseaudio_sink_add_cb, &mis->menu_info[MENU_SINK]));
             break;
         case PA_SUBSCRIPTION_EVENT_SOURCE:
             pa_operation_unref(pa_context_get_source_info_by_index(context, index,
-                        pulseaudio_add_source_cb, &mis->menu_info[MENU_SOURCE]));
+                        pulseaudio_source_add_cb, &mis->menu_info[MENU_SOURCE]));
             break;
         case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
             pa_operation_unref(pa_context_get_sink_input_info(context, index,
-                        pulseaudio_add_sink_input_cb, &mis->menu_info[MENU_INPUT]));
+                        pulseaudio_sink_input_add_cb, &mis->menu_info[MENU_INPUT]));
             break;
         case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
             pa_operation_unref(pa_context_get_source_output_info(context, index,
-                        pulseaudio_add_source_output_cb, &mis->menu_info[MENU_OUTPUT]));
+                        pulseaudio_source_output_add_cb, &mis->menu_info[MENU_OUTPUT]));
             break;
         default:
             break;
@@ -187,7 +188,31 @@ void pulseaudio_event_new(pa_subscription_event_type_t facility, uint32_t index,
 
 void pulseaudio_event_change(pa_subscription_event_type_t facility, uint32_t index, menu_infos_t* mis)
 {
-    pulseaudio_event_new(facility, index, mis);
+    switch(facility)
+    {
+        case PA_SUBSCRIPTION_EVENT_SERVER:
+            pa_operation_unref(pa_context_get_server_info(context,
+                        pulseaudio_server_change_cb, &mis->menu_info[MENU_SERVER]));
+            break;
+        case PA_SUBSCRIPTION_EVENT_SINK:
+            pa_operation_unref(pa_context_get_sink_info_by_index(context, index,
+                        pulseaudio_sink_change_cb, &mis->menu_info[MENU_SINK]));
+            break;
+        case PA_SUBSCRIPTION_EVENT_SOURCE:
+            pa_operation_unref(pa_context_get_source_info_by_index(context, index,
+                        pulseaudio_source_change_cb, &mis->menu_info[MENU_SOURCE]));
+            break;
+        case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
+            pa_operation_unref(pa_context_get_sink_input_info(context, index,
+                        pulseaudio_sink_input_change_cb, &mis->menu_info[MENU_INPUT]));
+            break;
+        case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
+            pa_operation_unref(pa_context_get_source_output_info(context, index,
+                        pulseaudio_source_output_change_cb, &mis->menu_info[MENU_OUTPUT]));
+            break;
+        default:
+            break;
+    }
 }
 
 void pulseaudio_event_remove(pa_subscription_event_type_t facility, uint32_t index, menu_infos_t* mis)
@@ -235,7 +260,22 @@ void pulseaudio_print_event(pa_subscription_event_type_t t, uint32_t index)
 }
 #endif
 
-void pulseaudio_add_server_cb(pa_context* c, const pa_server_info* i, void* userdata)
+void pulseaudio_server_init_cb(pa_context* c, const pa_server_info* i, void* userdata)
+{
+    pulseaudio_server_add(i, userdata, FALSE);
+}
+
+void pulseaudio_server_add_cb(pa_context* c, const pa_server_info* i, void* userdata)
+{
+    pulseaudio_server_add(i, userdata, TRUE);
+}
+
+void pulseaudio_server_change_cb(pa_context* c, const pa_server_info* i, void* userdata)
+{
+    pulseaudio_server_add(i, userdata, FALSE);
+}
+
+void pulseaudio_server_add(const pa_server_info* i, void* userdata, gboolean is_new)
 {
     menu_info_t* mi = userdata;
     char* tooltip = server_info_str(i);
@@ -258,17 +298,39 @@ void pulseaudio_change_default_item(menu_info_t* mi, const char* new_default)
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget), true);
 }
 
-void pulseaudio_add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userdata)
+void pulseaudio_sink_init_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userdata)
+{
+    pulseaudio_sink_add(i, is_last, userdata, FALSE);
+}
+
+void pulseaudio_sink_add_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userdata)
+{
+    pulseaudio_sink_add(i, is_last, userdata, TRUE);
+}
+
+void pulseaudio_sink_change_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userdata)
+{
+    pulseaudio_sink_add(i, is_last, userdata, FALSE);
+}
+
+void pulseaudio_sink_add(const pa_sink_info* i, int is_last, void* userdata, gboolean is_new)
 {
     if(is_last < 0)
     {
         g_message("Failed to get sink information: %s",
-                pa_strerror(pa_context_errno(c)));
+                pa_strerror(pa_context_errno(context)));
         return;
     }
 
     if(is_last)
         return;
+
+    if(is_new)
+    {
+        gchar* msg = g_strdup_printf("new sink \"%s\"", i->description);
+        notify(msg, i->name, NULL);
+        g_free(msg);
+    }
 
     menu_info_t* mi = userdata;
     char* tooltip = sink_info_str(i);
@@ -277,11 +339,26 @@ void pulseaudio_add_sink_cb(pa_context* c, const pa_sink_info* i, int is_last, v
     g_free(tooltip);
 }
 
-void pulseaudio_add_source_cb(pa_context* c, const pa_source_info* i, int is_last, void* userdata)
+void pulseaudio_source_init_cb(pa_context* c, const pa_source_info* i, int is_last, void* userdata)
+{
+    pulseaudio_source_add(i, is_last, userdata, FALSE);
+}
+
+void pulseaudio_source_add_cb(pa_context* c, const pa_source_info* i, int is_last, void* userdata)
+{
+    pulseaudio_source_add(i, is_last, userdata, TRUE);
+}
+
+void pulseaudio_source_change_cb(pa_context* c, const pa_source_info* i, int is_last, void* userdata)
+{
+    pulseaudio_source_add(i, is_last, userdata, FALSE);
+}
+
+void pulseaudio_source_add(const pa_source_info* i, int is_last, void* userdata, gboolean is_new)
 {
     if(is_last < 0)
     {
-        g_message("Failed to get source information: %s", pa_strerror(pa_context_errno(c)));
+        g_message("Failed to get source information: %s", pa_strerror(pa_context_errno(context)));
         return;
     }
 
@@ -294,6 +371,13 @@ void pulseaudio_add_source_cb(pa_context* c, const pa_source_info* i, int is_las
     if(class && g_str_equal(class, "monitor"))
         return;
 
+    if(is_new)
+    {
+        gchar* msg = g_strdup_printf("new source \"%s\"", i->description);
+        notify(msg, i->name, NULL);
+        g_free(msg);
+    }
+
     menu_info_t* mi = userdata;
     char* tooltip = source_info_str(i);
     menu_info_item_update(mi, i->index, i->name, i->description, &i->volume,
@@ -301,11 +385,26 @@ void pulseaudio_add_source_cb(pa_context* c, const pa_source_info* i, int is_las
     g_free(tooltip);
 }
 
-void pulseaudio_add_sink_input_cb(pa_context* c, const pa_sink_input_info* i, int is_last, void* userdata)
+void pulseaudio_sink_input_init_cb(pa_context* c, const pa_sink_input_info* i, int is_last, void* userdata)
+{
+    pulseaudio_sink_input_add(i, is_last, userdata, FALSE);
+}
+
+void pulseaudio_sink_input_add_cb(pa_context* c, const pa_sink_input_info* i, int is_last, void* userdata)
+{
+    pulseaudio_sink_input_add(i, is_last, userdata, TRUE);
+}
+
+void pulseaudio_sink_input_change_cb(pa_context* c, const pa_sink_input_info* i, int is_last, void* userdata)
+{
+    pulseaudio_sink_input_add(i, is_last, userdata, FALSE);
+}
+
+void pulseaudio_sink_input_add(const pa_sink_input_info* i, int is_last, void* userdata, gboolean is_new)
 {
     if(is_last < 0)
     {
-        g_message("Failed to get sink information: %s", pa_strerror(pa_context_errno(c)));
+        g_message("Failed to get sink information: %s", pa_strerror(pa_context_errno(context)));
         return;
     }
 
@@ -327,11 +426,26 @@ void pulseaudio_add_sink_input_cb(pa_context* c, const pa_sink_input_info* i, in
     g_free(tooltip);
 }
 
-void pulseaudio_add_source_output_cb(pa_context* c, const pa_source_output_info* i, int is_last, void* userdata)
+void pulseaudio_source_output_init_cb(pa_context* c, const pa_source_output_info* i, int is_last, void* userdata)
+{
+    pulseaudio_source_output_add(i, is_last, userdata, FALSE);
+}
+
+void pulseaudio_source_output_add_cb(pa_context* c, const pa_source_output_info* i, int is_last, void* userdata)
+{
+    pulseaudio_source_output_add(i, is_last, userdata, TRUE);
+}
+
+void pulseaudio_source_output_change_cb(pa_context* c, const pa_source_output_info* i, int is_last, void* userdata)
+{
+    pulseaudio_source_output_add(i, is_last, userdata, FALSE);
+}
+
+void pulseaudio_source_output_add(const pa_source_output_info* i, int is_last, void* userdata, gboolean is_new)
 {
     if(is_last < 0)
     {
-        g_message("Failed to get source information: %s", pa_strerror(pa_context_errno(c)));
+        g_message("Failed to get source information: %s", pa_strerror(pa_context_errno(context)));
         return;
     }
 
