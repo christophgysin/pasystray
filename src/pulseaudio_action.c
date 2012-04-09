@@ -109,7 +109,6 @@ void pulseaudio_volume(menu_info_item_t* mii, int inc)
 #endif
 
     /* increment/decrement in 2% steps */
-
     pa_cvolume* volume;
     if(inc < 0)
         volume = pa_cvolume_dec(mii->volume, -inc * PA_VOLUME_NORM / 50);
@@ -162,12 +161,11 @@ void pulseaudio_set_volume_success_cb(pa_context *c, int success, void *userdata
 
 void pulseaudio_update_volume_notification(menu_info_item_t* mii)
 {
-
     char vol[PA_CVOLUME_SNPRINT_MAX];
-
-    gchar* msg = g_strdup_printf("%s %s: %s",
+    gchar* msg = g_strdup_printf("%s %s: %s%s",
                 menu_info_type_name(mii->menu_info->type), mii->desc,
-                pa_cvolume_snprint(vol, sizeof(vol), mii->volume));
+                pa_cvolume_snprint(vol, sizeof(vol), mii->volume),
+                mii->mute ? "" : " [muted]");
 
     if(!mii->notify)
         mii->notify = notify(msg, NULL, mii->icon);
