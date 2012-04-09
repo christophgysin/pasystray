@@ -104,6 +104,7 @@
             <property name="has_focus">True</property>
             <property name="is_focus">True</property>
             <property name="invisible_char">●</property>
+            <property name="truncate_multiline">True</property>
           </object>
           <packing>
             <property name="expand">False</property>

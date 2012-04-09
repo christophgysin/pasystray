@@ -434,10 +434,13 @@ void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event,
 
     if(gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK)
     {
-        const char* name = gtk_entry_get_text(GTK_ENTRY(ui_renamedialog_entry()));
+        const char* entry = gtk_entry_get_text(GTK_ENTRY(ui_renamedialog_entry()));
+        char* name = g_strstrip(g_strdup(entry));
 
         if(!g_str_equal(name, mii->desc))
             pulseaudio_rename(mii, name);
+
+        g_free(name);
     }
 
     gtk_widget_hide(GTK_WIDGET(dialog));
