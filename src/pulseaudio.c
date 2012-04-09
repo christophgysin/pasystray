@@ -24,24 +24,33 @@
 #include "systray.h"
 #include "notify.h"
 
+#include <pulse/glib-mainloop.h>
+
 pa_context* context = NULL;
 
-static pa_threaded_mainloop* m = NULL;
+static pa_glib_mainloop* m = NULL;
 static pa_proplist* context_proplist = NULL;
 static char* server = NULL;
 
 void pulseaudio_init(menu_infos_t* mis)
 {
-    if(!(m = pa_threaded_mainloop_new()))
-        pulseaudio_quit("pa_threaded_mainloop_new() failed.");
+    if(!(m = pa_glib_mainloop_new(g_main_context_default())))
+        pulseaudio_quit("pa_glib_mainloop_new() failed.");
 
     pulseaudio_prepare_context();
     pa_context_set_state_callback(context, pulseaudio_context_state_cb, mis);
+
+    pulseaudio_connect();
+}
+
+void pulseaudio_destroy()
+{
+    // TODO: teardown and cleanup pulseaudio
 }
 
 void pulseaudio_prepare_context()
 {
-    pa_mainloop_api* mainloop_api = pa_threaded_mainloop_get_api(m);
+    pa_mainloop_api* mainloop_api = pa_glib_mainloop_get_api(m);
 
     context_proplist = pa_proplist_new();
     pa_proplist_sets(context_proplist, PA_PROP_APPLICATION_NAME, "PulseAudio systray");
@@ -58,12 +67,6 @@ void pulseaudio_connect()
         g_message("pa_context_connect() failed: ");
         pulseaudio_quit(pa_strerror(pa_context_errno(context)));
     }
-}
-
-void pulseaudio_start()
-{
-    if(pa_threaded_mainloop_start(m) < 0)
-        pulseaudio_quit("pa_threaded_mainloop_start() failed.");
 }
 
 void pulseaudio_context_state_cb(pa_context* c, void* userdata)
@@ -478,6 +481,6 @@ void pulseaudio_quit(const char* msg)
     if(m)
     {
         pa_signal_done();
-        pa_threaded_mainloop_free(m);
+        pa_glib_mainloop_free(m);
     }
 }
