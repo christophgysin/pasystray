@@ -41,6 +41,8 @@ void ui_load()
     }
 
     gtk_about_dialog_set_version(ui_aboutdialog(), PACKAGE_VERSION);
+    gtk_about_dialog_set_website(ui_aboutdialog(), PACKAGE_URL);
+    gtk_about_dialog_set_website_label(ui_aboutdialog(), PACKAGE_URL);
 }
 
 GtkStatusIcon* ui_statusicon()

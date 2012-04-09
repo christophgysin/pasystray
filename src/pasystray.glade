@@ -7,11 +7,8 @@
     <property name="icon_name">pasystray</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">pasystray</property>
-    <property name="version">x.y.z</property>
     <property name="copyright" translatable="yes">Copyright © 2011, 2012</property>
     <property name="comments" translatable="yes">PulseAudio system tray</property>
-    <property name="website">https://github.com/christophgysin/pasystray</property>
-    <property name="website_label" translatable="yes">https://github.com/christophgysin/pasystray</property>
     <property name="authors">Christoph Gysin &lt;christoph.gysin@gmail.com&gt;</property>
     <property name="logo_icon_name">pasystray</property>
     <property name="license_type">lgpl-2-1</property>
