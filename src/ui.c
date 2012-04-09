@@ -24,8 +24,6 @@
 
 #include <gtk/gtk.h>
 
-#define GLADE_FILE "pasystray.glade"
-
 static GtkBuilder* builder;
 
 void ui_load()
