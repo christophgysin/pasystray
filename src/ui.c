@@ -31,11 +31,19 @@ void ui_load()
     builder = gtk_builder_new();
 
     GError* error = NULL;
-    guint ret = gtk_builder_add_from_file(builder, GLADE_FILE, &error);
+
+    const char* filename = GLADE_FILE;
+
+#ifdef DEBUG
+    if(!g_file_test(filename, G_FILE_TEST_EXISTS))
+        filename = g_strdup_printf("src/pasystray.glade");
+#endif
+
+    guint ret = gtk_builder_add_from_file(builder, filename, &error);
 
     if(!ret)
     {
-        g_error("[ui] failed to load %s: %s", GLADE_FILE, error->message);
+        g_error("[ui] %s", error->message);
         g_error_free(error);
         return;
     }

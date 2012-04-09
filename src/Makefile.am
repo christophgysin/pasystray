@@ -28,7 +28,7 @@ pasystray_SOURCES=pasystray.c menu_info.c systray.c pulseaudio.c \
 	options.h notify.h ui.h
 
 pasystray_LDADD=$(AM_LDADD) $(GUILIBS_LIBS) $(PULSEAUDIO_LIBS) $(NOTIFY_LIBS)
-pasystray_CFLAGS=$(AM_CFLAGS) $(GUILIBS_CFLAGS) $(PULSEAUDIO_CFLAGS) $(NOTIFY_CFLAGS)
-pasystray_CFLAGS+=-DGLADE_FILE=\"$(gladedir)/pasystray.glade\"
+pasystray_CFLAGS=$(AM_CFLAGS) $(GUILIBS_CFLAGS) $(PULSEAUDIO_CFLAGS) $(NOTIFY_CFLAGS) \
+				 -DGLADE_FILE=\"$(gladedir)/pasystray.glade\"
 
 EXTRA_DIST = $(glade_DATA)
