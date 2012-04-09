@@ -23,12 +23,14 @@ bin_PROGRAMS=pasystray
 glade_DATA=pasystray.glade
 
 pasystray_SOURCES=pasystray.c menu_info.c systray.c pulseaudio.c \
-	pulseaudio_info.c pulseaudio_action.c options.c notify.c ui.c \
+	pulseaudio_info.c pulseaudio_action.c options.c notify.c ui.c avahi.c \
 	menu_info.h systray.h pulseaudio.h pulseaudio_info.h pulseaudio_action.h \
-	options.h notify.h ui.h
+	options.h notify.h ui.h avahi.h
 
-pasystray_LDADD=$(AM_LDADD) $(GUILIBS_LIBS) $(PULSEAUDIO_LIBS) $(NOTIFY_LIBS)
-pasystray_CFLAGS=$(AM_CFLAGS) $(GUILIBS_CFLAGS) $(PULSEAUDIO_CFLAGS) $(NOTIFY_CFLAGS) \
-				 -DGLADE_FILE=\"$(gladedir)/pasystray.glade\"
+pasystray_LDADD=$(AM_LDADD) $(GUILIBS_LIBS) $(PULSEAUDIO_LIBS) \
+				$(NOTIFY_LIBS) $(AVAHI_LIBS)
+pasystray_CFLAGS=$(AM_CFLAGS) $(GUILIBS_CFLAGS) $(PULSEAUDIO_CFLAGS) \
+				$(NOTIFY_CFLAGS) $(AVAHI_CFLAGS) \
+				-DGLADE_FILE=\"$(gladedir)/pasystray.glade\"
 
 EXTRA_DIST = $(glade_DATA)

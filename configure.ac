@@ -41,7 +41,7 @@ AC_ARG_ENABLE([avahi],
     AS_HELP_STRING([--disable-avahi], [Disable optional avahi support]))
 
 AS_IF([test "x$enable_avahi" != xno],
-    [PKG_CHECK_MODULES(AVAHI, [ avahi-client >= 0.6 ], HAVE_AVAHI=1,
+    [PKG_CHECK_MODULES(AVAHI, [ avahi-client >= 0.6 avahi-glib >= 0.6 ], HAVE_AVAHI=1,
                        HAVE_AVAHI=0)], HAVE_AVAHI=0)
 
 AS_IF([test "x$enable_avahi" = xyes && test "x$HAVE_AVAHI" = x0],
