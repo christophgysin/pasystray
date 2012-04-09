@@ -20,11 +20,11 @@
 iconsdir =  $(datadir)/icons/hicolor/scalable/apps
 icons_DATA = data/pasystray.svg
 
-pixmapsdir =  $(datadir)/pixmaps
+pixmapsdir = $(datadir)/pixmaps
 pixmaps_DATA = data/pasystray.png
 
 desktopdir = $(datadir)/applications
-desktop_DATA=data/pasystray.desktop
+desktop_DATA = data/pasystray.desktop
 
 EXTRA_DIST = bootstrap.sh README LICENSE $(icons_DATA) $(pixmaps_DATA) $(desktop_DATA)
 
