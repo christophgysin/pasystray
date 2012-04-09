@@ -24,6 +24,7 @@
 #include "menu_info.h"
 #include "systray.h"
 #include "pulseaudio_action.h"
+#include "ui.h"
 
 menu_infos_t* menu_infos_create()
 {
@@ -419,33 +420,26 @@ void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event,
             menu_info_type_name(mii->menu_info->type), mii->desc);
     char* text = g_strdup_printf("%s to:", title);
 
+    GtkDialog* dialog = ui_renamedialog();
+    gtk_window_set_title(GTK_WINDOW(dialog), title);
+    gtk_label_set_text(ui_renamedialog_label(), text);
+    gtk_entry_set_text(ui_renamedialog_entry(), mii->desc);
 
-    GtkWidget* dialog = gtk_dialog_new_with_buttons(title, NULL,
-        0, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL,
-        GTK_RESPONSE_REJECT, NULL);
+    g_free(text);
+    g_free(title);
 
-    GtkWidget* content_area = gtk_dialog_get_content_area(GTK_DIALOG (dialog));
-    GtkWidget* label = gtk_label_new(text);
-    gtk_container_add(GTK_CONTAINER(content_area), label);
+    gtk_widget_show_all(GTK_WIDGET(dialog));
 
-    GtkWidget* entry = gtk_entry_new();
-    gtk_entry_set_text(GTK_ENTRY(entry), mii->desc);
-    gtk_container_add(GTK_CONTAINER(content_area), entry);
-
-    gtk_widget_show_all(dialog);
-
-    if(gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT)
+    if(gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK)
     {
-        const char* name = gtk_entry_get_text(GTK_ENTRY(entry));
+        const char* name = gtk_entry_get_text(GTK_ENTRY(ui_renamedialog_entry()));
 
         if(!g_str_equal(name, mii->desc))
             pulseaudio_rename(mii, name);
     }
 
-    gtk_widget_destroy(dialog);
+    gtk_widget_hide(GTK_WIDGET(dialog));
 
-    g_free(text);
-    g_free(title);
 }
 
 void menu_info_item_remove(menu_info_t* mi, uint32_t index)

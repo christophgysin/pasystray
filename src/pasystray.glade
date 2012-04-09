@@ -41,21 +41,31 @@
     <property name="title" translatable="yes">Rename &lt;device&gt; &lt;name&gt;</property>
     <property name="type_hint">normal</property>
     <child internal-child="vbox">
-      <object class="GtkBox" id="dialog-vbox3">
+      <object class="GtkBox" id="dialog-vbox">
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
+        <child>
+          <object class="GtkLabel" id="label">
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Rename &lt;device&gt; &lt;old name&gt; to:</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area3">
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="button1">
+              <object class="GtkButton" id="cancelbutton">
                 <property name="label">gtk-cancel</property>
                 <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="receives_default">False</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
               </object>
@@ -69,9 +79,8 @@
               <object class="GtkButton" id="okbutton">
                 <property name="label">gtk-ok</property>
                 <property name="use_action_appearance">False</property>
-                <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
+                <property name="receives_default">False</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
               </object>
@@ -90,48 +99,23 @@
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="box1">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="orientation">vertical</property>
-            <property name="homogeneous">True</property>
-            <child>
-              <object class="GtkLabel" id="label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Rename &lt;device&gt; &lt;oldname&gt; to:</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEntry" id="entry">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="invisible_char">●</property>
-                <property name="invisible_char_set">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
+          <object class="GtkEntry" id="entry">
+            <property name="can_focus">True</property>
+            <property name="has_focus">True</property>
+            <property name="is_focus">True</property>
+            <property name="invisible_char">●</property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">4</property>
           </packing>
         </child>
       </object>
     </child>
     <action-widgets>
-      <action-widget response="0">button1</action-widget>
-      <action-widget response="0">okbutton</action-widget>
+      <action-widget response="-6">cancelbutton</action-widget>
+      <action-widget response="-5">okbutton</action-widget>
     </action-widgets>
   </object>
   <object class="GtkStatusIcon" id="statusicon">

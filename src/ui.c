@@ -67,3 +67,13 @@ GtkDialog* ui_renamedialog()
 {
     return (GtkDialog*) gtk_builder_get_object(builder, "renamedialog");
 }
+
+GtkLabel* ui_renamedialog_label()
+{
+    return (GtkLabel*) gtk_builder_get_object(builder, "label");
+}
+
+GtkEntry* ui_renamedialog_entry()
+{
+    return (GtkEntry*) gtk_builder_get_object(builder, "entry");
+}

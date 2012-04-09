@@ -1,4 +1,4 @@
-focus device rename dialog
+focus and placement of device rename dialog
 
 detect pulseaudio servers with libavahi-client
 switch servers by setting X properties
