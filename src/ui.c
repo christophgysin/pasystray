@@ -19,37 +19,43 @@
   USA.
 ***/
 
-#include <stdlib.h>
-#include <glib.h>
-#include <gtk/gtk.h>
+#include "ui.h"
 #include "config.h"
 
-static gboolean version = FALSE;
+#include <gtk/gtk.h>
 
-static GOptionEntry entries[] =
+#define GLADE_FILE "pasystray.glade"
+
+static GtkBuilder* builder;
+
+void ui_load()
 {
-    { "version", 'V', 0, G_OPTION_ARG_NONE, &version, "print version and exit", NULL },
-    { .long_name = NULL }
-};
+    builder = gtk_builder_new();
 
-void parse_options(int argc, char *argv[])
-{
-    GError *error = NULL;
-    GOptionContext *context;
+    GError* error = NULL;
+    guint ret = gtk_builder_add_from_file(builder, GLADE_FILE, &error);
 
-    context = g_option_context_new(NULL);
-    g_option_context_add_main_entries(context, entries, NULL);
-    g_option_context_add_group(context, gtk_get_option_group(TRUE));
-    if(!g_option_context_parse(context, &argc, &argv, &error))
+    if(!ret)
     {
-        g_print("option parsing failed: %s\n", error->message);
+        g_error("[ui] failed to load %s: %s", GLADE_FILE, error->message);
         g_error_free(error);
-        exit(1);
+        return;
     }
 
-    if(version)
-    {
-        g_print("%s\n", VERSION);
-        exit(1);
-    }
+    gtk_about_dialog_set_version(ui_aboutdialog(), PACKAGE_VERSION);
+}
+
+GtkStatusIcon* ui_statusicon()
+{
+    return (GtkStatusIcon*) gtk_builder_get_object(builder, "statusicon");
+}
+
+GtkAboutDialog* ui_aboutdialog()
+{
+    return (GtkAboutDialog*) gtk_builder_get_object(builder, "aboutdialog");
+}
+
+GtkDialog* ui_renamedialog()
+{
+    return (GtkDialog*) gtk_builder_get_object(builder, "renamedialog");
 }

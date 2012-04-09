@@ -19,31 +19,14 @@
   USA.
 ***/
 
+#ifndef PASYSTRAY_UI_H
+#define PASYSTRAY_UI_H
+
 #include <gtk/gtk.h>
 
-#include "options.h"
-#include "notify.h"
-#include "ui.h"
-#include "menu_info.h"
-#include "systray.h"
-#include "pulseaudio.h"
+void ui_load();
+GtkStatusIcon* ui_statusicon();
+GtkAboutDialog* ui_aboutdialog();
+GtkDialog* ui_renamedialog();
 
-int main(int argc, char *argv[])
-{
-    parse_options(argc, argv);
-    gtk_init(&argc, &argv);
-    notify_initialize();
-    ui_load();
-
-    menu_infos_t* mis = menu_infos_create();
-    systray_create(mis);
-
-    pulseaudio_init(mis);
-    pulseaudio_connect();
-    pulseaudio_start();
-
-    gtk_main();
-
-    menu_infos_destroy(mis);
-    return 0;
-}
+#endif /* PASYSTRAY_UI_H */
