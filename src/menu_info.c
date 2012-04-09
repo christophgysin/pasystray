@@ -416,6 +416,8 @@ void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event,
 void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event,
         menu_info_item_t* mii)
 {
+    gtk_menu_popdown(GTK_MENU(mii->menu_info->menu_infos->menu));
+
     char* title = g_strdup_printf("Rename %s %s",
             menu_info_type_name(mii->menu_info->type), mii->desc);
     char* text = g_strdup_printf("%s to:", title);
