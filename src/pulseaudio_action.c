@@ -24,6 +24,8 @@
 #include <pulse/volume.h>
 #include <pulse/ext-device-manager.h>
 
+#include "notify.h"
+
 extern pa_context* context;
 
 void pulseaudio_set_default(menu_info_item_t* mii)
@@ -149,8 +151,30 @@ void pulseaudio_set_volume_success_cb(pa_context *c, int success, void *userdata
     menu_info_item_t* mii = userdata;
 
     if(!success)
+    {
         g_error("failed to set volume for %s \"%s\"!\n",
                 menu_info_type_name(mii->menu_info->type), mii->name);
+        return;
+    }
+
+    pulseaudio_update_volume_notification(mii);
+}
+
+void pulseaudio_update_volume_notification(menu_info_item_t* mii)
+{
+
+    char vol[PA_CVOLUME_SNPRINT_MAX];
+
+    gchar* msg = g_strdup_printf("%s %s: %s",
+                menu_info_type_name(mii->menu_info->type), mii->desc,
+                pa_cvolume_snprint(vol, sizeof(vol), mii->volume));
+
+    if(!mii->notify)
+        mii->notify = notify(msg, NULL, mii->icon);
+    else
+        notify_update(mii->notify, msg, NULL, mii->icon);
+
+    g_free(msg);
 }
 
 void pulseaudio_toggle_mute(menu_info_item_t* mii)

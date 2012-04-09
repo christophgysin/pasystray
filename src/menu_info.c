@@ -109,6 +109,7 @@ void menu_info_item_init(menu_info_item_t* mii)
     mii->name = NULL;
     mii->desc = NULL;
     mii->volume = NULL;
+    mii->notify = NULL;
     mii->icon = NULL;
     mii->widget = NULL;
     mii->menu_info = NULL;
@@ -484,6 +485,7 @@ void menu_info_item_destroy(menu_info_item_t* mii)
 {
     g_free(mii->name);
     g_free(mii->volume);
+    g_free(mii->notify);
     g_free(mii->icon);
     g_free(mii);
 }

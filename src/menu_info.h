@@ -26,6 +26,8 @@
 #include <stdint.h>
 #include <pulse/pulseaudio.h>
 
+#include "notify.h"
+
 typedef enum {
     MENU_SERVER = 0,
     MENU_SINK = 1,
@@ -61,6 +63,7 @@ struct menu_info_item_t_ {
     char* name;
     char* desc;
     pa_cvolume* volume;
+    notify_handle_t notify;
     int mute;
     char* icon;
     GtkWidget* widget;
