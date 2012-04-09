@@ -248,7 +248,7 @@ GtkWidget* systray_menu_item_about()
 void systray_about_dialog()
 {
     GtkAboutDialog* dialog = ui_aboutdialog();
-    g_signal_connect_swapped(dialog, "response", G_CALLBACK (gtk_widget_destroy), dialog);
+    g_signal_connect_swapped(dialog, "response", G_CALLBACK(gtk_widget_hide), dialog);
     gtk_widget_show_all(GTK_WIDGET(dialog));
 }
 
