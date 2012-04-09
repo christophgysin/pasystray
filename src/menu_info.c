@@ -417,13 +417,15 @@ void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event,
 {
     char* title = g_strdup_printf("Rename %s %s",
             menu_info_type_name(mii->menu_info->type), mii->desc);
+    char* text = g_strdup_printf("%s to:", title);
+
 
     GtkWidget* dialog = gtk_dialog_new_with_buttons(title, NULL,
         0, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL,
         GTK_RESPONSE_REJECT, NULL);
 
     GtkWidget* content_area = gtk_dialog_get_content_area(GTK_DIALOG (dialog));
-    GtkWidget* label = gtk_label_new(g_strdup_printf("%s to:", title));
+    GtkWidget* label = gtk_label_new(text);
     gtk_container_add(GTK_CONTAINER(content_area), label);
 
     GtkWidget* entry = gtk_entry_new();
@@ -441,6 +443,9 @@ void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event,
     }
 
     gtk_widget_destroy(dialog);
+
+    g_free(text);
+    g_free(title);
 }
 
 void menu_info_item_remove(menu_info_t* mi, uint32_t index)
