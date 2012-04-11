@@ -1,10 +1,12 @@
-fix exit
+BUGS:
 fix pulseaudio reconnect
 focus and placement of device rename dialog
 
+FEATURES:
 detect pulseaudio servers with libavahi-client
 switch servers by setting X properties
 allow manual adding of servers
+module-device-manager autoload
 
 settings
 gettext and translations
