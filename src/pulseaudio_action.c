@@ -81,7 +81,7 @@ void pulseaudio_move_success_cb(pa_context *c, int success, void *userdata)
     menu_info_item_t* from = to->menu_info->parent;
 
     if(!success)
-        g_error("failed to move %s \"%s\" to %s \"%s\"!\n",
+        g_error("failed to move %s '%s' to %s '%s'!\n",
                 menu_info_type_name(from->menu_info->type), from->name,
                 menu_info_type_name(to->menu_info->type), to->name);
 }
@@ -89,17 +89,26 @@ void pulseaudio_move_success_cb(pa_context *c, int success, void *userdata)
 void pulseaudio_rename(menu_info_item_t* mii, const char* name)
 {
 #ifdef DEBUG
-    g_message("rename %s %s to %s",
+    g_message("rename %s '%s' to '%s'",
             menu_info_type_name(mii->menu_info->type), mii->desc, name);
 #endif
     char *key = g_markup_printf_escaped("%s:%s", menu_info_type_name(mii->menu_info->type), mii->name);
 
     pa_operation* o;
-    if(!(o = pa_ext_device_manager_set_device_description(context, key, name, NULL, NULL))) {
+    if(!(o = pa_ext_device_manager_set_device_description(context, key, name, pulseaudio_rename_success_cb, mii))) {
         g_error("pa_ext_device_manager_set_device_description(context, %s, %s) failed", key, name);
         return;
     }
     pa_operation_unref(o);
+}
+
+void pulseaudio_rename_success_cb(pa_context *c, int success, void *userdata)
+{
+    menu_info_item_t* mii = userdata;
+
+    if(!success)
+        g_error("failed to rename %s '%s'!\n",
+                menu_info_type_name(mii->menu_info->type), mii->name);
 }
 
 void pulseaudio_volume(menu_info_item_t* mii, int inc)
