@@ -37,6 +37,8 @@ void avahi_destroy(){}
 #include <avahi-glib/glib-watch.h>
 #include <avahi-glib/glib-malloc.h>
 
+static const char* AVAHI_SERVICE_PULSEAUDIO_SERVER_TCP = "_pulse-server._tcp";
+
 static AvahiGLibPoll* glib_poll = NULL;
 static const AvahiPoll* poll_api = NULL;
 static AvahiClient* client = NULL;
@@ -60,7 +62,7 @@ void avahi_init(GMainLoop* loop)
     glib_poll = avahi_glib_poll_new(NULL, G_PRIORITY_DEFAULT);
     if(glib_poll == NULL)
     {
-        g_warning("Faild to create Avahi glib poll object.");
+        g_warning("Failed to create Avahi glib poll object.");
         return;
     }
     poll_api = avahi_glib_poll_get(glib_poll);
@@ -91,10 +93,13 @@ void avahi_init(GMainLoop* loop)
 
 void avahi_start()
 {
-    sb = avahi_service_browser_new(client, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, "_http._tcp", NULL, 0, avahi_browse_callback, client);
+    sb = avahi_service_browser_new(client, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC,
+            AVAHI_SERVICE_PULSEAUDIO_SERVER_TCP, NULL, 0,
+            avahi_browse_callback, client);
 
     if(!sb)
-        g_message("Failed to create service browser: %s\n", avahi_strerror(avahi_client_errno(client)));
+        g_message("Failed to create service browser: %s",
+                avahi_strerror(avahi_client_errno(client)));
 }
 
 void avahi_destroy()
@@ -112,7 +117,8 @@ static void avahi_client_callback(AvahiClient* c, AvahiClientState state, void* 
     assert(c);
 
     if(state == AVAHI_CLIENT_FAILURE)
-        g_message("Server connection failure: %s\n", avahi_strerror(avahi_client_errno(c)));
+        g_message("Server connection failure: %s",
+                avahi_strerror(avahi_client_errno(c)));
 }
 
 static void avahi_browse_callback(AvahiServiceBrowser* b, AvahiIfIndex interface,
@@ -126,29 +132,37 @@ static void avahi_browse_callback(AvahiServiceBrowser* b, AvahiIfIndex interface
     switch (event)
     {
         case AVAHI_BROWSER_FAILURE:
-            g_message("[avahi] %s\n", avahi_strerror(avahi_client_errno(avahi_service_browser_get_client(b))));
+            g_message("[avahi] %s",
+                    avahi_strerror(avahi_client_errno(
+                            avahi_service_browser_get_client(b))));
             return;
 
         case AVAHI_BROWSER_NEW:
-            g_message("[avahi] NEW: service '%s' of type '%s' in domain '%s'\n", name, type, domain);
+#ifdef DEBUG
+            g_message("[avahi] NEW: service '%s' of type '%s' in domain '%s'",
+                    name, type, domain);
+#endif
 
             /* We ignore the returned resolver object. In the callback
                function we free it. If the server is terminated before
                the callback function is called the server will free
                the resolver for us. */
 
-            if (!(avahi_service_resolver_new(c, interface, protocol, name, type, domain, AVAHI_PROTO_UNSPEC, 0, avahi_resolve_callback, c)))
-                g_message("Failed to resolve service '%s': %s\n", name, avahi_strerror(avahi_client_errno(c)));
+            if (!(avahi_service_resolver_new(
+                            c, interface, protocol, name, type, domain,
+                            AVAHI_PROTO_UNSPEC, 0, avahi_resolve_callback, c)))
+                g_message("Failed to resolve service '%s': %s",
+                        name, avahi_strerror(avahi_client_errno(c)));
 
             break;
 
         case AVAHI_BROWSER_REMOVE:
-            g_message("[avahi] REMOVE: service '%s' of type '%s' in domain '%s'\n", name, type, domain);
+            g_message("[avahi] REMOVE: service '%s' of type '%s' in domain '%s'",
+                    name, type, domain);
             break;
 
         case AVAHI_BROWSER_ALL_FOR_NOW:
         case AVAHI_BROWSER_CACHE_EXHAUSTED:
-            g_message("[avahi] %s\n", event == AVAHI_BROWSER_CACHE_EXHAUSTED ? "CACHE_EXHAUSTED" : "ALL_FOR_NOW");
             break;
     }
 }
@@ -164,36 +178,24 @@ static void avahi_resolve_callback(AvahiServiceResolver* r, AvahiIfIndex interfa
     switch (event)
     {
         case AVAHI_RESOLVER_FAILURE:
-            g_message("[avahi] Failed to resolve service '%s' of type '%s' in domain '%s': %s\n", name, type, domain, avahi_strerror(avahi_client_errno(avahi_service_resolver_get_client(r))));
+            g_message("[avahi] Failed to resolve service '%s' of type '%s' in domain '%s': %s",
+                    name, type, domain, avahi_strerror(avahi_client_errno(
+                            avahi_service_resolver_get_client(r))));
             break;
 
         case AVAHI_RESOLVER_FOUND:
         {
-            g_message("Service '%s' of type '%s' in domain '%s':\n", name, type, domain);
-
+#ifdef DEBUG
             char a[AVAHI_ADDRESS_STR_MAX];
             avahi_address_snprint(a, sizeof(a), address);
+
+            g_message("New PulseAudio server detected: %s %s:%u",
+                    name, a, port);
+#endif
+            /*
             char* t = avahi_string_list_to_string(txt);
-
-            g_message(
-                    "\t%s:%u (%s)\n"
-                    "\tTXT=%s\n"
-                    "\tcookie is %u\n"
-                    "\tis_local: %i\n"
-                    "\tour_own: %i\n"
-                    "\twide_area: %i\n"
-                    "\tmulticast: %i\n"
-                    "\tcached: %i\n",
-                    host_name, port, a,
-                    t,
-                    avahi_string_list_get_service_cookie(txt),
-                    !!(flags & AVAHI_LOOKUP_RESULT_LOCAL),
-                    !!(flags & AVAHI_LOOKUP_RESULT_OUR_OWN),
-                    !!(flags & AVAHI_LOOKUP_RESULT_WIDE_AREA),
-                    !!(flags & AVAHI_LOOKUP_RESULT_MULTICAST),
-                    !!(flags & AVAHI_LOOKUP_RESULT_CACHED));
-
             avahi_free(t);
+            */
         }
     }
 
