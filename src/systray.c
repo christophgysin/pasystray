@@ -20,6 +20,8 @@
 ***/
 
 #include "systray.h"
+
+#include "pasystray.h"
 #include "config.h"
 #include "pulseaudio_action.h"
 #include "ui.h"
@@ -255,7 +257,7 @@ void systray_about_dialog()
 GtkWidget* systray_menu_item_quit()
 {
     GtkWidget* item = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, NULL);
-    g_signal_connect(item, "activate", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(item, "activate", G_CALLBACK(quit), NULL);
     gtk_widget_show(item);
     return item;
 }

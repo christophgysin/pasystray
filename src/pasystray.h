@@ -19,44 +19,9 @@
   USA.
 ***/
 
-#include <gtk/gtk.h>
+#ifndef PASYSTRAY_PASYSTRAY_H
+#define PASYSTRAY_PASYSTRAY_H
 
-#include "options.h"
-#include "notify.h"
-#include "ui.h"
-#include "menu_info.h"
-#include "systray.h"
-#include "pulseaudio.h"
-#include "avahi.h"
+void quit();
 
-GMainLoop* loop;
-
-int main(int argc, char *argv[])
-{
-    parse_options(argc, argv);
-
-    gtk_init(&argc, &argv);
-
-    notify_initialize();
-    ui_load();
-
-    menu_infos_t* mis = menu_infos_create();
-    systray_create(mis);
-
-    loop = g_main_loop_new(NULL, FALSE);
-
-    avahi_init(loop);
-    pulseaudio_init(mis);
-
-    g_main_loop_run(loop);
-
-    pulseaudio_destroy();
-    avahi_destroy();
-    menu_infos_destroy(mis);
-    return 0;
-}
-
-void quit()
-{
-    g_main_loop_quit(loop);
-}
+#endif /* PASYSTRAY_PASYSTRAY_H */
