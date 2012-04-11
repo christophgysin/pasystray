@@ -24,8 +24,10 @@
 
 #include <glib.h>
 
+#include "menu_info.h"
+
 void avahi_init(GMainLoop* loop);
-void avahi_start();
+void avahi_start(menu_infos_t* mis);
 void avahi_destroy();
 
 #endif /* PASYSTRAY_AVAHI_H */

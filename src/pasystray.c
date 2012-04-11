@@ -36,17 +36,18 @@ int main(int argc, char *argv[])
     parse_options(argc, argv);
 
     gtk_init(&argc, &argv);
+    loop = g_main_loop_new(NULL, FALSE);
 
+    avahi_init(loop);
     notify_initialize();
+
     ui_load();
 
     menu_infos_t* mis = menu_infos_create();
     systray_create(mis);
 
-    loop = g_main_loop_new(NULL, FALSE);
-
-    avahi_init(loop);
     pulseaudio_init(mis);
+    avahi_start(mis);
 
     g_main_loop_run(loop);
 

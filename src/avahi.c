@@ -29,13 +29,13 @@ void avahi_destroy(){}
 
 #else
 
-#include "avahi.h"
-
 #include <avahi-client/client.h>
 #include <avahi-client/lookup.h>
 #include <avahi-common/error.h>
 #include <avahi-glib/glib-watch.h>
 #include <avahi-glib/glib-malloc.h>
+
+#include "avahi.h"
 
 static const char* AVAHI_SERVICE_PULSEAUDIO_SERVER_TCP = "_pulse-server._tcp";
 
@@ -72,7 +72,7 @@ void avahi_init(GMainLoop* loop)
 
     if(client == NULL)
     {
-        g_warning("Error initializing Avahi: %s", avahi_strerror (error));
+        g_warning("Error initializing Avahi: %s", avahi_strerror(error));
         return;
     }
 
@@ -87,15 +87,13 @@ void avahi_init(GMainLoop* loop)
 
     g_message("Avahi Server Version: %s", version);
 #endif
-
-    avahi_start();
 }
 
-void avahi_start()
+void avahi_start(menu_infos_t* mis)
 {
     sb = avahi_service_browser_new(client, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC,
             AVAHI_SERVICE_PULSEAUDIO_SERVER_TCP, NULL, 0,
-            avahi_browse_callback, client);
+            avahi_browse_callback, mis);
 
     if(!sb)
         g_message("Failed to create service browser: %s",
@@ -112,7 +110,7 @@ void avahi_destroy()
         avahi_glib_poll_free(glib_poll);
 }
 
-static void avahi_client_callback(AvahiClient* c, AvahiClientState state, void*  userdata)
+static void avahi_client_callback(AvahiClient* c, AvahiClientState state, void* userdata)
 {
     assert(c);
 
@@ -126,7 +124,6 @@ static void avahi_browse_callback(AvahiServiceBrowser* b, AvahiIfIndex interface
         const char* type, const char* domain, AvahiLookupResultFlags flags,
         void* userdata)
  {
-    AvahiClient* c = userdata;
     assert(b);
 
     switch (event)
@@ -149,10 +146,10 @@ static void avahi_browse_callback(AvahiServiceBrowser* b, AvahiIfIndex interface
                the resolver for us. */
 
             if (!(avahi_service_resolver_new(
-                            c, interface, protocol, name, type, domain,
-                            AVAHI_PROTO_UNSPEC, 0, avahi_resolve_callback, c)))
+                            client, interface, protocol, name, type, domain,
+                            AVAHI_PROTO_UNSPEC, 0, avahi_resolve_callback, userdata)))
                 g_message("Failed to resolve service '%s': %s",
-                        name, avahi_strerror(avahi_client_errno(c)));
+                        name, avahi_strerror(avahi_client_errno(client)));
 
             break;
 
@@ -192,10 +189,24 @@ static void avahi_resolve_callback(AvahiServiceResolver* r, AvahiIfIndex interfa
             g_message("New PulseAudio server detected: %s %s:%u",
                     name, a, port);
 #endif
-            /*
-            char* t = avahi_string_list_to_string(txt);
-            avahi_free(t);
-            */
+
+            char* text = avahi_string_list_to_string(txt);
+
+            // TODO: tooltip formatting
+            gchar* tooltip = g_strdup_printf(
+                    "name: %s\n"
+                    "host: %s%u\n"
+                    "txt: %s",
+                    name,
+                    a, port,
+                    text);
+
+            menu_infos_t* mis = userdata;
+            menu_info_t* mi = &mis->menu_info[MENU_SERVER];
+            menu_info_item_update(mi, 1, NULL, name, NULL, 0, tooltip, NULL);
+
+            g_free(tooltip);
+            avahi_free(text);
         }
     }
 
