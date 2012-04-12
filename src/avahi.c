@@ -154,6 +154,7 @@ static void avahi_browse_callback(AvahiServiceBrowser* b, AvahiIfIndex interface
             break;
 
         case AVAHI_BROWSER_REMOVE:
+        {
 #ifdef DEBUG
             g_message("[avahi] REMOVE: service '%s' of type '%s' in domain '%s'",
                     name, type, domain);
@@ -162,6 +163,7 @@ static void avahi_browse_callback(AvahiServiceBrowser* b, AvahiIfIndex interface
             menu_info_t* mi = &mis->menu_info[MENU_SERVER];
             menu_info_item_remove_by_name(mi, name);
             break;
+        }
 
         case AVAHI_BROWSER_ALL_FOR_NOW:
         case AVAHI_BROWSER_CACHE_EXHAUSTED:
