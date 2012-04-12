@@ -154,14 +154,42 @@ static void avahi_browse_callback(AvahiServiceBrowser* b, AvahiIfIndex interface
             break;
 
         case AVAHI_BROWSER_REMOVE:
+#ifdef DEBUG
             g_message("[avahi] REMOVE: service '%s' of type '%s' in domain '%s'",
                     name, type, domain);
+#endif
+            menu_infos_t* mis = userdata;
+            menu_info_t* mi = &mis->menu_info[MENU_SERVER];
+            menu_info_item_remove_by_name(mi, name);
             break;
 
         case AVAHI_BROWSER_ALL_FOR_NOW:
         case AVAHI_BROWSER_CACHE_EXHAUSTED:
             break;
     }
+}
+
+char* avahi_string_list_info(AvahiStringList* list)
+{
+    char* str = NULL;
+
+    char* key = NULL;
+    char* value = NULL;
+
+    while(list)
+    {
+        avahi_string_list_get_pair(list, &key, &value, NULL);
+        char* new = g_strdup_printf("%s%s%s: %s", str ? str : "", str ? "\n" : "", key, value);
+        avahi_free(key);
+        avahi_free(value);
+
+        g_free(str);
+        str = new;
+
+        list = avahi_string_list_get_next(list);
+    }
+
+    return str;
 }
 
 static void avahi_resolve_callback(AvahiServiceResolver* r, AvahiIfIndex interface,
@@ -182,31 +210,34 @@ static void avahi_resolve_callback(AvahiServiceResolver* r, AvahiIfIndex interfa
 
         case AVAHI_RESOLVER_FOUND:
         {
-#ifdef DEBUG
             char a[AVAHI_ADDRESS_STR_MAX];
             avahi_address_snprint(a, sizeof(a), address);
 
-            g_message("New PulseAudio server detected: %s %s:%u",
-                    name, a, port);
+            gchar* host_port = g_strdup_printf("%s:%u", a, port);
+#ifdef DEBUG
+
+            g_message("New PulseAudio server detected: %s %s",
+                    name, host_port);
 #endif
 
-            char* text = avahi_string_list_to_string(txt);
+            char* text = avahi_string_list_info(txt);
 
             // TODO: tooltip formatting
             gchar* tooltip = g_strdup_printf(
                     "name: %s\n"
-                    "host: %s%u\n"
-                    "txt: %s",
+                    "host: %s\n"
+                    "%s",
                     name,
-                    a, port,
+                    host_port,
                     text);
 
             menu_infos_t* mis = userdata;
             menu_info_t* mi = &mis->menu_info[MENU_SERVER];
-            menu_info_item_update(mi, 1, NULL, name, NULL, 0, tooltip, NULL);
+            menu_info_item_update(mi, -1, name, name, NULL, 0, tooltip, NULL);
 
             g_free(tooltip);
             avahi_free(text);
+            g_free(host_port);
         }
     }
 

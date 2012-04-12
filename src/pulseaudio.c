@@ -282,7 +282,7 @@ void pulseaudio_server_add(const pa_server_info* i, void* userdata, gboolean is_
 {
     menu_info_t* mi = userdata;
     char* tooltip = server_info_str(i);
-    menu_info_item_update(mi, 0, NULL, i->host_name, NULL, 0, tooltip, NULL);
+    menu_info_item_update(mi, 0, "localhost", i->host_name, NULL, 0, tooltip, NULL);
     g_free(tooltip);
 
     /* set default sink/source */

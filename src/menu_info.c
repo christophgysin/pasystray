@@ -91,8 +91,19 @@ void menu_info_init(menu_infos_t* mis, menu_info_t* mi, menu_type_t type)
     mi->type = type;
     mi->menu = NULL;
     mi->group = NULL;
-    mi->items = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL,
+
+    GHashFunc hash_func = g_direct_hash;
+    GEqualFunc eq_func = g_direct_equal;
+
+    if(type == MENU_SERVER)
+    {
+        hash_func = g_str_hash;
+        eq_func = g_str_equal;
+    }
+
+    mi->items = g_hash_table_new_full(hash_func, eq_func, NULL,
             (GDestroyNotify) menu_info_item_destroy);
+
     mi->menu_infos = mis;
     mi->parent = NULL;
 
@@ -135,7 +146,12 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
         const char* desc, const pa_cvolume* vol, int mute, char* tooltip,
         const char* icon)
 {
-    menu_info_item_t* mii = menu_info_item_get(mi, index);
+    menu_info_item_t* mii;
+
+    if(mi->type == MENU_SERVER)
+        mii = menu_info_item_get_by_name(mi, name);
+    else
+        mii = menu_info_item_get(mi, index);
 
    if(mii == NULL)
        return menu_info_item_add(mi, index, name, desc, vol, mute, tooltip, icon);
@@ -271,7 +287,10 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
     g_signal_connect(item->widget, "scroll-event",
             G_CALLBACK(menu_info_item_scrolled), item);
 
-    g_hash_table_insert(mi->items, GUINT_TO_POINTER(index), item);
+    if(mi->type == MENU_SERVER)
+        g_hash_table_insert(mi->items, item->name, item);
+    else
+        g_hash_table_insert(mi->items, GUINT_TO_POINTER(index), item);
 }
 
 GtkMenuShell* menu_info_item_context_menu(menu_info_item_t* mii)
@@ -299,6 +318,7 @@ void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name,
     subitem->widget = systray_add_radio_item(mi, desc, tooltip);
 
     g_hash_table_insert(mi->items, GUINT_TO_POINTER(index), subitem);
+
     g_signal_connect(subitem->widget, "button-press-event",
             G_CALLBACK(menu_info_subitem_clicked), subitem);
 }
@@ -449,40 +469,40 @@ void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event,
 
 void menu_info_item_remove(menu_info_t* mi, uint32_t index)
 {
-    menu_infos_t* mis = mi->menu_infos;
     menu_info_item_t* mii = menu_info_item_get(mi, index);
 
     if(!mii)
         return;
 
 #ifdef DEBUG
-    g_message("[menu_info] removing %s %u", menu_info_type_name(mi->type), index);
+    g_message("[menu_info] removing %s %u",
+            menu_info_type_name(mi->type), index);
 #endif
 
-    switch(mi->type)
-    {
-        case MENU_SERVER:
-            systray_remove_radio_item(mi, mii->widget);
-            break;
-        case MENU_SINK:
-            if(!mii->menu_info->parent)
-                systray_remove_item_from_all_submenus(mii,
-                        &mis->menu_info[MENU_INPUT]);
-            systray_remove_radio_item(mi, mii->widget);
-            break;
-        case MENU_SOURCE:
-            if(!mii->menu_info->parent)
-                systray_remove_item_from_all_submenus(mii,
-                        &mis->menu_info[MENU_OUTPUT]);
-            systray_remove_radio_item(mi, mii->widget);
-            break;
-        case MENU_INPUT:
-        case MENU_OUTPUT:
-            systray_remove_all_items_from_submenu(mii->submenu);
-            systray_remove_menu_item(mi, mii->widget);
-            break;
-    }
+    systray_remove_item(mii);
+
     g_hash_table_remove(mi->items, GUINT_TO_POINTER(index));
+}
+
+void menu_info_item_remove_by_name(menu_info_t* mi, const char* name)
+{
+    menu_info_item_t* mii = menu_info_item_get_by_name(mi, name);
+
+    if(!mii)
+    {
+        g_warning("failed to remove %s '%s': item not found!",
+                menu_info_type_name(mi->type), name);
+        return;
+    }
+
+#ifdef DEBUG
+    g_message("[menu_info] removing %s %s (by name: '%s')",
+            menu_info_type_name(mi->type), mii->desc, name);
+#endif
+
+    systray_remove_item(mii);
+
+    g_hash_table_foreach_remove(mi->items, name_equal, mii->name);
 }
 
 void menu_info_item_destroy(menu_info_item_t* mii)

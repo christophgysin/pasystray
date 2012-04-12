@@ -36,6 +36,8 @@ void systray_menu_add_separator(GtkMenuShell* menu);
 GtkWidget* systray_menu_add_item(GtkMenuShell* menu, const char* name, const char* icon, bool sensitive);
 void systray_menu_add_application(GtkMenuShell* menu, const char* text, const char* icon, const char* command);
 
+void systray_remove_item(menu_info_item_t* mii);
+
 GtkWidget* systray_add_menu_item(GtkMenuShell* menu, const char* desc, const char* tooltip, const char* icon);
 void systray_remove_menu_item(menu_info_t* mi, GtkWidget* item);
 

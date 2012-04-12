@@ -106,6 +106,7 @@ void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event,
         menu_info_item_t* mii);
 
 void menu_info_item_remove(menu_info_t* mi, uint32_t index);
+void menu_info_item_remove_by_name(menu_info_t* mi, const char* name);
 void menu_info_item_destroy(menu_info_item_t* mii);
 
 #endif /* PASYSTRAY_MENU_INFO_H */

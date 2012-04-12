@@ -191,6 +191,36 @@ void systray_menu_add_application(GtkMenuShell* menu, const char* name, const ch
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(start_application_cb), (gpointer)command);
 }
 
+void systray_remove_item(menu_info_item_t* mii)
+{
+    menu_info_t* mi = mii->menu_info;
+    menu_infos_t* mis = mi->menu_infos;
+
+    switch(mi->type)
+    {
+        case MENU_SERVER:
+            systray_remove_radio_item(mi, mii->widget);
+            break;
+        case MENU_SINK:
+            if(!mii->menu_info->parent)
+                systray_remove_item_from_all_submenus(mii,
+                        &mis->menu_info[MENU_INPUT]);
+            systray_remove_radio_item(mi, mii->widget);
+            break;
+        case MENU_SOURCE:
+            if(!mii->menu_info->parent)
+                systray_remove_item_from_all_submenus(mii,
+                        &mis->menu_info[MENU_OUTPUT]);
+            systray_remove_radio_item(mi, mii->widget);
+            break;
+        case MENU_INPUT:
+        case MENU_OUTPUT:
+            systray_remove_all_items_from_submenu(mii->submenu);
+            systray_remove_menu_item(mi, mii->widget);
+            break;
+    }
+}
+
 void systray_add_all_items_to_submenu(menu_info_t* submenu, menu_info_item_t* item)
 {
     GHashTableIter iter;
