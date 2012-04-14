@@ -32,11 +32,19 @@ void ui_load()
 
     GError* error = NULL;
 
+    // GLADE_FILE is set in src/Makefile.am
     const char* filename = GLADE_FILE;
 
 #ifdef DEBUG
-    if(!g_file_test(filename, G_FILE_TEST_EXISTS))
-        filename = g_strdup_printf("src/pasystray.glade");
+    /* try to load ui in current dir first */
+    char* local_file = "pasystray.glade";
+    if(g_file_test(local_file, G_FILE_TEST_EXISTS))
+        filename = local_file;
+    local_file = "src/pasystray.glade";
+    if(g_file_test(local_file, G_FILE_TEST_EXISTS))
+        filename = local_file;
+
+    g_message("using UI file: %s", filename);
 #endif
 
     guint ret = gtk_builder_add_from_file(builder, filename, &error);
