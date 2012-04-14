@@ -8,4 +8,5 @@ allow manual adding of servers
 module-device-manager autoload
 
 settings
+libindicator support
 gettext and translations
