@@ -127,6 +127,18 @@ void menu_info_item_init(menu_info_item_t* mii)
     mii->menu_info = NULL;
     mii->submenu = NULL;
     mii->context = NULL;
+    mii->address = NULL;
+}
+
+void menu_info_item_destroy(menu_info_item_t* mii)
+{
+    g_free(mii->name);
+    g_free(mii->desc);
+    g_free(mii->volume);
+    g_free(mii->notify);
+    g_free(mii->icon);
+    g_free(mii->address);
+    g_free(mii);
 }
 
 const char* menu_info_type_name(menu_type_t type)
@@ -144,7 +156,7 @@ const char* menu_info_type_name(menu_type_t type)
 
 void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
         const char* desc, const pa_cvolume* vol, int mute, char* tooltip,
-        const char* icon)
+        const char* icon, const char* address)
 {
     menu_info_item_t* mii;
 
@@ -154,7 +166,7 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
         mii = menu_info_item_get(mi, index);
 
    if(mii == NULL)
-       return menu_info_item_add(mi, index, name, desc, vol, mute, tooltip, icon);
+       return menu_info_item_add(mi, index, name, desc, vol, mute, tooltip, icon, address);
 
 #ifdef DEBUG
     g_message("[menu_info] updating %s %u %s",
@@ -168,6 +180,8 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     g_free(mii->volume);
     mii->volume = g_memdup(vol, sizeof(pa_cvolume));
     mii->mute = mute;
+    g_free(mii->address);
+    mii->address = g_strdup(address);
 
     switch(mi->type)
     {
@@ -219,7 +233,8 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
 }
 
 void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
-        const char* desc, const pa_cvolume* vol, int mute, char* tooltip, const char* icon)
+        const char* desc, const pa_cvolume* vol, int mute, char* tooltip,
+        const char* icon, const char* address)
 {
     menu_infos_t* mis = mi->menu_infos;
     menu_info_item_t* item = g_new(menu_info_item_t, 1);
@@ -236,6 +251,7 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
     item->volume = g_memdup(vol, sizeof(pa_cvolume));
     item->mute = mute;
     item->icon = g_strdup(icon);
+    item->address = g_strdup(address);
 
     switch(item->menu_info->type)
     {
@@ -344,7 +360,7 @@ void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
         menu_info_item_t* mii)
 {
 #ifdef DEBUG
-    g_message("[systray] button-presss-event mod:%s button:%i",
+    g_message("[systray] button-press-event mod:%s button:%i",
             (event->state & GDK_CONTROL_MASK) ? "ctrl" : "", event->button);
 #endif
 
@@ -503,13 +519,4 @@ void menu_info_item_remove_by_name(menu_info_t* mi, const char* name)
     systray_remove_item(mii);
 
     g_hash_table_foreach_remove(mi->items, name_equal, mii->name);
-}
-
-void menu_info_item_destroy(menu_info_item_t* mii)
-{
-    g_free(mii->name);
-    g_free(mii->volume);
-    g_free(mii->notify);
-    g_free(mii->icon);
-    g_free(mii);
 }

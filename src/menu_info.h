@@ -62,6 +62,7 @@ struct menu_info_item_t_ {
     int index;
     char* name;
     char* desc;
+    char* address;
     pa_cvolume* volume;
     notify_handle_t notify;
     int mute;
@@ -78,17 +79,18 @@ void menu_infos_destroy(menu_infos_t* mi);
 
 menu_info_t* menu_info_create(menu_infos_t* mis, menu_type_t type);
 void menu_info_init(menu_infos_t* mis, menu_info_t* mi, menu_type_t type);
-
-void menu_info_item_init(menu_info_item_t* mii);
 void menu_info_destroy(menu_info_t* mi);
 
+void menu_info_item_init(menu_info_item_t* mii);
+void menu_info_item_destroy(menu_info_item_t* mii);
+
 const char* menu_info_type_name(menu_type_t type);
-void menu_info_item_add(menu_info_t* mi, uint32_t index,
-        const char* name, const char* desc, const pa_cvolume* vol, int mute,
-        char* tooltip, const char* icon);
+void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
+        const char* desc, const pa_cvolume* vol, int mute, char* tooltip,
+        const char* icon, const char* address);
 void menu_info_item_update(menu_info_t* mi, uint32_t index,
         const char* name, const char* desc, const pa_cvolume* vol, int mute,
-        char* tooltip, const char* icon);
+        char* tooltip, const char* icon, const char* address);
 GtkMenuShell* menu_info_item_context_menu(menu_info_item_t* mii);
 void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name,
         const char* desc, char* tooltip, const char* icon);
@@ -107,6 +109,5 @@ void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event,
 
 void menu_info_item_remove(menu_info_t* mi, uint32_t index);
 void menu_info_item_remove_by_name(menu_info_t* mi, const char* name);
-void menu_info_item_destroy(menu_info_item_t* mii);
 
 #endif /* PASYSTRAY_MENU_INFO_H */

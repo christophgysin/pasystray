@@ -25,6 +25,7 @@
 #include <pulse/ext-device-manager.h>
 
 #include "notify.h"
+#include "x11-property.h"
 
 extern pa_context* context;
 
@@ -35,7 +36,10 @@ void pulseaudio_set_default(menu_info_item_t* mii)
     switch(mii->menu_info->type)
     {
         case MENU_SERVER:
-            /* TODO: set X property PULSE_SERVER to hostname */
+            if(mii->index == 0)
+                x11_property_del("PULSE_SERVER");
+            else
+                x11_property_set("PULSE_SERVER", mii->address);
             break;
         case MENU_SINK:
             o = pa_context_set_default_sink(context, mii->name,

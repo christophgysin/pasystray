@@ -3,7 +3,6 @@ fix pulseaudio reconnect
 placement of device rename dialog close to systray
 
 FEATURES:
-switch servers by setting X properties
 allow manual adding of servers
 module-device-manager autoload
 

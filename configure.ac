@@ -71,6 +71,24 @@ AC_SUBST(HAVE_NOTIFY)
 AM_CONDITIONAL([HAVE_NOTIFY], [test "x$HAVE_NOTIFY" = x1])
 AS_IF([test "x$HAVE_NOTIFY" = x1], AC_DEFINE([HAVE_NOTIFY], 1,
       [Have libnotify?]))
+
+### optional Xlib support ######################################################
+AC_ARG_ENABLE([x11],
+    AS_HELP_STRING([--disable-x11], [Disable optional X11 support]))
+
+AS_IF([test "x$enable_x11" != xno],
+    [PKG_CHECK_MODULES(X11, [ x11 >= 1.4 ], HAVE_X11=1,
+                       HAVE_X11=0)], HAVE_X11=0)
+
+AS_IF([test "x$enable_x11" = xyes && test "x$HAVE_X11" = x0],
+    [AC_MSG_ERROR([*** libX11 not found])])
+
+AC_SUBST(X11_CFLAGS)
+AC_SUBST(X11_LIBS)
+AC_SUBST(HAVE_X11)
+AM_CONDITIONAL([HAVE_X11], [test "x$HAVE_X11" = x1])
+AS_IF([test "x$HAVE_X11" = x1], AC_DEFINE([HAVE_X11], 1,
+      [Have X11?]))
 ################################################################################
 
 if test "x$GCC" = xyes -o "x$CLANG" = xyes; then

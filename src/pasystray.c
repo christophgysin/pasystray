@@ -21,6 +21,7 @@
 
 #include <gtk/gtk.h>
 
+#include "pasystray.h"
 #include "options.h"
 #include "notify.h"
 #include "ui.h"
@@ -28,36 +29,48 @@
 #include "systray.h"
 #include "pulseaudio.h"
 #include "avahi.h"
+#include "x11-property.h"
 
 GMainLoop* loop;
+menu_infos_t* mis;
 
 int main(int argc, char *argv[])
 {
     parse_options(argc, argv);
-
     gtk_init(&argc, &argv);
+
+    init();
+    g_main_loop_run(loop);
+    destroy();
+
+    return 0;
+}
+
+void init()
+{
     loop = g_main_loop_new(NULL, FALSE);
 
     avahi_init(loop);
     notify_initialize();
+    x11_property_init();
 
     ui_load();
 
-    menu_infos_t* mis = menu_infos_create();
+    mis = menu_infos_create();
     systray_create(mis);
 
     pulseaudio_init(mis);
     avahi_start(mis);
-
-    g_main_loop_run(loop);
-
-    pulseaudio_destroy();
-    avahi_destroy();
-    menu_infos_destroy(mis);
-    return 0;
 }
 
 void quit()
 {
     g_main_loop_quit(loop);
+}
+
+void destroy()
+{
+    pulseaudio_destroy();
+    avahi_destroy();
+    menu_infos_destroy(mis);
 }
