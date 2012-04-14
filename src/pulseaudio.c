@@ -47,6 +47,7 @@ void pulseaudio_destroy()
 {
     pulseaudio_quit(NULL);
 }
+
 void pulseaudio_prepare_context()
 {
     pa_mainloop_api* mainloop_api = pa_glib_mainloop_get_api(m);
