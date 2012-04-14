@@ -45,9 +45,8 @@ void pulseaudio_init(menu_infos_t* mis)
 
 void pulseaudio_destroy()
 {
-    // TODO: teardown and cleanup pulseaudio
+    pulseaudio_quit(NULL);
 }
-
 void pulseaudio_prepare_context()
 {
     pa_mainloop_api* mainloop_api = pa_glib_mainloop_get_api(m);
