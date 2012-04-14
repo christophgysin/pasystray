@@ -141,7 +141,7 @@ static void avahi_browse_callback(AvahiServiceBrowser* b, AvahiIfIndex interface
 
         case AVAHI_BROWSER_NEW:
 #ifdef DEBUG
-            g_message("[avahi] NEW: service '%s' of type '%s' in domain '%s'",
+            g_message("[avahi] new service '%s' of type '%s' in domain '%s'",
                     name, type, domain);
 #endif
 
@@ -159,10 +159,6 @@ static void avahi_browse_callback(AvahiServiceBrowser* b, AvahiIfIndex interface
             break;
 
         case AVAHI_BROWSER_REMOVE:
-#ifdef DEBUG
-            g_message("[avahi] REMOVE: service '%s' of type '%s' in domain '%s'",
-                    name, type, domain);
-#endif
             avahi_server_remove(&mis->menu_info[MENU_SERVER], name);
             break;
 
@@ -252,6 +248,9 @@ void avahi_server_add(menu_info_t* mi, const char* name, const AvahiAddress* add
 
 void avahi_server_remove(menu_info_t* mi, const char* name)
 {
+#ifdef DEBUG
+    g_message("[avahi] remove server '%s'", name);
+#endif
     menu_info_item_remove_by_name(mi, name);
 }
 
