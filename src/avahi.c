@@ -239,6 +239,11 @@ void avahi_server_add(menu_info_t* mi, const char* name, const AvahiAddress* add
             host_port,
             text);
 
+    // remove any existing entry detected from X property
+    menu_info_item_t* mii = menu_info_item_get_by_desc(mi, host_port);
+    if(mii)
+        menu_info_item_remove_by_name(mi, mii->name);
+
     menu_info_item_update(mi, -1, name, name, NULL, 0, tooltip, NULL, host_port);
 
     g_free(tooltip);
@@ -253,7 +258,5 @@ void avahi_server_remove(menu_info_t* mi, const char* name)
 #endif
     menu_info_item_remove_by_name(mi, name);
 }
-
-
 
 #endif

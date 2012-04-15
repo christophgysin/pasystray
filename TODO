@@ -1,5 +1,4 @@
 BUGS:
-select correct default server on startup
 fix pulseaudio reconnect
 placement of device rename dialog close to systray
 

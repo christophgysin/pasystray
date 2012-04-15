@@ -28,7 +28,7 @@
 void x11_property_init(){}
 void x11_property_set(const char* key, const char* value){}
 void x11_property_del(const char* key){}
-//char* x11_property_get(const char* key){ return NULL; }
+char* x11_property_get(const char* key){ return NULL; }
 
 #else
 
@@ -67,7 +67,6 @@ void x11_property_del(const char* key)
     XDeleteProperty(display, window, atom);
 }
 
-/*
 char* x11_property_get(const char* key)
 {
     Atom property = XInternAtom(display, key, False);
@@ -89,12 +88,15 @@ char* x11_property_get(const char* key)
 
     value = g_memdup(prop, nitems);
 
+#ifdef DEBUG
+    g_message("[x11-property] got '%s' = '%s'", key, value);
+#endif
+
 finish:
     if(prop)
         XFree(prop);
 
     return value;
 }
-*/
 
 #endif

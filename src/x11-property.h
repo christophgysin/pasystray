@@ -25,6 +25,6 @@
 void x11_property_init();
 void x11_property_set(const char* key, const char* value);
 void x11_property_del(const char* key);
-//char* x11_property_get(const char* key);
+char* x11_property_get(const char* key);
 
 #endif /* PASYSTRAY_X11_PROPERTY_H */

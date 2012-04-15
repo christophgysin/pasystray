@@ -25,6 +25,7 @@
 #include "systray.h"
 #include "pulseaudio_action.h"
 #include "ui.h"
+#include "x11-property.h"
 
 menu_infos_t* menu_infos_create()
 {
@@ -36,6 +37,18 @@ menu_infos_t* menu_infos_create()
 
     return mis;
 }
+
+void menu_infos_init(menu_infos_t* mis)
+{
+    menu_info_t* servers = &mis->menu_info[MENU_SERVER];
+    servers->default_name = x11_property_get("PULSE_SERVER");
+
+    if(servers->default_name)
+        menu_info_item_update(servers, -1, servers->default_name,
+                servers->default_name, NULL, 0, "detected in X properties",
+                NULL, servers->default_name);
+}
+
 
 void menu_infos_clear(menu_infos_t* mis)
 {
@@ -271,6 +284,10 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
     {
         case MENU_SERVER:
             item->widget = systray_add_radio_item(mi, desc, tooltip);
+            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget),
+                    (item->address == mi->default_name) ||
+                    (item->address && mi->default_name &&
+                     g_str_equal(mi->default_name, item->address)));
             break;
         case MENU_SINK:
             item->context = menu_info_item_context_menu(item);
@@ -354,6 +371,18 @@ gboolean name_equal(gpointer key, gpointer value, gpointer user_data)
 menu_info_item_t* menu_info_item_get_by_name(menu_info_t* mi, const char* name)
 {
     return g_hash_table_find(mi->items, name_equal, (gpointer)name);
+}
+
+gboolean desc_equal(gpointer key, gpointer value, gpointer user_data)
+{
+    menu_info_item_t* mii = value;
+    const char* desc = user_data;
+    return g_str_equal(mii->desc, desc);
+}
+
+menu_info_item_t* menu_info_item_get_by_desc(menu_info_t* mi, const char* desc)
+{
+    return g_hash_table_find(mi->items, desc_equal, (gpointer)desc);
 }
 
 void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,

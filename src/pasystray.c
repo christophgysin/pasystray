@@ -58,6 +58,7 @@ void init()
 
     mis = menu_infos_create();
     systray_create(mis);
+    menu_infos_init(mis);
 
     pulseaudio_init(mis);
     avahi_start(mis);
