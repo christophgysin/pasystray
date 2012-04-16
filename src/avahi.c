@@ -23,6 +23,8 @@
 
 #ifndef HAVE_AVAHI
 
+#include "avahi.h"
+
 void avahi_init(GMainLoop* loop){}
 void avahi_start(){}
 void avahi_destroy(){}
