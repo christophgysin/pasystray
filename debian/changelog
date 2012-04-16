@@ -1,3 +1,9 @@
+pasystray (0.2.0-1) oneiric; urgency=low
+
+  * update to 0.2.0, add avahi/notify dependency
+
+ -- Christoph Gysin <christoph.gysin@gmail.com>  Mon, 17 Apr 2012 00:27:08 +0200
+
 pasystray (0.1.1-5) oneiric; urgency=low
 
   * fix runtime dependencies (libgtk-3-0, pulseaudio)
