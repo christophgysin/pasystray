@@ -1,3 +1,9 @@
+pasystray (0.2.1-1) oneiric; urgency=low
+
+  * update to 0.2.1, fix tarball contents
+
+ -- Christoph Gysin <christoph.gysin@gmail.com>  Tue, 17 Apr 2012 10:45:28 +0200
+
 pasystray (0.2.0-1) oneiric; urgency=low
 
   * update to 0.2.0, add avahi/notify dependency
