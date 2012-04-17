@@ -26,7 +26,7 @@ pasystray_SOURCES=pasystray.c menu_info.c systray.c pulseaudio.c \
 	pulseaudio_info.c pulseaudio_action.c options.c notify.c ui.c avahi.c \
 	x11-property.c \
 	menu_info.h systray.h pulseaudio.h pulseaudio_info.h pulseaudio_action.h \
-	options.h notify.h ui.h avahi.h x11-property.h
+	options.h notify.h ui.h avahi.h x11-property.h pasystray.h
 
 pasystray_LDADD=$(AM_LDADD) $(GUILIBS_LIBS) $(PULSEAUDIO_LIBS) \
 				$(NOTIFY_LIBS) $(AVAHI_LIBS) $(X11_LIBS)
