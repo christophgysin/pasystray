@@ -26,7 +26,7 @@
 #include "avahi.h"
 
 void avahi_init(GMainLoop* loop){}
-void avahi_start(){}
+void avahi_start(menu_infos_t* mis){}
 void avahi_destroy(){}
 
 #else
