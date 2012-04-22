@@ -19,3 +19,7 @@ src/config.h.in
 src/config.h
 stamp-h1
 tags
+pkg/arch/*/src
+pkg/arch/*/pkg
+pkg/arch/*/pasystray-*.tar.*
+pkg/arch/*/*.pkg.tar.*
