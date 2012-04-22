@@ -5,7 +5,7 @@
 EAPI=4
 inherit eutils gnome2-utils git-2
 
-DESCRIPTION="PulseAudio notification area (replacement for the padevchooser)"
+DESCRIPTION="PulseAudio system tray (replacement for padevchooser)"
 HOMEPAGE="http://github.com/christophgysin/pasystray"
 EGIT_REPO_URI="git://github.com/christophgysin/${P}"
 
