@@ -16,7 +16,7 @@ IUSE="avahi notify"
 
 RDEPEND=">=media-sound/pulseaudio-1.0[glib,avahi]
     >=net-dns/avahi-0.6
-    >=xxx-yyy/libnotify-0.?
+    >=x11-libs/libnotify-0.7
     x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
     dev-util/pkgconfig"
