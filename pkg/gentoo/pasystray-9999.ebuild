@@ -7,7 +7,7 @@ inherit eutils gnome2-utils git-2
 
 DESCRIPTION="PulseAudio system tray (replacement for padevchooser)"
 HOMEPAGE="http://github.com/christophgysin/pasystray"
-EGIT_REPO_URI="git://github.com/christophgysin/${P}"
+EGIT_REPO_URI="git://github.com/christophgysin/${PN}"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
