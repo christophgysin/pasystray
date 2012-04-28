@@ -317,6 +317,7 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
 
     g_signal_connect(item->widget, "button-press-event",
             G_CALLBACK(menu_info_item_clicked), item);
+    gtk_widget_add_events(item->widget, GDK_SCROLL_MASK);
     g_signal_connect(item->widget, "scroll-event",
             G_CALLBACK(menu_info_item_scrolled), item);
 
