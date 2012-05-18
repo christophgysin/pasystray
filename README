@@ -20,3 +20,7 @@ Pasystray does not (yet) browse the network for available PulseAudio servers.
 To control a different server than the local instance, run pasystray as:
 
 $ PULSE_SERVER=remote_host pasystray
+
+If pasystray icon is not displayed in your Unity system tray, you will have
+to whitelist it. Read this for instructions:
+http://askubuntu.com/questions/30742/how-do-i-access-and-enable-more-icons-to-be-in-the-system-tray
