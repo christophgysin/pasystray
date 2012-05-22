@@ -28,9 +28,9 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 
 ### check for gtk3 ############################################################
-PKG_CHECK_MODULES(GUILIBS, [ gtk+-3.0 ])
-AC_SUBST(GUILIBS_CFLAGS)
-AC_SUBST(GUILIBS_LIBS)
+PKG_CHECK_MODULES(GTK, [ gtk+-3.0 ])
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
 
 ### check for pulseaudio libs #################################################
 PKG_CHECK_MODULES(PULSEAUDIO, [ libpulse >= 1.0 libpulse-mainloop-glib >= 1.0 ])
