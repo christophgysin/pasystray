@@ -27,8 +27,17 @@ AM_INIT_AUTOMAKE([foreign 1.9 -Wall])
 AC_PROG_CC
 AM_PROG_CC_C_O
 
-### check for gtk3 ############################################################
-PKG_CHECK_MODULES(GTK, [ gtk+-3.0 ])
+### check for gtk #############################################################
+AC_ARG_WITH(gtk, AC_HELP_STRING([--with-gtk=2|3], [choose GTK version (default: 3)]),, with_gtk=3)
+AC_MSG_CHECKING([GTK version to use])
+case ${with_gtk} in
+    2) GTK_VERSION=gtk+-2.0;;
+    3) GTK_VERSION=gtk+-3.0;;
+    *) AC_MSG_ERROR([unknown GTK version!]);;
+esac
+AC_MSG_RESULT($GTK_VERSION)
+
+PKG_CHECK_MODULES(GTK, [ $GTK_VERSION ])
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
