@@ -26,6 +26,6 @@ pixmaps_DATA = data/pasystray.png
 desktopdir = $(datadir)/applications
 desktop_DATA = data/pasystray.desktop
 
-EXTRA_DIST = bootstrap.sh README LICENSE $(icons_DATA) $(pixmaps_DATA) $(desktop_DATA)
+EXTRA_DIST = bootstrap.sh README.md LICENSE $(icons_DATA) $(pixmaps_DATA) $(desktop_DATA)
 
 SUBDIRS = src

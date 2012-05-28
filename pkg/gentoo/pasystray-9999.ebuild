@@ -21,7 +21,7 @@ RDEPEND=">=media-sound/pulseaudio-1.0[glib,avahi]
 DEPEND="${RDEPEND}
     dev-util/pkgconfig"
 
-DOCS="AUTHORS README TODO"
+DOCS="AUTHORS README.md TODO"
 
 pkg_preinst() { gnome2_icon_savelist; }
 pkg_postinst() { gnome2_icon_cache_update; }
