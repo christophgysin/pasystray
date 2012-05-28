@@ -29,3 +29,6 @@ desktop_DATA = data/pasystray.desktop
 EXTRA_DIST = bootstrap.sh README.md LICENSE $(icons_DATA) $(pixmaps_DATA) $(desktop_DATA)
 
 SUBDIRS = src
+
+doc:
+	markdown_py README.md > README.html
