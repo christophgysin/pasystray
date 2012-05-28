@@ -1,11 +1,18 @@
+verify all mouse bindings works
+
 BUGS:
 fix pulseaudio reconnect
 placement of device rename dialog close to systray
+crash if avahi not running
 
 FEATURES:
+debug output in release build (--debug)
+popup if can't rename device
 allow manual adding of servers
 module-device-manager autoload
 
-settings
+FUTURE:
+load avahi/notify support at runtime
+settings?
 libindicator support
 gettext and translations
