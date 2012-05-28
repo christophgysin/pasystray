@@ -28,9 +28,9 @@ pasystray_SOURCES=pasystray.c menu_info.c systray.c pulseaudio.c \
 	menu_info.h systray.h pulseaudio.h pulseaudio_info.h pulseaudio_action.h \
 	options.h notify.h ui.h avahi.h x11-property.h pasystray.h
 
-pasystray_LDADD=$(AM_LDADD) $(GUILIBS_LIBS) $(PULSEAUDIO_LIBS) \
+pasystray_LDADD=$(AM_LDADD) $(GTK_LIBS) $(PULSEAUDIO_LIBS) \
 				$(NOTIFY_LIBS) $(AVAHI_LIBS) $(X11_LIBS)
-pasystray_CFLAGS=$(AM_CFLAGS) $(GUILIBS_CFLAGS) $(PULSEAUDIO_CFLAGS) \
+pasystray_CFLAGS=$(AM_CFLAGS) $(GTK_CFLAGS) $(PULSEAUDIO_CFLAGS) \
 				$(NOTIFY_CFLAGS) $(AVAHI_CFLAGS) $(X11_CFLAGS) \
 				-DGLADE_FILE=\"$(gladedir)/pasystray.glade\"
 

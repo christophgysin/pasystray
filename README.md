@@ -23,7 +23,7 @@ To detect remote sinks/sources you need to enable module-zeroconf-discover on
 the local PulseAudio instance and module-zeroconf-publish on the remote side.
 
 To control a different server than the local instance, run pasystray as:
-> $ PULSE_SERVER=remote_host pasystray
+$ PULSE_SERVER=remote_host pasystray
 
 Mouse bindings
 --------------
@@ -43,3 +43,10 @@ over source/sink:
 over playback/record stream:
 * scroll up/down: adjust the volume of repsective stream
 * middle-click: toggle mute
+
+Troubleshooting
+---------------
+
+If pasystray icon is not displayed in your Unity system tray, you will have
+to whitelist it. Read this for instructions:
+http://askubuntu.com/questions/30742/how-do-i-access-and-enable-more-icons-to-be-in-the-system-tray
