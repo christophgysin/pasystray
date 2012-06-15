@@ -63,7 +63,33 @@ void ui_load()
 
 GtkStatusIcon* ui_statusicon()
 {
-    return (GtkStatusIcon*) gtk_builder_get_object(builder, "statusicon");
+    GObject* status_icon = gtk_builder_get_object(builder, "statusicon");
+
+#ifdef DEBUG
+    GError* error = NULL;
+    gchar* exe_path = g_file_read_link("/proc/self/exe", &error);
+    if(error)
+    {
+        g_message("g_file_read_link() failed (%s)", error->message);
+        g_free(exe_path);
+        return GTK_STATUS_ICON(status_icon);
+    }
+
+    gchar* dirname = g_path_get_dirname(exe_path);
+    g_free(exe_path);
+
+    gchar* icon_file = g_build_path("/", dirname, "../data/pasystray.svg", NULL);
+    g_free(dirname);
+
+    if(g_file_test(icon_file, G_FILE_TEST_EXISTS))
+    {
+        gtk_status_icon_set_from_file(GTK_STATUS_ICON(status_icon), icon_file);
+        g_message("using icon: %s", icon_file);
+    }
+    g_free(icon_file);
+#endif
+
+    return GTK_STATUS_ICON(status_icon);
 }
 
 GtkAboutDialog* ui_aboutdialog()
