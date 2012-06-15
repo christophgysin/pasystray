@@ -71,6 +71,7 @@ GtkStatusIcon* ui_statusicon()
     if(error)
     {
         g_message("g_file_read_link() failed (%s)", error->message);
+        g_error_free(error);
         g_free(exe_path);
         return GTK_STATUS_ICON(status_icon);
     }
