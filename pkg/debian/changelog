@@ -1,3 +1,15 @@
+pasystray (0.2.1-3) quantal; urgency=low
+
+  * build for quantal
+
+ -- Christoph Gysin <christoph.gysin@gmail.com>  Mon, 03 Dec 2012 23:35:18 +0200
+
+pasystray (0.2.1-2) precise; urgency=low
+
+  * build for precise
+
+ -- Christoph Gysin <christoph.gysin@gmail.com>  Sat, 12 May 2012 02:38:10 +0200
+
 pasystray (0.2.1-1) oneiric; urgency=low
 
   * update to 0.2.1, fix tarball contents
