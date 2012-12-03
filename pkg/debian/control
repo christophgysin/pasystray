@@ -3,7 +3,7 @@ Section: sound
 Priority: extra
 Maintainer: Christoph Gysin <christoph.gysin@gmail.com>
 Build-Depends: debhelper (>= 8.0.0), autotools-dev, pkg-config, libgtk-3-dev, libpulse-dev, libavahi-client-dev, libavahi-glib-dev, libnotify-dev
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Homepage: http://github.com/christophgysin/pasystray
 Vcs-Git: git://github.com/christophgysin/pasystray.git
 Vcs-Browser: http://github.com/christophgysin/pasystray
