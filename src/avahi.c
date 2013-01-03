@@ -97,6 +97,9 @@ void avahi_init(GMainLoop* loop)
 
 void avahi_start(menu_infos_t* mis)
 {
+    if(!client)
+        return;
+
     sb = avahi_service_browser_new(client, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC,
             AVAHI_SERVICE_PULSEAUDIO_SERVER_TCP, NULL, 0,
             avahi_browse_callback, mis);
