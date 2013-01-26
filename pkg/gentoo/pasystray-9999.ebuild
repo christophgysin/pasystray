@@ -25,6 +25,10 @@ DEPEND="${RDEPEND}
 DOCS="AUTHORS README.md TODO"
 
 src_configure() {
+    aclocal
+    autoconf
+    autoheader
+    automake --add-missing
     econf $(use_enable libnotify notify)
 }
 

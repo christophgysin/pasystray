@@ -7,7 +7,7 @@ inherit gnome2-utils
 
 DESCRIPTION="PulseAudio system tray (replacement for padevchooser)"
 HOMEPAGE="http://github.com/christophgysin/pasystray"
-SRC_URI="mirror://github/christophgysin/${PN}/${P}.tar.bz2"
+SRC_URI="https://github.com/christophgysin/${PN}/archive/${PV}.tar.gz"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
@@ -25,6 +25,10 @@ DEPEND="${RDEPEND}
 DOCS="AUTHORS README.md TODO"
 
 src_configure() {
+    aclocal
+    autoconf
+    autoheader
+    automake --add-missing
     econf $(use_enable libnotify notify)
 }
 
