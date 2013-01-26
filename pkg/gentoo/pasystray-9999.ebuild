@@ -11,7 +11,7 @@ EGIT_REPO_URI="git://github.com/christophgysin/${PN}"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS=""
 IUSE="libnotify"
 
 RDEPEND=">=media-sound/pulseaudio-1.0[glib,avahi]
