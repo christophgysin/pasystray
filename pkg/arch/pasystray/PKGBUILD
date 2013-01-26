@@ -8,14 +8,20 @@ url="https://github.com/christophgysin/pasystray"
 license=('LGPL')
 groups=('multimedia')
 depends=('libpulse' 'gtk3' 'libnotify' 'avahi' 'libx11')
+makedepends=('automake' 'autoconf')
 provides=('pasystray')
 conflicts=('pasystray')
 replaces=('pasystray')
-source=("http://github.com/christophgysin/pasystray/downloads/pasystray-0.2.1.tar.bz2")
-md5sums=('c1c70ec678e13d302d87f583889da87d')
+source=("http://github.com/christophgysin/${pkgname}/archive/${pkgver}.tar.gz")
+md5sums=('07406cfcd3ec439bbec2d7b41c13fdb9')
 
 build() {
     cd $srcdir/$pkgname-$pkgver
+
+    aclocal
+    autoconf
+    autoheader
+    automake --add-missing
     ./configure --prefix=/usr
     make
 }
