@@ -3,7 +3,7 @@
 # $Header$
 
 EAPI=4
-inherit eutils gnome2-utils git-2
+inherit eutils gnome2-utils git-2 autotools
 
 DESCRIPTION="PulseAudio system tray (replacement for padevchooser)"
 HOMEPAGE="http://github.com/christophgysin/pasystray"
@@ -11,7 +11,7 @@ EGIT_REPO_URI="git://github.com/christophgysin/${PN}"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS=""
 IUSE="libnotify"
 
 RDEPEND=">=media-sound/pulseaudio-1.0[glib,avahi]
@@ -24,11 +24,11 @@ DEPEND="${RDEPEND}
 
 DOCS="AUTHORS README.md TODO"
 
+src_prepare() {
+	eautoreconf
+}
+
 src_configure() {
-    aclocal
-    autoconf
-    autoheader
-    automake --add-missing
     econf $(use_enable libnotify notify)
 }
 

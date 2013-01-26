@@ -3,7 +3,7 @@
 # $Header$
 
 EAPI=4
-inherit gnome2-utils
+inherit gnome2-utils autotools
 
 DESCRIPTION="PulseAudio system tray (replacement for padevchooser)"
 HOMEPAGE="http://github.com/christophgysin/pasystray"
@@ -24,11 +24,11 @@ DEPEND="${RDEPEND}
 
 DOCS="AUTHORS README.md TODO"
 
+src_prepare() {
+	eautoreconf
+}
+
 src_configure() {
-    aclocal
-    autoconf
-    autoheader
-    automake --add-missing
     econf $(use_enable libnotify notify)
 }
 
