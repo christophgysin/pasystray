@@ -25,7 +25,7 @@ DEPEND="${RDEPEND}
 DOCS="AUTHORS README.md TODO"
 
 src_prepare() {
-	eautoreconf
+    eautoreconf
 }
 
 src_configure() {
