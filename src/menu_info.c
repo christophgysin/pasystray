@@ -148,7 +148,6 @@ void menu_info_item_destroy(menu_info_item_t* mii)
     g_free(mii->name);
     g_free(mii->desc);
     g_free(mii->volume);
-    g_free(mii->notify);
     g_free(mii->icon);
     g_free(mii->address);
     g_free(mii);
