@@ -136,7 +136,7 @@ void pulseaudio_volume(menu_info_item_t* mii, int inc)
     switch(mii->menu_info->type)
     {
         case MENU_SERVER:
-            /* TODO: set X property PULSE_SERVER to hostname */
+            /* nothing to do here */
             break;
         case MENU_SINK:
             o = pa_context_set_sink_volume_by_index(context, mii->index,
@@ -233,4 +233,3 @@ void pulseaudio_toggle_mute_success_cb(pa_context *c, int success, void *userdat
         g_error("failed to toogle mute for %s \"%s\"!\n",
                 menu_info_type_name(mii->menu_info->type), mii->name);
 }
-
