@@ -18,7 +18,7 @@ optdepends=(
 provides=('pasystray')
 conflicts=('pasystray')
 replaces=('pasystray')
-source=("https://github.com/christophgysin/${pkgname}/archive/${pkgver}.tar.gz")
+source=("https://github.com/christophgysin/${pkgname}/archive/${pkgname}-${pkgver}.tar.gz")
 md5sums=('07406cfcd3ec439bbec2d7b41c13fdb9')
 
 build() {
