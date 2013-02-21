@@ -18,6 +18,7 @@ RDEPEND=">=media-sound/pulseaudio-1.0[glib,avahi]
     >=net-dns/avahi-0.6
     x11-libs/gtk+:3
     x11-libs/libX11
+    x11-themes/gnome-icon-theme
     libnotify? ( >=x11-libs/libnotify-0.7 )"
 DEPEND="${RDEPEND}
     virtual/pkgconfig"

@@ -10,7 +10,7 @@ Vcs-Browser: http://github.com/christophgysin/pasystray
 
 Package: pasystray
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libgtk-3-0, libpulse0, libavahi-client3, libavahi-glib1, libnotify4
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgtk-3-0, libpulse0, libavahi-client3, libavahi-glib1, libnotify4, gnome-icon-theme-full
 Description: PulseAudio system tray - a padevchooser replacement
  PaSystray provides a system tray icon to control the PulseAudio daemon. It
  supports changing the default source/sink, detecting remote source/sinks and
