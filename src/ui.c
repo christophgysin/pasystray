@@ -107,8 +107,6 @@ void ui_update_statusicon(menu_info_item_t* mii)
         icon_name = "stock_volume-mute";
     else if(volume < (PA_VOLUME_NORM / 3))
         icon_name = "stock_volume-min";
-    else if(volume < (PA_VOLUME_NORM / 3))
-        icon_name = "stock_volume-min";
     else if(volume < (PA_VOLUME_NORM / 3 * 2))
         icon_name = "stock_volume-med";
     else
