@@ -243,6 +243,10 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
             systray_set_tooltip(GTK_WIDGET(mii->widget), tooltip);
             break;
     }
+
+    /* if this is the default sink, update status icon acording to volume */
+    if(mi->type == MENU_SINK && mii == menu_info_item_get_by_name(mi, mi->default_name))
+        ui_update_statusicon(mii);
 }
 
 void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
@@ -325,6 +329,10 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
         g_hash_table_insert(mi->items, item->name, item);
     else
         g_hash_table_insert(mi->items, GUINT_TO_POINTER(index), item);
+
+    /* if this is the default sink, update status icon acording to volume */
+    if(mi->type == MENU_SINK && item == menu_info_item_get_by_name(mi, mi->default_name))
+        ui_update_statusicon(item);
 }
 
 GtkMenuShell* menu_info_item_context_menu(menu_info_item_t* mii)

@@ -22,10 +22,12 @@
 #ifndef PASYSTRAY_UI_H
 #define PASYSTRAY_UI_H
 
+#include "menu_info.h"
 #include <gtk/gtk.h>
 
 void ui_load();
 GtkStatusIcon* ui_statusicon();
+void ui_update_statusicon(menu_info_item_t* mii);
 GtkAboutDialog* ui_aboutdialog();
 
 GtkDialog* ui_renamedialog();

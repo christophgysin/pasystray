@@ -22,8 +22,6 @@
 #include "ui.h"
 #include "config.h"
 
-#include <gtk/gtk.h>
-
 static GtkBuilder* builder;
 
 void ui_load()
@@ -91,6 +89,33 @@ GtkStatusIcon* ui_statusicon()
 #endif
 
     return GTK_STATUS_ICON(status_icon);
+}
+
+void ui_update_statusicon(menu_info_item_t* mii)
+{
+#ifdef DEBUG
+    g_message("pulseaudio_update_status_icon(%s)", mii->name);
+#endif
+
+    pa_volume_t volume = pa_cvolume_avg(mii->volume);
+
+    g_message("volume:%u%s", volume, mii->mute ? " muted" : "");
+
+    const char* icon_name = NULL;
+
+    if(volume == PA_VOLUME_MUTED || mii->mute)
+        icon_name = "stock_volume-mute";
+    else if(volume < (PA_VOLUME_NORM / 3))
+        icon_name = "stock_volume-min";
+    else if(volume < (PA_VOLUME_NORM / 3))
+        icon_name = "stock_volume-min";
+    else if(volume < (PA_VOLUME_NORM / 3 * 2))
+        icon_name = "stock_volume-med";
+    else
+        icon_name = "stock_volume-max";
+
+    menu_infos_t* mis = mii->menu_info->menu_infos;
+    gtk_status_icon_set_from_icon_name(mis->icon, icon_name);
 }
 
 GtkAboutDialog* ui_aboutdialog()
