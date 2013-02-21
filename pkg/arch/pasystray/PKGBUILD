@@ -9,6 +9,12 @@ license=('LGPL')
 groups=('multimedia')
 depends=('libpulse' 'gtk3' 'libnotify' 'avahi' 'libx11' 'gnome-icon-theme')
 makedepends=('automake' 'autoconf')
+optdepends=(
+    'paman: Launch PulseAudio manager from tray icon'
+    'pavucontrol: Launch PulseAudio mixer from tray icon'
+    'pavumeter: Launch PulseAudio volume meter from tray icon'
+    'paprefs: Launch PulseAudio preferences from tray icon'
+)
 provides=('pasystray')
 conflicts=('pasystray')
 replaces=('pasystray')
