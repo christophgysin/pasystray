@@ -24,3 +24,5 @@ pkg/arch/*/pkg
 pkg/arch/*/pasystray-*.tar.*
 pkg/arch/*/*.pkg.tar.*
 README.html
+.gdb_history
+.*.swp
