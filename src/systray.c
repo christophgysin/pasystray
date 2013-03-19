@@ -56,8 +56,8 @@ void systray_menu_create(menu_infos_t* mis)
     systray_menu_add_application(mis->menu, "_Manager...", NULL, COMMAND_PAMAN);
     systray_menu_add_application(mis->menu, "Volume _Control...", NULL, COMMAND_PAVUCONTROL);
     systray_menu_add_application(mis->menu, "Volume Meter (_Playback)...", NULL, COMMAND_PAVUMETER);
-    systray_menu_add_application(mis->menu, "_Volume Meter (_Recording)...", NULL, COMMAND_PAVUMETER_REC);
-    systray_menu_add_application(mis->menu, "Configure Local Sound Server...", NULL, COMMAND_PAPREFS);
+    systray_menu_add_application(mis->menu, "Volume Meter (_Recording)...", NULL, COMMAND_PAVUMETER_REC);
+    systray_menu_add_application(mis->menu, "Con_figure Local Sound Server...", NULL, COMMAND_PAPREFS);
 
     /* TODO: settings
     systray_menu_add_separator(mis->menu);
