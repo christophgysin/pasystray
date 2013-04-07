@@ -206,19 +206,19 @@ void pulseaudio_toggle_mute(menu_info_item_t* mii)
             break;
         case MENU_SINK:
             o = pa_context_set_sink_mute_by_index(context, mii->index,
-                    mute, pulseaudio_set_volume_success_cb, mii);
+                    mute, pulseaudio_toggle_mute_success_cb, mii);
             break;
         case MENU_SOURCE:
             o = pa_context_set_source_mute_by_index(context, mii->index,
-                    mute, pulseaudio_set_volume_success_cb, mii);
+                    mute, pulseaudio_toggle_mute_success_cb, mii);
             break;
         case MENU_INPUT:
             o = pa_context_set_sink_input_mute(context, mii->index,
-                    mute, pulseaudio_set_volume_success_cb, mii);
+                    mute, pulseaudio_toggle_mute_success_cb, mii);
             break;
         case MENU_OUTPUT:
             o = pa_context_set_source_output_mute(context, mii->index,
-                    mute, pulseaudio_set_volume_success_cb, mii);
+                    mute, pulseaudio_toggle_mute_success_cb, mii);
             break;
     }
     if(o)
