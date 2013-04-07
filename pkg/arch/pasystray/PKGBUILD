@@ -1,6 +1,6 @@
 # Maintainer: Christoph Gysin <christoph.gysin@gmail.com>
 pkgname=pasystray
-pkgver=0.2.2
+pkgver=0.2.3
 pkgrel=1
 pkgdesc="PulseAudio system tray (a replacement for padevchooser)"
 arch=('i686' 'x86_64')
@@ -19,10 +19,10 @@ provides=('pasystray')
 conflicts=('pasystray')
 replaces=('pasystray')
 source=("https://github.com/christophgysin/${pkgname}/archive/${pkgname}-${pkgver}.tar.gz")
-md5sums=('07406cfcd3ec439bbec2d7b41c13fdb9')
+md5sums=('a4354ad7941c1578c776c0126f257ae2')
 
 build() {
-    cd $srcdir/$pkgname-$pkgver
+    cd $srcdir/$pkgname-$pkgname-$pkgver
 
     aclocal
     autoconf
@@ -33,6 +33,6 @@ build() {
 }
 
 package() {
-    cd $srcdir/$pkgname-$pkgver
+    cd $srcdir/$pkgname-$pkgname-$pkgver
     make DESTDIR="$pkgdir/" install
 }
