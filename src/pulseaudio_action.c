@@ -179,7 +179,7 @@ void pulseaudio_update_volume_notification(menu_info_item_t* mii)
     gchar* msg = g_strdup_printf("%s %s: %s%s",
                 menu_info_type_name(mii->menu_info->type), mii->desc,
                 pa_cvolume_snprint(vol, sizeof(vol), mii->volume),
-                mii->mute ? "" : " [muted]");
+                mii->mute ? " [muted]" : "");
 
     if(!mii->notify)
         mii->notify = notify(msg, NULL, mii->icon);
