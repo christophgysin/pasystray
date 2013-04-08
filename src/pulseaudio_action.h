@@ -37,7 +37,7 @@ void pulseaudio_rename_success_cb(pa_context *c, int success, void *userdata);
 
 void pulseaudio_volume(menu_info_item_t* mii, int inc);
 void pulseaudio_set_volume_success_cb(pa_context *c, int success, void *userdata);
-void pulseaudio_update_volume_notification(menu_info_item_t* mii);
+void pulseaudio_update_volume_notification(menu_info_item_t* mii, int is_muting);
 
 void pulseaudio_toggle_mute(menu_info_item_t* mii);
 void pulseaudio_toggle_mute_success_cb(pa_context *c, int success, void *userdata);

@@ -170,16 +170,16 @@ void pulseaudio_set_volume_success_cb(pa_context *c, int success, void *userdata
         return;
     }
 
-    pulseaudio_update_volume_notification(mii);
+    pulseaudio_update_volume_notification(mii, 0);
 }
 
-void pulseaudio_update_volume_notification(menu_info_item_t* mii)
+void pulseaudio_update_volume_notification(menu_info_item_t* mii, int is_muting)
 {
     char vol[PA_CVOLUME_SNPRINT_MAX];
     gchar* msg = g_strdup_printf("%s %s: %s%s",
                 menu_info_type_name(mii->menu_info->type), mii->desc,
                 pa_cvolume_snprint(vol, sizeof(vol), mii->volume),
-                mii->mute ? "" : " [muted]");
+                (is_muting ^ mii->mute) ? " [muted]" : "");
 
     if(!mii->notify)
         mii->notify = notify(msg, NULL, mii->icon);
@@ -230,6 +230,11 @@ void pulseaudio_toggle_mute_success_cb(pa_context *c, int success, void *userdat
     menu_info_item_t* mii = userdata;
 
     if(!success)
+    {
         g_error("failed to toogle mute for %s \"%s\"!\n",
                 menu_info_type_name(mii->menu_info->type), mii->name);
+        return;
+    }
+
+    pulseaudio_update_volume_notification(mii, 1);
 }
