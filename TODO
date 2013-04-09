@@ -3,9 +3,10 @@ verify all mouse bindings works
 BUGS:
 fix pulseaudio reconnect
 placement of device rename dialog close to systray
-crash if avahi not running
 
 FEATURES:
+libindicator support:
+http://developer.ubuntu.com/api/ubuntu-12.04/c/appindicator/libappindicator-app-indicator.html
 debug output in release build (--debug)
 popup if can't rename device
 allow manual adding of servers
@@ -14,5 +15,4 @@ module-device-manager autoload
 FUTURE:
 load avahi/notify support at runtime
 settings?
-libindicator support
 gettext and translations
