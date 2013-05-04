@@ -19,19 +19,49 @@
 
 gladedir = $(pkgdatadir)
 
-bin_PROGRAMS=pasystray
-glade_DATA=pasystray.glade
+bin_PROGRAMS = pasystray
+glade_DATA = pasystray.glade
 
-pasystray_SOURCES=pasystray.c menu_info.c systray.c pulseaudio.c \
-	pulseaudio_info.c pulseaudio_action.c options.c notify.c ui.c avahi.c \
-	x11-property.c \
-	menu_info.h systray.h pulseaudio.h pulseaudio_info.h pulseaudio_action.h \
-	options.h notify.h ui.h avahi.h x11-property.h pasystray.h
+pasystray_SOURCES = \
+    avahi.c \
+    avahi.h \
+    menu_info.c \
+    menu_info.h \
+    notify.c \
+    notify.h \
+    options.c \
+    options.h \
+    pasystray.c \
+    pasystray.h \
+    pulseaudio.c \
+    pulseaudio.h \
+    pulseaudio_action.c \
+    pulseaudio_action.h \
+    pulseaudio_info.c \
+    pulseaudio_info.h \
+    systray.c \
+    systray.h \
+    ui.c \
+    ui.h \
+    x11-property.c \
+    x11-property.h
 
-pasystray_LDADD=$(AM_LDADD) $(GTK_LIBS) $(PULSEAUDIO_LIBS) \
-				$(NOTIFY_LIBS) $(AVAHI_LIBS) $(X11_LIBS)
-pasystray_CFLAGS=$(AM_CFLAGS) $(GTK_CFLAGS) $(PULSEAUDIO_CFLAGS) \
-				$(NOTIFY_CFLAGS) $(AVAHI_CFLAGS) $(X11_CFLAGS) \
-				-DGLADE_FILE=\"$(gladedir)/pasystray.glade\"
+pasystray_LDADD = \
+    $(AM_LDADD) \
+    $(GTK_LIBS) \
+    $(PULSEAUDIO_LIBS) \
+    $(NOTIFY_LIBS) \
+    $(AVAHI_LIBS) \
+    $(X11_LIBS)
 
-EXTRA_DIST = $(glade_DATA)
+pasystray_CFLAGS = \
+    $(AM_CFLAGS) \
+    $(GTK_CFLAGS) \
+    $(PULSEAUDIO_CFLAGS) \
+    $(NOTIFY_CFLAGS) \
+    $(AVAHI_CFLAGS) \
+    $(X11_CFLAGS) \
+    -DGLADE_FILE=\"$(gladedir)/pasystray.glade\"
+
+EXTRA_DIST = \
+    $(glade_DATA)
