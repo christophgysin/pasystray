@@ -23,6 +23,44 @@
 
 #include "config.h"
 #include "systray.h"
+
+#ifdef HAVE_APPINDICATOR
+
+#include <libappindicator/app-indicator.h>
+
+static void systray_impl_scroll_cb(AppIndicator* appind, gint delta, GdkScrollDirection direction, gpointer userdata)
+{
+    systray_t systray = appind;
+    guint state = 0; // TODO: get modifiers?
+    menu_infos_t* mis = userdata;
+    systray_scroll_cb(systray, state, direction, mis);
+}
+
+systray_t systray_impl_create(menu_infos_t* mis)
+{
+#ifdef DEBUG
+    g_message("creating systray implementation using AppIndicator");
+#endif
+    AppIndicator* appind = app_indicator_new("pasystray", "pasystray", APP_INDICATOR_CATEGORY_HARDWARE);
+    app_indicator_set_status(appind, APP_INDICATOR_STATUS_ACTIVE);
+    app_indicator_set_icon_full(appind, "pasystray", "pasystray");
+    app_indicator_set_menu(appind, GTK_MENU(mis->menu));
+    g_signal_connect(appind, "scroll-event", G_CALLBACK(systray_impl_scroll_cb), mis);
+    return appind;
+}
+
+void systray_impl_set_icon(systray_t systray, const char* icon_name)
+{
+    AppIndicator* appind = systray;
+    app_indicator_set_icon_full(appind, icon_name, icon_name);
+}
+
+void systray_impl_set_tooltip(systray_t systray, const char* markup)
+{
+    // TODO: set tooltip?
+}
+#else
+
 #include "ui.h"
 
 static void systray_impl_scroll_cb(GtkStatusIcon* icon, GdkEventScroll* ev, gpointer userdata)
@@ -91,3 +129,5 @@ void systray_impl_set_tooltip(systray_t systray, const char* markup)
     GtkStatusIcon* icon = systray;
     gtk_status_icon_set_tooltip_markup(icon, markup);
 }
+
+#endif
