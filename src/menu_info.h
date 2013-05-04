@@ -28,6 +28,8 @@
 
 #include "notify.h"
 
+typedef void* systray_t;
+
 typedef enum {
     MENU_SERVER = 0,
     MENU_SINK = 1,
@@ -53,7 +55,7 @@ struct menu_info_t_ {
 };
 
 struct menu_infos_t_ {
-    GtkStatusIcon* icon;
+    systray_t systray;
     GtkMenuShell* menu;
     menu_info_t menu_info[MENU_COUNT];
 };

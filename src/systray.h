@@ -26,6 +26,7 @@
 #include <gtk/gtk.h>
 
 #include "menu_info.h"
+#include "systray_impl.h"
 
 void systray_create(menu_infos_t* mis);
 
@@ -54,7 +55,7 @@ void systray_about_dialog();
 GtkWidget* systray_menu_item_quit();
 
 void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata);
-void systray_scroll_cb(GtkStatusIcon* icon, GdkEventScroll* ev, gpointer userdata);
+void systray_scroll_cb(systray_t* systray, guint state, GdkScrollDirection direction, menu_infos_t* mis);
 void start_application_cb(GtkMenuItem* menuitem, const char* command);
 
 void systray_set_tooltip(GtkWidget* item, const char* tooltip);

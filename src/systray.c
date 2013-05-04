@@ -25,15 +25,12 @@
 #include "config.h"
 #include "pulseaudio_action.h"
 #include "ui.h"
+#include "systray_impl.h"
 
 void systray_create(menu_infos_t* mis)
 {
-    mis->icon = ui_statusicon();
     systray_menu_create(mis);
-    g_signal_connect(mis->icon, "button-press-event", G_CALLBACK(systray_click_cb), mis);
-    g_signal_connect(mis->icon, "scroll-event", G_CALLBACK(systray_scroll_cb), mis);
-    gtk_status_icon_set_tooltip_text(mis->icon, "connecting to server...");
-    gtk_status_icon_set_visible(mis->icon, TRUE);
+    mis->systray = systray_impl_create(mis);
 }
 
 void systray_menu_create(menu_infos_t* mis)
@@ -313,11 +310,12 @@ void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata
     }
 }
 
-void systray_scroll_cb(GtkStatusIcon* icon, GdkEventScroll* ev, gpointer userdata)
+
+void systray_scroll_cb(systray_t* systray, guint state, GdkScrollDirection direction, menu_infos_t* mis)
 {
     int inc = 0;
 
-    switch(ev->direction)
+    switch(direction)
     {
         case GDK_SCROLL_UP:
             inc = 1;
@@ -329,8 +327,7 @@ void systray_scroll_cb(GtkStatusIcon* icon, GdkEventScroll* ev, gpointer userdat
             return;
     }
 
-    menu_infos_t* mis = userdata;
-    menu_info_t* mi = &mis->menu_info[(ev->state & GDK_CONTROL_MASK) ? MENU_SOURCE : MENU_SINK];
+    menu_info_t* mi = &mis->menu_info[(state & GDK_CONTROL_MASK) ? MENU_SOURCE : MENU_SINK];
     menu_info_item_t* mii = menu_info_item_get_by_name(mi, mi->default_name);
 
     if(mii)

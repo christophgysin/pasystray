@@ -21,6 +21,7 @@
 
 #include "ui.h"
 #include "config.h"
+#include "systray_impl.h"
 
 static GtkBuilder* builder;
 
@@ -59,42 +60,10 @@ void ui_load()
     gtk_about_dialog_set_website_label(ui_aboutdialog(), PACKAGE_URL);
 }
 
-GtkStatusIcon* ui_statusicon()
-{
-    GObject* status_icon = gtk_builder_get_object(builder, "statusicon");
-
-#ifdef DEBUG
-    GError* error = NULL;
-    gchar* exe_path = g_file_read_link("/proc/self/exe", &error);
-    if(error)
-    {
-        g_message("g_file_read_link() failed (%s)", error->message);
-        g_error_free(error);
-        g_free(exe_path);
-        return GTK_STATUS_ICON(status_icon);
-    }
-
-    gchar* dirname = g_path_get_dirname(exe_path);
-    g_free(exe_path);
-
-    gchar* icon_file = g_build_path("/", dirname, "../data/pasystray.svg", NULL);
-    g_free(dirname);
-
-    if(g_file_test(icon_file, G_FILE_TEST_EXISTS))
-    {
-        gtk_status_icon_set_from_file(GTK_STATUS_ICON(status_icon), icon_file);
-        g_message("using icon: %s", icon_file);
-    }
-    g_free(icon_file);
-#endif
-
-    return GTK_STATUS_ICON(status_icon);
-}
-
-void ui_update_statusicon(menu_info_item_t* mii)
+void ui_update_systray_icon(menu_info_item_t* mii)
 {
 #ifdef DEBUG
-    g_message("pulseaudio_update_status_icon(%s)", mii->name);
+    g_message("pulseaudio_update_systray_icon(%s)", mii->name);
 #endif
 
     pa_volume_t volume = pa_cvolume_avg(mii->volume);
@@ -113,7 +82,7 @@ void ui_update_statusicon(menu_info_item_t* mii)
         icon_name = "stock_volume-max";
 
     menu_infos_t* mis = mii->menu_info->menu_infos;
-    gtk_status_icon_set_from_icon_name(mis->icon, icon_name);
+    systray_impl_set_icon(mis->systray, icon_name);
 }
 
 GtkAboutDialog* ui_aboutdialog()

@@ -119,8 +119,4 @@
       <action-widget response="-5">okbutton</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkStatusIcon" id="statusicon">
-    <property name="icon_name">pasystray</property>
-    <property name="title" translatable="yes">PulseAudio system tray</property>
-  </object>
 </interface>

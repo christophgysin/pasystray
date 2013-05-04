@@ -22,6 +22,7 @@
 #include "pulseaudio.h"
 #include "pulseaudio_info.h"
 #include "systray.h"
+#include "systray_impl.h"
 #include "notify.h"
 
 #include <pulse/glib-mainloop.h>
@@ -85,7 +86,7 @@ void pulseaudio_context_state_cb(pa_context* c, void* userdata)
             char* escaped = g_markup_escape_text(tooltip, -1);
             char* markup = g_strdup_printf(
                     "<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", escaped);
-            gtk_status_icon_set_tooltip_markup(mis->icon, markup);
+            systray_impl_set_tooltip(mis->systray, markup);
             g_free(escaped);
             g_free(tooltip);
             g_free(markup);

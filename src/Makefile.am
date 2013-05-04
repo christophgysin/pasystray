@@ -41,6 +41,8 @@ pasystray_SOURCES = \
     pulseaudio_info.h \
     systray.c \
     systray.h \
+    systray_impl.c \
+    systray_impl.h \
     ui.c \
     ui.h \
     x11-property.c \

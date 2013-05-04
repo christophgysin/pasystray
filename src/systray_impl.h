@@ -19,18 +19,13 @@
   USA.
 ***/
 
-#ifndef PASYSTRAY_UI_H
-#define PASYSTRAY_UI_H
+#ifndef PASYSTRAY_SYSTRAY_IMPL_H
+#define PASYSTRAY_SYSTRAY_IMPL_H
 
 #include "menu_info.h"
-#include <gtk/gtk.h>
 
-void ui_load();
-void ui_update_systray_icon(menu_info_item_t* mii);
-GtkAboutDialog* ui_aboutdialog();
+systray_t systray_impl_create(menu_infos_t* mis);
+void systray_impl_set_icon(systray_t systray, const char* icon_name);
+void systray_impl_set_tooltip(systray_t systray, const char* markup);
 
-GtkDialog* ui_renamedialog();
-GtkLabel* ui_renamedialog_label();
-GtkEntry* ui_renamedialog_entry();
-
-#endif /* PASYSTRAY_UI_H */
+#endif /* PASYSTRAY_SYSTRAY_IMPL_H */
