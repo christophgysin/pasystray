@@ -54,6 +54,7 @@ pasystray_LDADD = \
     $(PULSEAUDIO_LIBS) \
     $(NOTIFY_LIBS) \
     $(AVAHI_LIBS) \
+    $(APPINDICATOR_LIBS) \
     $(X11_LIBS)
 
 pasystray_CFLAGS = \
@@ -62,6 +63,7 @@ pasystray_CFLAGS = \
     $(PULSEAUDIO_CFLAGS) \
     $(NOTIFY_CFLAGS) \
     $(AVAHI_CFLAGS) \
+    $(APPINDICATOR_CFLAGS) \
     $(X11_CFLAGS) \
     -DGLADE_FILE=\"$(gladedir)/pasystray.glade\"
 

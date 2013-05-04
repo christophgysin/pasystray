@@ -99,6 +99,24 @@ AC_SUBST(HAVE_X11)
 AM_CONDITIONAL([HAVE_X11], [test "x$HAVE_X11" = x1])
 AS_IF([test "x$HAVE_X11" = x1], AC_DEFINE([HAVE_X11], 1,
       [Have X11?]))
+
+### optional libappindicator support ###########################################
+AC_ARG_ENABLE([appindicator],
+    AS_HELP_STRING([--disable-appindicator], [Disable optional appindicator support]))
+
+AS_IF([test "x$enable_appindicator" != xno],
+    [PKG_CHECK_MODULES(APPINDICATOR, [ appindicator3-0.1 >= 12.10.0 ], HAVE_APPINDICATOR=1,
+                       HAVE_APPINDICATOR=0)], HAVE_APPINDICATOR=0)
+
+AS_IF([test "x$enable_appindicator" = xyes && test "x$HAVE_APPINDICATOR" = x0],
+    [AC_MSG_ERROR([*** libappindicator not found])])
+
+AC_SUBST(APPINDICATOR_CFLAGS)
+AC_SUBST(APPINDICATOR_LIBS)
+AC_SUBST(HAVE_APPINDICATOR)
+AM_CONDITIONAL([HAVE_APPINDICATOR], [test "x$HAVE_APPINDICATOR" = x1])
+AS_IF([test "x$HAVE_APPINDICATOR" = x1], AC_DEFINE([HAVE_APPINDICATOR], 1,
+      [Have APPINDICATOR?]))
 ################################################################################
 
 if test "x$GCC" = xyes -o "x$CLANG" = xyes; then
