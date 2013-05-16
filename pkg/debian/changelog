@@ -1,3 +1,9 @@
+pasystray (0.3.0-1) quantal; urgency=low
+
+  * update to 0.3.0
+
+ -- Christoph Gysin <christoph.gysin@gmail.com>  Thu, 16 May 2013 21:22:20 +0100
+
 pasystray (0.2.3-1) quantal; urgency=low
 
   * update to 0.2.3
