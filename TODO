@@ -1,12 +1,11 @@
 verify all mouse bindings works
 
 BUGS:
+mouse bindings, modifiers don't work with appindicator
 fix pulseaudio reconnect
 placement of device rename dialog close to systray
 
 FEATURES:
-libindicator support:
-http://developer.ubuntu.com/api/ubuntu-12.04/c/appindicator/libappindicator-app-indicator.html
 debug output in release build (--debug)
 popup if can't rename device
 allow manual adding of servers

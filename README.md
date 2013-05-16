@@ -50,3 +50,6 @@ Troubleshooting
 If pasystray icon is not displayed in your Unity system tray, you will have
 to whitelist it. Read this for instructions:
 http://askubuntu.com/questions/30742/how-do-i-access-and-enable-more-icons-to-be-in-the-system-tray
+
+For ubuntu 13.04 and above, AppIndicator is mandatory. Unfortunatly, the
+ctrl-click/ctrl-scroll bindings don't work with AppIndicator.
