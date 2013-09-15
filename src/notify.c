@@ -44,7 +44,7 @@ void notify_show(NotifyNotification* n)
     GError* error = NULL;
 
     if(!notify_notification_show(n, &error))
-        g_error("[notify] error trying to show notification: %s: %s (%i)",
+        g_warning("[notify] unable to show notification: %s: %s (%i)",
                 g_quark_to_string(error->domain), error->message,
                 error->code);
 }
