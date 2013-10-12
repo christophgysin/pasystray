@@ -86,7 +86,7 @@ char* x11_property_get(const char* key)
     if(actual_type != XA_STRING)
         goto finish;
 
-    value = g_memdup(prop, nitems);
+    value = g_memdup(prop, nitems + 1);
 
 #ifdef DEBUG
     g_message("[x11-property] got '%s' = '%s'", key, value);
