@@ -269,14 +269,34 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
     item->icon = g_strdup(icon);
     item->address = g_strdup(address);
 
+    menu_type_t submenu_type;
+
+    switch(mi->type)
+    {
+        case MENU_SERVER:
+            submenu_type = 0; // unused
+            break;
+        case MENU_SINK:
+            submenu_type = MENU_INPUT;
+            break;
+        case MENU_SOURCE:
+            submenu_type = MENU_OUTPUT;
+            break;
+        case MENU_INPUT:
+            submenu_type = MENU_SINK;
+            break;
+        case MENU_OUTPUT:
+            submenu_type = MENU_SOURCE;
+            break;
+    }
+
+    menu_info_t* submenu = &mis->menu_info[submenu_type];
+
     switch(item->menu_info->type)
     {
         case MENU_INPUT:
-            item->submenu = menu_info_create(mis, MENU_SINK);
-            item->submenu->parent = item;
-            break;
         case MENU_OUTPUT:
-            item->submenu = menu_info_create(mis, MENU_SOURCE);
+            item->submenu = menu_info_create(mis, submenu_type);
             item->submenu->parent = item;
             break;
         default:
@@ -293,28 +313,18 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
                      g_str_equal(mi->default_name, item->address)));
             break;
         case MENU_SINK:
-            item->context = menu_info_item_context_menu(item);
-            item->widget = systray_add_radio_item(mi, desc, tooltip);
-            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget),
-                    g_str_equal(mi->default_name, item->name));
-            systray_add_item_to_all_submenus(item, &mis->menu_info[MENU_INPUT]);
-            break;
         case MENU_SOURCE:
             item->context = menu_info_item_context_menu(item);
             item->widget = systray_add_radio_item(mi, desc, tooltip);
             gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget),
                     g_str_equal(mi->default_name, item->name));
-            systray_add_item_to_all_submenus(item, &mis->menu_info[MENU_OUTPUT]);
+            systray_add_item_to_all_submenus(item, submenu);
             break;
         case MENU_INPUT:
-            item->widget = systray_menu_add_submenu(mi->menu, item->submenu,
-                    desc, tooltip, icon);
-            systray_add_all_items_to_submenu(&mis->menu_info[MENU_SINK], item);
-            break;
         case MENU_OUTPUT:
             item->widget = systray_menu_add_submenu(mi->menu, item->submenu,
                     desc, tooltip, icon);
-            systray_add_all_items_to_submenu(&mis->menu_info[MENU_SOURCE], item);
+            systray_add_all_items_to_submenu(submenu, item);
             break;
     }
 
