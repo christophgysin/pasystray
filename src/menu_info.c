@@ -166,6 +166,24 @@ const char* menu_info_type_name(menu_type_t type)
     return MENU_NAME[type];
 }
 
+menu_type_t menu_info_submenu_type(menu_type_t menu_type)
+{
+    switch(menu_type)
+    {
+        case MENU_SINK:
+            return MENU_INPUT;
+        case MENU_SOURCE:
+            return MENU_OUTPUT;
+        case MENU_INPUT:
+            return MENU_SINK;
+        case MENU_OUTPUT:
+            return MENU_SOURCE;
+        default:
+            break;
+    }
+    return -1;
+}
+
 void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
         const char* desc, const pa_cvolume* vol, int mute, char* tooltip,
         const char* icon, const char* address)
@@ -269,27 +287,7 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
     item->icon = g_strdup(icon);
     item->address = g_strdup(address);
 
-    menu_type_t submenu_type;
-
-    switch(mi->type)
-    {
-        case MENU_SERVER:
-            submenu_type = 0; // unused
-            break;
-        case MENU_SINK:
-            submenu_type = MENU_INPUT;
-            break;
-        case MENU_SOURCE:
-            submenu_type = MENU_OUTPUT;
-            break;
-        case MENU_INPUT:
-            submenu_type = MENU_SINK;
-            break;
-        case MENU_OUTPUT:
-            submenu_type = MENU_SOURCE;
-            break;
-    }
-
+    menu_type_t submenu_type = menu_info_submenu_type(mi->type);
     menu_info_t* submenu = &mis->menu_info[submenu_type];
 
     switch(item->menu_info->type)
