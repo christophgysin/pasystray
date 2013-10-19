@@ -80,7 +80,7 @@ void systray_rootmenu_add_submenu(menu_infos_t* mis, menu_type_t type, const cha
     menu_info_t* mi = &mis->menu_info[type];
 
     systray_menu_add_submenu(menu, mi, name, NULL, icon);
-    systray_menu_add_item(mi->menu, "none", NULL, false);
+    systray_menu_add_item(mi->menu, "none", NULL, FALSE);
 }
 
 GtkWidget* systray_menu_add_submenu(GtkMenuShell* menu, menu_info_t* mi, const char* name, const char* tooltip, const char* icon)
@@ -131,7 +131,7 @@ void systray_remove_menu_item(menu_info_t* mi, GtkWidget* item)
     /* insert "none" placeholder label for empty menus */
     if(!mi->parent)
         if(g_hash_table_size(mi->items) <= 1)
-            systray_menu_add_item(mi->menu, "none", NULL, false);
+            systray_menu_add_item(mi->menu, "none", NULL, FALSE);
 }
 
 GtkWidget* systray_add_radio_item(menu_info_t* mi, const char* desc, const char* tooltip)
@@ -170,7 +170,7 @@ void systray_remove_radio_item(menu_info_t* mi, GtkWidget* item)
         mi->group = NULL;
 }
 
-GtkWidget* systray_menu_add_item(GtkMenuShell* menu, const char* name, const char* icon, bool sensitive)
+GtkWidget* systray_menu_add_item(GtkMenuShell* menu, const char* name, const char* icon, gboolean sensitive)
 {
     GtkWidget* item = systray_add_menu_item(menu, name, NULL, icon);
     gtk_widget_set_sensitive(item, sensitive);
