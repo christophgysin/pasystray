@@ -1,6 +1,7 @@
 # Maintainer: Christoph Gysin <christoph.gysin@gmail.com>
-pkgname=pasystray-git
-pkgver=20130221
+_pkgname=pasystray
+pkgname=${_pkgname}-git
+pkgver=1
 pkgrel=1
 pkgdesc="PulseAudio system tray (a replacement for padevchooser)"
 arch=('i686' 'x86_64')
@@ -20,11 +21,18 @@ conflicts=('pasystray')
 replaces=('pasystray')
 backup=()
 options=()
+source=(git+https://github.com/christophgysin/pasystray.git)
 noextract=()
-md5sums=()
+md5sums=('SKIP')
 
 _gitroot=git://github.com/christophgysin/${pkgname%-git}.git
 _gitname=${pkgname%-git}
+
+pkgver() {
+    cd $_pkgname
+    local ver="$(git describe --long)"
+    printf "%s" "${ver//-/.}"
+}
 
 build() {
     cd "$srcdir"
