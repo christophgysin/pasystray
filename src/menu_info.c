@@ -46,7 +46,7 @@ void menu_infos_init(menu_infos_t* mis)
     if(servers->default_name)
         menu_info_item_update(servers, -1, servers->default_name,
                 servers->default_name, NULL, 0, "detected in X properties",
-                NULL, servers->default_name);
+                NULL, servers->default_name, -1);
 }
 
 
@@ -186,7 +186,7 @@ menu_type_t menu_info_submenu_type(menu_type_t menu_type)
 
 void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
         const char* desc, const pa_cvolume* vol, int mute, char* tooltip,
-        const char* icon, const char* address)
+        const char* icon, const char* address, uint32_t target)
 {
     menu_info_item_t* item;
 
@@ -196,11 +196,11 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
         item = menu_info_item_get(mi, index);
 
    if(item == NULL)
-       return menu_info_item_add(mi, index, name, desc, vol, mute, tooltip, icon, address);
+       return menu_info_item_add(mi, index, name, desc, vol, mute, tooltip, icon, address, target);
 
 #ifdef DEBUG
-    g_message("[menu_info] updating %s %u %s",
-            menu_info_type_name(item->menu_info->type), index, desc);
+    g_message("[menu_info] updating %s %u %s (target: %d)",
+            menu_info_type_name(item->menu_info->type), index, desc, (int)target);
 #endif
 
     g_free(item->name);
@@ -210,6 +210,7 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     g_free(item->volume);
     item->volume = g_memdup(vol, sizeof(pa_cvolume));
     item->mute = mute;
+    item->target = target;
     g_free(item->address);
     item->address = g_strdup(address);
 
@@ -268,7 +269,7 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
 
 void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
         const char* desc, const pa_cvolume* vol, int mute, char* tooltip,
-        const char* icon, const char* address)
+        const char* icon, const char* address, uint32_t target)
 {
     menu_infos_t* mis = mi->menu_infos;
     menu_info_item_t* item = g_new(menu_info_item_t, 1);
@@ -276,13 +277,15 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
     item->menu_info = mi;
 
 #ifdef DEBUG
-    g_message("[menu_info] adding %s %u %p", menu_info_type_name(mi->type), index, item);
+    g_message("[menu_info] adding %s %u %s (target: %d)",
+            menu_info_type_name(mi->type), index, desc, (int)target);
 #endif
 
     item->index = index;
     item->name = g_strdup(name);
     item->desc = g_strdup(desc);
     item->volume = g_memdup(vol, sizeof(pa_cvolume));
+    item->target = target;
     item->mute = mute;
     item->icon = g_strdup(icon);
     item->address = g_strdup(address);

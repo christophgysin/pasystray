@@ -68,6 +68,7 @@ struct menu_info_item_t_ {
     pa_cvolume* volume;
     notify_handle_t notify;
     int mute;
+    uint32_t target;
     char* icon;
     GtkWidget* widget;
     menu_info_t* menu_info;
@@ -91,10 +92,10 @@ const char* menu_info_type_name(menu_type_t type);
 menu_type_t menu_info_submenu_type(menu_type_t menu_type);
 void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
         const char* desc, const pa_cvolume* vol, int mute, char* tooltip,
-        const char* icon, const char* address);
+        const char* icon, const char* address, uint32_t target);
 void menu_info_item_update(menu_info_t* mi, uint32_t index,
         const char* name, const char* desc, const pa_cvolume* vol, int mute,
-        char* tooltip, const char* icon, const char* address);
+        char* tooltip, const char* icon, const char* address, uint32_t target);
 GtkMenuShell* menu_info_item_context_menu(menu_info_item_t* mii);
 void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name,
         const char* desc, char* tooltip, const char* icon);

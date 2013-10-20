@@ -283,7 +283,7 @@ void pulseaudio_server_add(const pa_server_info* i, void* userdata, gboolean is_
 {
     menu_info_t* mi = userdata;
     char* tooltip = server_info_str(i);
-    menu_info_item_update(mi, 0, "localhost", i->host_name, NULL, 0, tooltip, NULL, NULL);
+    menu_info_item_update(mi, 0, "localhost", i->host_name, NULL, 0, tooltip, NULL, NULL, -1);
     g_free(tooltip);
 
     /* set default sink/source */
@@ -339,7 +339,7 @@ void pulseaudio_sink_add(const pa_sink_info* i, int is_last, void* userdata, gbo
     menu_info_t* mi = userdata;
     char* tooltip = sink_info_str(i);
     menu_info_item_update(mi, i->index, i->name, i->description, &i->volume,
-            i->mute, tooltip, NULL, NULL);
+            i->mute, tooltip, NULL, NULL, -1);
     g_free(tooltip);
 }
 
@@ -385,7 +385,7 @@ void pulseaudio_source_add(const pa_source_info* i, int is_last, void* userdata,
     menu_info_t* mi = userdata;
     char* tooltip = source_info_str(i);
     menu_info_item_update(mi, i->index, i->name, i->description, &i->volume,
-            i->mute, tooltip, NULL, NULL);
+            i->mute, tooltip, NULL, NULL, -1);
     g_free(tooltip);
 }
 
@@ -426,7 +426,7 @@ void pulseaudio_sink_input_add(const pa_sink_input_info* i, int is_last, void* u
     menu_info_t* mi = userdata;
     char* tooltip = input_info_str(i);
     menu_info_item_update(mi, i->index, NULL, app_name ? app_name : i->name,
-            &i->volume, i->mute, tooltip, app_icon, NULL);
+            &i->volume, i->mute, tooltip, app_icon, NULL, i->sink);
     g_free(tooltip);
 }
 
@@ -467,7 +467,7 @@ void pulseaudio_source_output_add(const pa_source_output_info* i, int is_last, v
     menu_info_t* mi = userdata;
     char* tooltip = output_info_str(i);
     menu_info_item_update(mi, i->index, NULL, app_name ? app_name : i->name,
-            &i->volume, i->mute, tooltip, app_icon, NULL);
+            &i->volume, i->mute, tooltip, app_icon, NULL, i->source);
     g_free(tooltip);
 }
 

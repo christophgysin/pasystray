@@ -249,7 +249,7 @@ void avahi_server_add(menu_info_t* mi, const char* name, const AvahiAddress* add
     if(mii)
         menu_info_item_remove_by_name(mi, mii->name);
 
-    menu_info_item_update(mi, -1, name, name, NULL, 0, tooltip, NULL, host_port);
+    menu_info_item_update(mi, -1, name, name, NULL, 0, tooltip, NULL, host_port, -1);
 
     g_free(tooltip);
     avahi_free(text);
