@@ -61,7 +61,7 @@ struct menu_infos_t_ {
 };
 
 struct menu_info_item_t_ {
-    int index;
+    uint32_t index;
     char* name;
     char* desc;
     char* address;
