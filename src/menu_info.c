@@ -375,6 +375,27 @@ void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name,
             G_CALLBACK(menu_info_subitem_clicked), subitem);
 }
 
+void menu_info_subitem_update(menu_info_t* mi, uint32_t index, const char* name,
+        const char* desc, char* tooltip, const char* icon)
+{
+    menu_info_item_t* item = menu_info_item_get(mi, index);
+
+   if(item == NULL)
+       g_error("[menu_info] subitem not found!");
+
+    gboolean active = mi->parent->target == index;
+
+#ifdef DEBUG
+        g_message("[menu_info] updating subitem %s %u '%s' %s", menu_info_type_name(mi->type),
+                index, desc, active ? " (active)" : "");
+#endif
+
+    if(!g_str_equal(item->desc, desc))
+        gtk_menu_item_set_label(GTK_MENU_ITEM(item->widget), desc);
+    if(active)
+        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget), TRUE);
+}
+
 menu_info_item_t* menu_info_item_get(menu_info_t* mi, uint32_t index)
 {
     return g_hash_table_lookup(mi->items, GUINT_TO_POINTER(index));

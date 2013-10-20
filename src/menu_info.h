@@ -99,6 +99,8 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index,
 GtkMenuShell* menu_info_item_context_menu(menu_info_item_t* mii);
 void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name,
         const char* desc, char* tooltip, const char* icon);
+void menu_info_subitem_update(menu_info_t* mi, uint32_t index, const char* name,
+        const char* desc, char* tooltip, const char* icon);
 menu_info_item_t* menu_info_item_get(menu_info_t* mi, uint32_t index);
 menu_info_item_t* menu_info_item_get_by_name(menu_info_t* mi, const char* name);
 menu_info_item_t* menu_info_item_get_by_desc(menu_info_t* mi, const char* desc);
