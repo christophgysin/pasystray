@@ -214,51 +214,25 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     g_free(item->address);
     item->address = g_strdup(address);
 
+    menu_type_t submenu_type = menu_info_submenu_type(mi->type);
+    menu_info_t* submenu = NULL;
+    if(submenu_type != (menu_type_t)-1)
+        submenu = &mi->menu_infos->menu_info[submenu_type];
+
+    gtk_menu_item_set_label(GTK_MENU_ITEM(item->widget), desc);
+    systray_set_tooltip(GTK_WIDGET(item->widget), tooltip);
+
     switch(mi->type)
     {
         case MENU_SERVER:
+            break;
         case MENU_SINK:
         case MENU_SOURCE:
-            gtk_menu_item_set_label(GTK_MENU_ITEM(item->widget), desc);
-            systray_set_tooltip(GTK_WIDGET(item->widget), tooltip);
-
-            // submenu to update (if any)
-            menu_info_t* submenu = NULL;
-            switch(mi->type)
-            {
-                case MENU_SINK:
-                    submenu = &mi->menu_infos->menu_info[MENU_INPUT];
-                    break;
-                case MENU_SOURCE:
-                    submenu = &mi->menu_infos->menu_info[MENU_OUTPUT];
-                    break;
-                default:
-                    break;
-            }
-
-            // change labels in stream submenus
-            if(submenu)
-            {
-                GHashTableIter iter;
-                gpointer key;
-                menu_info_item_t* item;
-                menu_info_item_t* subitem;
-
-                g_hash_table_iter_init(&iter, submenu->items);
-                while(g_hash_table_iter_next(&iter, &key, (gpointer*)&item))
-                    if((subitem = g_hash_table_lookup(item->submenu->items,
-                                    GUINT_TO_POINTER(item->index))))
-                        if(!g_str_equal(subitem->desc, desc))
-                            gtk_menu_item_set_label(
-                                    GTK_MENU_ITEM(subitem->widget), desc);
-            }
-
+            systray_update_item_in_all_submenus(item, submenu);
             break;
-
-       case MENU_INPUT:
-       case MENU_OUTPUT:
-            gtk_menu_item_set_label(GTK_MENU_ITEM(item->widget), desc);
-            systray_set_tooltip(GTK_WIDGET(item->widget), tooltip);
+        case MENU_INPUT:
+        case MENU_OUTPUT:
+            systray_update_all_items_in_submenu(submenu, item);
             break;
     }
 
@@ -368,6 +342,14 @@ void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name,
     subitem->desc = g_strdup(desc);
     subitem->menu_info = mi;
     subitem->widget = systray_add_radio_item(mi, desc, tooltip);
+
+    gboolean active = mi->parent->target == index;
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(subitem->widget), active);
+
+#ifdef DEBUG
+        g_message("[menu_info] adding subitem %s %u '%s' %s", menu_info_type_name(mi->type),
+                index, desc, active ? " (active)" : "");
+#endif
 
     g_hash_table_insert(mi->items, GUINT_TO_POINTER(index), subitem);
 
