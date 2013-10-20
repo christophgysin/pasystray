@@ -170,38 +170,38 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
         const char* desc, const pa_cvolume* vol, int mute, char* tooltip,
         const char* icon, const char* address)
 {
-    menu_info_item_t* mii;
+    menu_info_item_t* item;
 
     if(mi->type == MENU_SERVER)
-        mii = menu_info_item_get_by_name(mi, name);
+        item = menu_info_item_get_by_name(mi, name);
     else
-        mii = menu_info_item_get(mi, index);
+        item = menu_info_item_get(mi, index);
 
-   if(mii == NULL)
+   if(item == NULL)
        return menu_info_item_add(mi, index, name, desc, vol, mute, tooltip, icon, address);
 
 #ifdef DEBUG
     g_message("[menu_info] updating %s %u %s",
-            menu_info_type_name(mii->menu_info->type), index, desc);
+            menu_info_type_name(item->menu_info->type), index, desc);
 #endif
 
-    g_free(mii->name);
-    mii->name = g_strdup(name);
-    g_free(mii->desc);
-    mii->desc = g_strdup(desc);
-    g_free(mii->volume);
-    mii->volume = g_memdup(vol, sizeof(pa_cvolume));
-    mii->mute = mute;
-    g_free(mii->address);
-    mii->address = g_strdup(address);
+    g_free(item->name);
+    item->name = g_strdup(name);
+    g_free(item->desc);
+    item->desc = g_strdup(desc);
+    g_free(item->volume);
+    item->volume = g_memdup(vol, sizeof(pa_cvolume));
+    item->mute = mute;
+    g_free(item->address);
+    item->address = g_strdup(address);
 
     switch(mi->type)
     {
         case MENU_SERVER:
         case MENU_SINK:
         case MENU_SOURCE:
-            gtk_menu_item_set_label(GTK_MENU_ITEM(mii->widget), desc);
-            systray_set_tooltip(GTK_WIDGET(mii->widget), tooltip);
+            gtk_menu_item_set_label(GTK_MENU_ITEM(item->widget), desc);
+            systray_set_tooltip(GTK_WIDGET(item->widget), tooltip);
 
             // submenu to update (if any)
             menu_info_t* submenu = NULL;
@@ -228,7 +228,7 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
                 g_hash_table_iter_init(&iter, submenu->items);
                 while(g_hash_table_iter_next(&iter, &key, (gpointer*)&item))
                     if((subitem = g_hash_table_lookup(item->submenu->items,
-                                    GUINT_TO_POINTER(mii->index))))
+                                    GUINT_TO_POINTER(item->index))))
                         if(!g_str_equal(subitem->desc, desc))
                             gtk_menu_item_set_label(
                                     GTK_MENU_ITEM(subitem->widget), desc);
@@ -238,14 +238,14 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
 
        case MENU_INPUT:
        case MENU_OUTPUT:
-            gtk_menu_item_set_label(GTK_MENU_ITEM(mii->widget), desc);
-            systray_set_tooltip(GTK_WIDGET(mii->widget), tooltip);
+            gtk_menu_item_set_label(GTK_MENU_ITEM(item->widget), desc);
+            systray_set_tooltip(GTK_WIDGET(item->widget), tooltip);
             break;
     }
 
     /* if this is the default sink, update status icon acording to volume */
-    if(mi->type == MENU_SINK && mii == menu_info_item_get_by_name(mi, mi->default_name))
-        ui_update_systray_icon(mii);
+    if(mi->type == MENU_SINK && item == menu_info_item_get_by_name(mi, mi->default_name))
+        ui_update_systray_icon(item);
 }
 
 void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
