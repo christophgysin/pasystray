@@ -310,7 +310,6 @@ void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata
     }
 }
 
-
 void systray_scroll_cb(systray_t* systray, guint state, GdkScrollDirection direction, menu_infos_t* mis)
 {
     int inc = 0;
