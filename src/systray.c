@@ -230,6 +230,17 @@ void systray_add_all_items_to_submenu(menu_info_t* submenu, menu_info_item_t* it
         menu_info_subitem_add(item->submenu, mii->index, mii->name, mii->desc, NULL, NULL);
 }
 
+void systray_update_all_items_in_submenu(menu_info_t* submenu, menu_info_item_t* item)
+{
+    GHashTableIter iter;
+    gpointer key;
+    menu_info_item_t* mii;
+
+    g_hash_table_iter_init(&iter, submenu->items);
+
+    while(g_hash_table_iter_next(&iter, &key, (gpointer*)&mii))
+        menu_info_subitem_update(item->submenu, mii->index, mii->name, mii->desc, NULL, NULL);
+}
 void systray_remove_all_items_from_submenu(menu_info_t* submenu)
 {
     GHashTableIter iter;
@@ -252,6 +263,18 @@ void systray_add_item_to_all_submenus(menu_info_item_t* item, menu_info_t* subme
 
     while(g_hash_table_iter_next(&iter, &key, (gpointer*)&mii))
         menu_info_subitem_add(mii->submenu, item->index, item->name, item->desc, NULL, NULL);
+}
+
+void systray_update_item_in_all_submenus(menu_info_item_t* item, menu_info_t* submenu)
+{
+    GHashTableIter iter;
+    gpointer key;
+    menu_info_item_t* mii;
+
+    g_hash_table_iter_init(&iter, submenu->items);
+
+    while(g_hash_table_iter_next(&iter, &key, (gpointer*)&mii))
+        menu_info_subitem_update(mii->submenu, item->index, item->name, item->desc, NULL, NULL);
 }
 
 void systray_remove_item_from_all_submenus(menu_info_item_t* item, menu_info_t* submenu)

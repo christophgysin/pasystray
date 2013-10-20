@@ -45,8 +45,10 @@ GtkWidget* systray_add_radio_item(menu_info_t* m, const char* desc, const char* 
 void systray_remove_radio_item(menu_info_t* mi, GtkWidget* item);
 
 void systray_add_all_items_to_submenu(menu_info_t* submenu, menu_info_item_t* item);
+void systray_update_all_items_in_submenu(menu_info_t* submenu, menu_info_item_t* item);
 void systray_remove_all_items_from_submenu(menu_info_t* submenu);
 void systray_add_item_to_all_submenus(menu_info_item_t* item, menu_info_t* submenu);
+void systray_update_item_in_all_submenus(menu_info_item_t* item, menu_info_t* submenu);
 void systray_remove_item_from_all_submenus(menu_info_item_t* item, menu_info_t* submenu);
 
 GtkWidget* systray_menu_item_about();
