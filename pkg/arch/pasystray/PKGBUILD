@@ -19,7 +19,7 @@ provides=('pasystray')
 conflicts=('pasystray')
 replaces=('pasystray')
 source=("https://github.com/christophgysin/${pkgname}/archive/${pkgname}-${pkgver}.tar.gz")
-md5sums=('a86dc07ea580df90208d312ca67827b7')
+md5sums=('0a7ee0842064f3d3c8585c414cb50a1c')
 
 build() {
     cd $srcdir/$pkgname-$pkgname-$pkgver
