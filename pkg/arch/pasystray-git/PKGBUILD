@@ -9,7 +9,7 @@ url="https://github.com/christophgysin/pasystray"
 license=('LGPL')
 groups=('multimedia')
 depends=('libpulse' 'gtk3' 'libnotify' 'avahi' 'libx11' 'gnome-icon-theme')
-makedepends=('git' 'autoconf' 'automake' 'pkg-config' )
+makedepends=('git' 'pkg-config' )
 optdepends=(
     'paman: Launch PulseAudio manager from tray icon'
     'pavucontrol: Launch PulseAudio mixer from tray icon'
