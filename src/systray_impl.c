@@ -118,9 +118,40 @@ systray_t systray_impl_create(menu_infos_t* mis)
     return icon;
 }
 
+#ifdef DEBUG
+void systray_impl_print_icon(gchar* icon_name, gpointer userdata)
+{
+    if(icon_name)
+        g_message(" %s", icon_name);
+}
+
+void systray_impl_list_icons(GtkIconTheme* icon_theme)
+{
+    GList* icons = gtk_icon_theme_list_icons(icon_theme, NULL);
+    GList* sorted_icons = g_list_sort(icons, (GCompareFunc)g_ascii_strcasecmp);
+    g_list_foreach(icons, (GFunc)g_free, NULL);
+    g_list_free(icons);
+
+    g_list_foreach(sorted_icons, (GFunc)systray_impl_print_icon, NULL);
+    g_list_foreach(sorted_icons, (GFunc)g_free, NULL);
+    g_list_free(sorted_icons);
+}
+#endif
+
 void systray_impl_set_icon(systray_t systray, const char* icon_name)
 {
     GtkStatusIcon* icon = systray;
+
+    GtkIconTheme* icon_theme = gtk_icon_theme_get_default();
+    if(gtk_icon_theme_has_icon(icon_theme, icon_name) == FALSE)
+    {
+        g_warning("[systray_impl] can't find icon %s in current icon theme", icon_name);
+#ifdef DEBUG
+        g_message("[systray_impl] available icons in current theme:");
+        systray_impl_list_icons(icon_theme);
+#endif
+    }
+
     gtk_status_icon_set_from_icon_name(icon, icon_name);
 }
 
