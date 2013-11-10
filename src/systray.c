@@ -115,22 +115,31 @@ GtkWidget* systray_menu_add_submenu(GtkMenuShell* menu, menu_info_t* mi, const c
     mi->menu = GTK_MENU_SHELL(submenu);
     mi->group = NULL;
 
-    /* if this is the first item, remove the "none" placeholder label */
     if(mi->parent)
-    {
-        menu_info_t* parent_mi = mi->parent->menu_info;
-        if(g_hash_table_size(parent_mi->items) == 0)
-        {
-            GList* children = gtk_container_get_children(GTK_CONTAINER(parent_mi->menu));
-            if(children)
-                gtk_container_remove(GTK_CONTAINER(parent_mi->menu), GTK_WIDGET(children->data));
-        }
-    }
+        systray_remove_placeholder(mi->parent->menu_info);
 
     GtkWidget* item = systray_add_item(menu, name, tooltip, icon);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
 
     return item;
+}
+
+void systray_add_placeholder(menu_info_t* mi)
+{
+    /* insert "none" placeholder label for empty menus */
+    if(g_hash_table_size(mi->items) <= 1)
+        systray_menu_add_item(mi->menu, "none", NULL, FALSE);
+}
+
+void systray_remove_placeholder(menu_info_t* mi)
+{
+    /* if this is the first item, remove the "none" placeholder label */
+    if(g_hash_table_size(mi->items) == 0)
+    {
+        GList* children = gtk_container_get_children(GTK_CONTAINER(mi->menu));
+        if(children)
+            gtk_container_remove(GTK_CONTAINER(mi->menu), GTK_WIDGET(children->data));
+    }
 }
 
 GtkWidget* systray_add_menu_item(menu_info_t* mi, const char* desc, const char* tooltip, const char* icon)
@@ -142,10 +151,7 @@ void systray_remove_menu_item(menu_info_t* mi, GtkWidget* item)
 {
     gtk_container_remove(GTK_CONTAINER(mi->menu), item);
 
-    /* insert "none" placeholder label for empty menus */
-    if(!mi->parent)
-        if(g_hash_table_size(mi->items) <= 1)
-            systray_menu_add_item(mi->menu, "none", NULL, FALSE);
+    systray_add_placeholder(mi);
 }
 
 GtkWidget* systray_add_radio_item(menu_info_t* mi, const char* desc, const char* tooltip)
@@ -157,13 +163,7 @@ GtkWidget* systray_add_radio_item(menu_info_t* mi, const char* desc, const char*
 
     mi->group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(item));
 
-    /* if this is the first item, remove the "none" placeholder label */
-    if(g_hash_table_size(mi->items) == 0)
-    {
-        GList* children = gtk_container_get_children(GTK_CONTAINER(mi->menu));
-        if(children)
-            gtk_container_remove(GTK_CONTAINER(mi->menu), GTK_WIDGET(children->data));
-    }
+    systray_remove_placeholder(mi);
 
     gtk_menu_shell_append(mi->menu, item);
     gtk_widget_show(item);
