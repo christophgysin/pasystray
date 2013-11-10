@@ -225,6 +225,10 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     switch(mi->type)
     {
         case MENU_SERVER:
+#ifdef DEBUG
+            g_warning("[menu_info] *** unhandled %s update! (index: %u, desc: %s)",
+                    menu_info_type_name(mi->type), index, desc);
+#endif
             break;
         case MENU_SINK:
         case MENU_SOURCE:
