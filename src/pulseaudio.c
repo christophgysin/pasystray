@@ -63,7 +63,7 @@ void pulseaudio_prepare_context()
 
 void pulseaudio_connect()
 {
-    if(pa_context_connect(context, server, 0, NULL) < 0)
+    if(pa_context_connect(context, server, PA_CONTEXT_NOFLAGS, NULL) < 0)
     {
         g_message("pa_context_connect() failed: ");
         pulseaudio_quit(pa_strerror(pa_context_errno(context)));
