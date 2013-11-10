@@ -329,7 +329,7 @@ GtkMenuShell* menu_info_item_context_menu(menu_info_item_t* mii)
     GtkWidget* item = gtk_menu_item_new_with_label("rename");
 
     g_signal_connect(item, "button-press-event",
-            G_CALLBACK(menu_info_item_rename_dialog), mii);
+            G_CALLBACK(menu_info_item_rename_cb), mii);
 
     gtk_menu_shell_append(menu, item);
     gtk_widget_show_all(GTK_WIDGET(menu));
@@ -504,8 +504,12 @@ void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event,
     }
 }
 
-void menu_info_item_rename_dialog(GtkWidget* item, GdkEventButton* event,
-        menu_info_item_t* mii)
+void menu_info_item_rename_cb(GtkWidget* item, GdkEventButton* event, void* userdata)
+{
+    menu_info_item_rename_dialog(userdata);
+}
+
+void menu_info_item_rename_dialog(menu_info_item_t* mii)
 {
     gtk_menu_popdown(GTK_MENU(mii->menu_info->menu_infos->menu));
 
