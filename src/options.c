@@ -42,9 +42,7 @@ void parse_options(int argc, char *argv[])
     g_option_context_add_group(context, gtk_get_option_group(TRUE));
     if(!g_option_context_parse(context, &argc, &argv, &error))
     {
-        g_print("option parsing failed: %s\n", error->message);
-        g_error_free(error);
-        exit(1);
+        g_error("option parsing failed: %s\n", error->message);
     }
 
     if(version)

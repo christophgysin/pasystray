@@ -51,8 +51,6 @@ void ui_load()
     if(!ret)
     {
         g_error("[ui] %s", error->message);
-        g_error_free(error);
-        return;
     }
 
     gtk_about_dialog_set_version(ui_aboutdialog(), PACKAGE_VERSION);

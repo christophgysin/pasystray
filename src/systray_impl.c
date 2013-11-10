@@ -81,7 +81,7 @@ static GtkStatusIcon* systray_impl_create_statusicon()
     gchar* exe_path = g_file_read_link("/proc/self/exe", &error);
     if(error)
     {
-        g_message("g_file_read_link() failed (%s)", error->message);
+        g_warning("failed to read /proc/self/exe: %s", error->message);
         g_error_free(error);
         g_free(exe_path);
         return status_icon;
