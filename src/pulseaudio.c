@@ -103,18 +103,35 @@ void pulseaudio_context_state_cb(pa_context* c, void* userdata)
         }
 
         case PA_CONTEXT_FAILED:
-        case PA_CONTEXT_TERMINATED:
-            g_message("PulseAudio terminated!");
+            g_message("[pulseaudio] context failed!");
             menu_infos_clear(mis);
             pa_context_unref(context);
+
             pulseaudio_prepare_context();
-            g_message("reconnecting...");
+            g_message("[pulseaudio] trying again...");
+            pulseaudio_connect();
+            break;
+
+        case PA_CONTEXT_TERMINATED:
+            g_message("[pulseaudio] context terminated!");
+            menu_infos_clear(mis);
+            pa_context_unref(context);
+
+            pulseaudio_prepare_context();
+            g_message("[pulseaudio] reconnecting...");
             pulseaudio_connect();
             break;
 
         case PA_CONTEXT_CONNECTING:
+            g_message("[pulseaudio] connecting...");
+            break;
+
         case PA_CONTEXT_AUTHORIZING:
+            g_message("[pulseaudio] authorizing...");
+            break;
+
         case PA_CONTEXT_SETTING_NAME:
+            g_message("[pulseaudio] setting name...");
             break;
     }
 }
