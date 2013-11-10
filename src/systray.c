@@ -132,28 +132,9 @@ GtkWidget* systray_menu_add_submenu(GtkMenuShell* menu, menu_info_t* mi, const c
     return item;
 }
 
-GtkWidget* systray_add_item(GtkMenuShell* menu, const char* desc, const char* tooltip, const char* icon)
+GtkWidget* systray_add_menu_item(menu_info_t* mi, const char* desc, const char* tooltip, const char* icon)
 {
-    GtkWidget* item =
-    /* TODO: GtkImageMenuItem is deprecated. Replace it with GMenu from GIO?
-        gtk_image_menu_item_new_with_mnemonic(desc);
-    */
-        gtk_menu_item_new_with_mnemonic(desc);
-
-    gtk_menu_shell_append(menu, item);
-
-    if(tooltip)
-        systray_set_tooltip(item, tooltip);
-
-    /* TODO: GtkImageMenuItem is deprecated. Replace it with GMenu from GIO?
-    if(icon)
-        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-            gtk_image_new_from_icon_name(icon, GTK_ICON_SIZE_MENU));
-    */
-
-    gtk_widget_show(item);
-
-    return item;
+    return systray_add_item(mi->menu, desc, tooltip, icon);
 }
 
 void systray_remove_menu_item(menu_info_t* mi, GtkWidget* item)
@@ -200,6 +181,30 @@ void systray_remove_radio_item(menu_info_t* mi, GtkWidget* item)
         mi->group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(children->data));
     else
         mi->group = NULL;
+}
+
+GtkWidget* systray_add_item(GtkMenuShell* menu, const char* desc, const char* tooltip, const char* icon)
+{
+    GtkWidget* item =
+    /* TODO: GtkImageMenuItem is deprecated. Replace it with GMenu from GIO?
+        gtk_image_menu_item_new_with_mnemonic(desc);
+    */
+        gtk_menu_item_new_with_mnemonic(desc);
+
+    gtk_menu_shell_append(menu, item);
+
+    if(tooltip)
+        systray_set_tooltip(item, tooltip);
+
+    /* TODO: GtkImageMenuItem is deprecated. Replace it with GMenu from GIO?
+    if(icon)
+        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+            gtk_image_new_from_icon_name(icon, GTK_ICON_SIZE_MENU));
+    */
+
+    gtk_widget_show(item);
+
+    return item;
 }
 
 void systray_remove_item(menu_info_item_t* mii)
