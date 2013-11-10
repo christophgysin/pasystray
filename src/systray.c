@@ -67,13 +67,6 @@ void systray_menu_create(menu_infos_t* mis)
     gtk_menu_shell_append(GTK_MENU_SHELL(mis->menu), systray_menu_item_quit());
 }
 
-void systray_menu_add_separator(GtkMenuShell* menu)
-{
-    GtkWidget* item = gtk_separator_menu_item_new();
-    gtk_menu_shell_append(menu, item);
-    gtk_widget_show(item);
-}
-
 void systray_rootmenu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* name, const char* icon)
 {
     GtkMenuShell* menu = mis->menu;
@@ -81,6 +74,31 @@ void systray_rootmenu_add_submenu(menu_infos_t* mis, menu_type_t type, const cha
 
     systray_menu_add_submenu(menu, mi, name, NULL, icon);
     systray_menu_add_item(mi->menu, "none", NULL, FALSE);
+}
+
+void systray_menu_add_separator(GtkMenuShell* menu)
+{
+    GtkWidget* item = gtk_separator_menu_item_new();
+    gtk_menu_shell_append(menu, item);
+    gtk_widget_show(item);
+}
+
+void systray_menu_add_application(GtkMenuShell* menu, const char* name, const char* icon, const char* command)
+{
+    gchar** exe = g_strsplit_set(command, " ", 2);
+    gchar* c = g_find_program_in_path(exe[0]);
+    g_strfreev(exe);
+    GtkWidget* item = systray_menu_add_item(menu, name, icon, (c != NULL));
+    g_free(c);
+
+    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(start_application_cb), (gpointer)command);
+}
+
+GtkWidget* systray_menu_add_item(GtkMenuShell* menu, const char* name, const char* icon, gboolean sensitive)
+{
+    GtkWidget* item = systray_add_menu_item(menu, name, NULL, icon);
+    gtk_widget_set_sensitive(item, sensitive);
+    return item;
 }
 
 GtkWidget* systray_menu_add_submenu(GtkMenuShell* menu, menu_info_t* mi, const char* name, const char* tooltip, const char* icon)
@@ -168,24 +186,6 @@ void systray_remove_radio_item(menu_info_t* mi, GtkWidget* item)
         mi->group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(children->data));
     else
         mi->group = NULL;
-}
-
-GtkWidget* systray_menu_add_item(GtkMenuShell* menu, const char* name, const char* icon, gboolean sensitive)
-{
-    GtkWidget* item = systray_add_menu_item(menu, name, NULL, icon);
-    gtk_widget_set_sensitive(item, sensitive);
-    return item;
-}
-
-void systray_menu_add_application(GtkMenuShell* menu, const char* name, const char* icon, const char* command)
-{
-    gchar** exe = g_strsplit_set(command, " ", 2);
-    gchar* c = g_find_program_in_path(exe[0]);
-    g_strfreev(exe);
-    GtkWidget* item = systray_menu_add_item(menu, name, icon, (c != NULL));
-    g_free(c);
-
-    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(start_application_cb), (gpointer)command);
 }
 
 void systray_remove_item(menu_info_item_t* mii)
