@@ -144,6 +144,8 @@ void systray_remove_placeholder(menu_info_t* mi)
 
 GtkWidget* systray_add_menu_item(menu_info_t* mi, const char* desc, const char* tooltip, const char* icon)
 {
+    systray_remove_placeholder(mi);
+
     return systray_add_item(mi->menu, desc, tooltip, icon);
 }
 
@@ -175,6 +177,8 @@ void systray_remove_radio_item(menu_info_t* mi, GtkWidget* item)
 {
     gtk_radio_menu_item_set_group(GTK_RADIO_MENU_ITEM(item), NULL);
     gtk_container_remove(GTK_CONTAINER(mi->menu), item);
+
+    systray_add_placeholder(mi);
 
     /* update group */
     GList* children = gtk_container_get_children(GTK_CONTAINER(mi->menu));
