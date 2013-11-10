@@ -50,6 +50,6 @@ void parse_options(int argc, char *argv[])
     if(version)
     {
         g_print("%s\n", VERSION);
-        exit(1);
+        exit(0);
     }
 }
