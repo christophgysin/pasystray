@@ -170,6 +170,10 @@ menu_type_t menu_info_submenu_type(menu_type_t menu_type)
 {
     switch(menu_type)
     {
+        /* no submenu, return self */
+        case MENU_SERVER:
+            return menu_type;
+
         case MENU_SINK:
             return MENU_INPUT;
         case MENU_SOURCE:
@@ -178,8 +182,6 @@ menu_type_t menu_info_submenu_type(menu_type_t menu_type)
             return MENU_SINK;
         case MENU_OUTPUT:
             return MENU_SOURCE;
-        default:
-            break;
     }
     return -1;
 }
@@ -215,9 +217,7 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     item->address = g_strdup(address);
 
     menu_type_t submenu_type = menu_info_submenu_type(mi->type);
-    menu_info_t* submenu = NULL;
-    if(submenu_type != (menu_type_t)-1)
-        submenu = &mi->menu_infos->menu_info[submenu_type];
+    menu_info_t* submenu = &mi->menu_infos->menu_info[submenu_type];
 
     gtk_menu_item_set_label(GTK_MENU_ITEM(item->widget), desc);
     systray_set_tooltip(GTK_WIDGET(item->widget), tooltip);
