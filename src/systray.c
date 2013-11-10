@@ -42,6 +42,7 @@ void systray_menu_create(menu_infos_t* mis)
     systray_rootmenu_add_submenu(mis, MENU_SOURCE, "Default S_ource", "audio-input-microphone");
     systray_rootmenu_add_submenu(mis, MENU_INPUT, "Playback S_treams", "player_play");
     systray_rootmenu_add_submenu(mis, MENU_OUTPUT, "Recording Stre_ams", "player_record");
+    systray_rootmenu_add_submenu(mis, MENU_MODULE, "_Modules", "system_run");
     systray_menu_add_separator(mis->menu);
 
     static const char* COMMAND_PAMAN = "paman";
@@ -232,6 +233,9 @@ void systray_remove_item(menu_info_item_t* mii)
         case MENU_INPUT:
         case MENU_OUTPUT:
             systray_remove_all_items_from_submenu(mii->submenu);
+            systray_remove_menu_item(mi, mii->widget);
+            break;
+        case MENU_MODULE:
             systray_remove_menu_item(mi, mii->widget);
             break;
     }

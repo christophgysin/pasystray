@@ -42,4 +42,10 @@ void pulseaudio_update_volume_notification(menu_info_item_t* mii);
 void pulseaudio_toggle_mute(menu_info_item_t* mii);
 void pulseaudio_toggle_mute_success_cb(pa_context *c, int success, void *userdata);
 
+void pulseaudio_module_load(const char* name, const char* argument);
+void pulseaudio_module_load_success_cb(pa_context *c, uint32_t idx, void *userdata);
+
+void pulseaudio_module_unload(menu_info_item_t* mii);
+void pulseaudio_module_unload_success_cb(pa_context *c, int success, void *userdata);
+
 #endif /* PASYSTRAY_PULSEAUDIO_ACTION_H */

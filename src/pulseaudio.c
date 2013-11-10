@@ -97,6 +97,7 @@ void pulseaudio_context_state_cb(pa_context* c, void* userdata)
                         PA_SUBSCRIPTION_MASK_SOURCE |
                         PA_SUBSCRIPTION_MASK_SINK_INPUT |
                         PA_SUBSCRIPTION_MASK_SOURCE_OUTPUT |
+                        PA_SUBSCRIPTION_MASK_MODULE |
                         PA_SUBSCRIPTION_MASK_SERVER,
                         pulseaudio_subscribed_cb, mis));
             break;
@@ -149,6 +150,8 @@ void pulseaudio_subscribed_cb(pa_context* c, int success, void* userdata)
                 pulseaudio_sink_input_init_cb, &mis->menu_info[MENU_INPUT]));
     pa_operation_unref(pa_context_get_source_output_info_list(context,
                 pulseaudio_source_output_init_cb, &mis->menu_info[MENU_OUTPUT]));
+    pa_operation_unref(pa_context_get_module_info_list(context,
+                pulseaudio_module_init_cb, &mis->menu_info[MENU_MODULE]));
 }
 
 void pulseaudio_event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, void* userdata)
@@ -202,6 +205,10 @@ void pulseaudio_event_new(pa_subscription_event_type_t facility, uint32_t index,
             pa_operation_unref(pa_context_get_source_output_info(context, index,
                         pulseaudio_source_output_add_cb, &mis->menu_info[MENU_OUTPUT]));
             break;
+        case PA_SUBSCRIPTION_EVENT_MODULE:
+            pa_operation_unref(pa_context_get_module_info(context, index,
+                        pulseaudio_module_add_cb, &mis->menu_info[MENU_MODULE]));
+            break;
         default:
             break;
     }
@@ -231,6 +238,10 @@ void pulseaudio_event_change(pa_subscription_event_type_t facility, uint32_t ind
             pa_operation_unref(pa_context_get_source_output_info(context, index,
                         pulseaudio_source_output_change_cb, &mis->menu_info[MENU_OUTPUT]));
             break;
+        case PA_SUBSCRIPTION_EVENT_MODULE:
+            pa_operation_unref(pa_context_get_module_info(context, index,
+                        pulseaudio_module_change_cb, &mis->menu_info[MENU_MODULE]));
+            break;
         default:
             break;
     }
@@ -255,6 +266,9 @@ void pulseaudio_event_remove(pa_subscription_event_type_t facility, uint32_t ind
         case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
             menu_info_item_remove(&mis->menu_info[MENU_OUTPUT], index);
             break;
+        case PA_SUBSCRIPTION_EVENT_MODULE:
+            menu_info_item_remove(&mis->menu_info[MENU_MODULE], index);
+            break;
         default:
             break;
     }
@@ -275,6 +289,7 @@ void pulseaudio_print_event(pa_subscription_event_type_t t, uint32_t index)
         (facility == PA_SUBSCRIPTION_EVENT_SOURCE) ? "source" :
         (facility == PA_SUBSCRIPTION_EVENT_SINK_INPUT) ? "sink-input" :
         (facility == PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT) ? "source-output" :
+        (facility == PA_SUBSCRIPTION_EVENT_MODULE) ? "module" :
         (facility == PA_SUBSCRIPTION_EVENT_SERVER) ? "server" :
         "unknown",
         index);
@@ -485,6 +500,39 @@ void pulseaudio_source_output_add(const pa_source_output_info* i, int is_last, v
     char* tooltip = output_info_str(i);
     menu_info_item_update(mi, i->index, NULL, app_name ? app_name : i->name,
             &i->volume, i->mute, tooltip, app_icon, NULL, i->source);
+    g_free(tooltip);
+}
+
+void pulseaudio_module_init_cb(pa_context* c, const pa_module_info* i, int is_last, void* userdata)
+{
+    pulseaudio_module_add(i, is_last, userdata, FALSE);
+}
+
+void pulseaudio_module_add_cb(pa_context* c, const pa_module_info* i, int is_last, void* userdata)
+{
+    pulseaudio_module_add(i, is_last, userdata, TRUE);
+}
+
+void pulseaudio_module_change_cb(pa_context* c, const pa_module_info* i, int is_last, void* userdata)
+{
+    pulseaudio_module_add(i, is_last, userdata, FALSE);
+}
+
+void pulseaudio_module_add(const pa_module_info* i, int is_last, void* userdata, gboolean is_new)
+{
+    if(is_last < 0)
+    {
+        g_message("Failed to get source information: %s", pa_strerror(pa_context_errno(context)));
+        return;
+    }
+
+    if(is_last)
+        return;
+
+    menu_info_t* mi = userdata;
+    char* tooltip = module_info_str(i);
+    menu_info_item_update(mi, i->index, NULL, i->name, NULL, 0, tooltip, NULL,
+            NULL, -1);
     g_free(tooltip);
 }
 

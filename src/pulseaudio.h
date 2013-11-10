@@ -68,6 +68,11 @@ void pulseaudio_source_output_add_cb(pa_context* c, const pa_source_output_info*
 void pulseaudio_source_output_change_cb(pa_context* c, const pa_source_output_info* i, int is_last, void* userdata);
 void pulseaudio_source_output_add(const pa_source_output_info* i, int is_last, void* userdata, gboolean is_new);
 
+void pulseaudio_module_init_cb(pa_context* c, const pa_module_info* i, int is_last, void* userdata);
+void pulseaudio_module_add_cb(pa_context* c, const pa_module_info* i, int is_last, void* userdata);
+void pulseaudio_module_change_cb(pa_context* c, const pa_module_info* i, int is_last, void* userdata);
+void pulseaudio_module_add(const pa_module_info* i, int is_last, void* userdata, gboolean is_new);
+
 void pulseaudio_quit(const char* msg);
 
 #ifdef DEBUG

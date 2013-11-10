@@ -51,6 +51,7 @@ void pulseaudio_set_default(menu_info_item_t* mii)
             break;
         case MENU_INPUT:
         case MENU_OUTPUT:
+        case MENU_MODULE:
             /* nothing to do here */
             break;
     }
@@ -136,6 +137,7 @@ void pulseaudio_volume(menu_info_item_t* mii, int inc)
     switch(mii->menu_info->type)
     {
         case MENU_SERVER:
+        case MENU_MODULE:
             /* nothing to do here */
             break;
         case MENU_SINK:
@@ -202,6 +204,7 @@ void pulseaudio_toggle_mute(menu_info_item_t* mii)
     switch(mii->menu_info->type)
     {
         case MENU_SERVER:
+        case MENU_MODULE:
             /* nothing to do here */
             break;
         case MENU_SINK:
@@ -232,4 +235,34 @@ void pulseaudio_toggle_mute_success_cb(pa_context *c, int success, void *userdat
     if(!success)
         g_warning("failed to toggle mute for %s \"%s\"!\n",
                 menu_info_type_name(mii->menu_info->type), mii->name);
+}
+
+void pulseaudio_module_load(const char* name, const char* argument)
+{
+    pa_operation_unref(pa_context_load_module(context, name, argument,
+                pulseaudio_module_load_success_cb, (void*)name));
+}
+
+void pulseaudio_module_load_success_cb(pa_context *c, uint32_t idx, void *userdata)
+{
+    const char* name = userdata;
+
+    if(idx == PA_INVALID_INDEX)
+        g_warning("failed to load module %s!\n", name);
+}
+
+void pulseaudio_module_unload(menu_info_item_t* mii)
+{
+    assert(mii->menu_info->type == MENU_MODULE);
+
+    pa_operation_unref(pa_context_unload_module(context, mii->index,
+                pulseaudio_module_unload_success_cb, mii));
+}
+
+void pulseaudio_module_unload_success_cb(pa_context *c, int success, void *userdata)
+{
+    menu_info_item_t* mii = userdata;
+
+    if(!success)
+        g_warning("failed to unload module %s!\n", mii->name);
 }

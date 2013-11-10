@@ -307,3 +307,24 @@ char* output_info_str(const pa_source_output_info* i)
 
     return str;
 }
+
+char* module_info_str(const pa_module_info* i)
+{
+    char *pl;
+
+    char* str = g_strdup_printf(
+            "Module #%u\n"
+            "Name: %s\n"
+            "Argument: %s\n"
+            "Used: %u\n"
+            "Properties:\n\t\t%s",
+            i->index,
+            i->name,
+            i->argument,
+            i->n_used,
+            pl = pa_proplist_to_string_sep(i->proplist, "\n\t\t"));
+
+    pa_xfree(pl);
+
+    return str;
+}

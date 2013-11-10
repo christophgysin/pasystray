@@ -74,6 +74,7 @@ void menu_infos_clear(menu_infos_t* mis)
                     break;
                 case MENU_INPUT:
                 case MENU_OUTPUT:
+                case MENU_MODULE:
                     systray_remove_menu_item(mi, mii->widget);
                     break;
             }
@@ -161,6 +162,7 @@ const char* menu_info_type_name(menu_type_t type)
         [MENU_SOURCE] = "source",
         [MENU_INPUT]  = "input",
         [MENU_OUTPUT] = "output",
+        [MENU_MODULE] = "module",
     };
 
     return MENU_NAME[type];
@@ -172,6 +174,7 @@ menu_type_t menu_info_submenu_type(menu_type_t menu_type)
     {
         /* no submenu, return self */
         case MENU_SERVER:
+        case MENU_MODULE:
             return menu_type;
 
         case MENU_SINK:
@@ -225,6 +228,7 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     switch(mi->type)
     {
         case MENU_SERVER:
+        case MENU_MODULE:
 #ifdef DEBUG
             g_warning("[menu_info] *** unhandled %s update! (index: %u, desc: %s)",
                     menu_info_type_name(mi->type), index, desc);
@@ -305,6 +309,10 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
                     desc, tooltip, icon);
             systray_add_all_items_to_submenu(submenu, item);
             break;
+        case MENU_MODULE:
+            item->context = menu_info_item_context_menu(item);
+            item->widget = systray_add_menu_item(mi, desc, tooltip, icon);
+            break;
     }
 
     g_signal_connect(item->widget, "button-press-event",
@@ -326,10 +334,28 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
 GtkMenuShell* menu_info_item_context_menu(menu_info_item_t* mii)
 {
     GtkMenuShell* menu = GTK_MENU_SHELL(gtk_menu_new());
-    GtkWidget* item = gtk_menu_item_new_with_label("rename");
+    GtkWidget* item = NULL;
 
-    g_signal_connect(item, "button-press-event",
-            G_CALLBACK(menu_info_item_rename_cb), mii);
+    switch(mii->menu_info->type)
+    {
+        case MENU_SERVER:
+        case MENU_INPUT:
+        case MENU_OUTPUT:
+            break;
+
+        case MENU_SINK:
+        case MENU_SOURCE:
+            item = gtk_menu_item_new_with_label("rename");
+            g_signal_connect(item, "button-press-event",
+                    G_CALLBACK(menu_info_item_rename_cb), mii);
+            break;
+
+        case MENU_MODULE:
+            item = gtk_menu_item_new_with_label("unload");
+            g_signal_connect(item, "button-press-event",
+                    G_CALLBACK(menu_info_module_unload_cb), mii);
+            break;
+    }
 
     gtk_menu_shell_append(menu, item);
     gtk_widget_show_all(GTK_WIDGET(menu));
@@ -468,6 +494,7 @@ void menu_info_item_scrolled(GtkWidget* item, GdkEventScroll* event,
     switch(mii->menu_info->type)
     {
         case MENU_SERVER:
+        case MENU_MODULE:
             break;
         case MENU_SINK:
         case MENU_SOURCE:
@@ -491,15 +518,15 @@ void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event,
     switch(mii->menu_info->type)
     {
         case MENU_SERVER:
+        case MENU_INPUT:
+        case MENU_OUTPUT:
+        case MENU_MODULE:
             break;
         case MENU_SINK:
             pulseaudio_move_input_to_sink(mii->menu_info->parent, mii);
             break;
         case MENU_SOURCE:
             pulseaudio_move_output_to_source(mii->menu_info->parent, mii);
-            break;
-        case MENU_INPUT:
-        case MENU_OUTPUT:
             break;
     }
 }
@@ -540,6 +567,11 @@ void menu_info_item_rename_dialog(menu_info_item_t* mii)
 
     gtk_widget_hide(GTK_WIDGET(dialog));
 
+}
+
+void menu_info_module_unload_cb(GtkWidget* item, GdkEventButton* event, void* userdata)
+{
+    pulseaudio_module_unload(userdata);
 }
 
 void menu_info_item_remove(menu_info_t* mi, uint32_t index)

@@ -36,8 +36,9 @@ typedef enum {
     MENU_SOURCE = 2,
     MENU_INPUT = 3,
     MENU_OUTPUT = 4,
+    MENU_MODULE = 5,
 } menu_type_t;
-enum { MENU_COUNT = 5 };
+enum { MENU_COUNT = 6 };
 
 typedef struct menu_infos_t_ menu_infos_t;
 typedef struct menu_info_t_ menu_info_t;
@@ -114,6 +115,8 @@ void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event,
 
 void menu_info_item_rename_cb(GtkWidget* item, GdkEventButton* event, void* userdata);
 void menu_info_item_rename_dialog(menu_info_item_t* mii);
+
+void menu_info_module_unload_cb(GtkWidget* item, GdkEventButton* event, void* userdata);
 
 void menu_info_item_remove(menu_info_t* mi, uint32_t index);
 void menu_info_item_remove_by_name(menu_info_t* mi, const char* name);
