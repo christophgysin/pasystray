@@ -1,0 +1,4 @@
+#!/bin/bash
+base=$(dirname $0)/..
+
+gdb -x ${base}/scripts/backtrace.gdb ${base}/src/pasystray
