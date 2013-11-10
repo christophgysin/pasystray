@@ -347,8 +347,8 @@ void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name,
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(subitem->widget), active);
 
 #ifdef DEBUG
-        g_message("[menu_info] adding subitem %s %u '%s' %s", menu_info_type_name(mi->type),
-                index, desc, active ? " (active)" : "");
+    g_message("[menu_info] adding subitem %s %u '%s' %s", menu_info_type_name(mi->type),
+            index, desc, active ? " (active)" : "");
 #endif
 
     g_hash_table_insert(mi->items, GUINT_TO_POINTER(index), subitem);
@@ -368,8 +368,8 @@ void menu_info_subitem_update(menu_info_t* mi, uint32_t index, const char* name,
     gboolean active = mi->parent->target == index;
 
 #ifdef DEBUG
-        g_message("[menu_info] updating subitem %s %u '%s' %s", menu_info_type_name(mi->type),
-                index, desc, active ? " (active)" : "");
+    g_message("[menu_info] updating subitem %s %u '%s' %s", menu_info_type_name(mi->type),
+            index, desc, active ? " (active)" : "");
 #endif
 
     if(!g_str_equal(item->desc, desc))
