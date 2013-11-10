@@ -63,8 +63,8 @@ void systray_menu_create(menu_infos_t* mis)
     */
 
     systray_menu_add_separator(mis->menu);
-    gtk_menu_shell_append(GTK_MENU_SHELL(mis->menu), systray_menu_item_about());
-    gtk_menu_shell_append(GTK_MENU_SHELL(mis->menu), systray_menu_item_quit());
+    systray_menu_add_action(mis->menu, "About", "about", G_CALLBACK(systray_about_dialog));
+    systray_menu_add_action(mis->menu, "Quit", "quit", G_CALLBACK(quit));
 }
 
 void systray_rootmenu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* name, const char* icon)
@@ -92,6 +92,13 @@ void systray_menu_add_application(GtkMenuShell* menu, const char* name, const ch
     g_free(c);
 
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(start_application_cb), (gpointer)command);
+}
+
+void systray_menu_add_action(GtkMenuShell* menu, const char* name, const char* icon, GCallback cb)
+{
+    GtkWidget* item = systray_menu_add_item(menu, name, icon, TRUE);
+
+    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(cb), NULL);
 }
 
 GtkWidget* systray_menu_add_item(GtkMenuShell* menu, const char* name, const char* icon, gboolean sensitive)
@@ -289,27 +296,11 @@ void systray_remove_item_from_all_submenus(menu_info_item_t* item, menu_info_t* 
         menu_info_item_remove(mii->submenu, item->index);
 }
 
-GtkWidget* systray_menu_item_about()
-{
-    GtkWidget* item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ABOUT, NULL);
-    g_signal_connect(item, "activate", G_CALLBACK(systray_about_dialog), NULL);
-    gtk_widget_show(item);
-    return item;
-}
-
 void systray_about_dialog()
 {
     GtkAboutDialog* dialog = ui_aboutdialog();
     g_signal_connect_swapped(dialog, "response", G_CALLBACK(gtk_widget_hide), dialog);
     gtk_widget_show_all(GTK_WIDGET(dialog));
-}
-
-GtkWidget* systray_menu_item_quit()
-{
-    GtkWidget* item = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, NULL);
-    g_signal_connect(item, "activate", G_CALLBACK(quit), NULL);
-    gtk_widget_show(item);
-    return item;
 }
 
 void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata)
