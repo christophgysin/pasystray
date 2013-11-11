@@ -1,0 +1,11 @@
+before_install:
+    - sudo apt-get install autotools-dev pkg-config libgtk-3-dev libpulse-dev libavahi-client-dev libavahi-glib-dev libnotify-dev libappindicator3-dev
+install:
+    - ./autogen.sh
+    - make
+    - make install
+before_script:
+script:
+after_sucess:
+after_failure:
+after_script:
