@@ -32,3 +32,6 @@ SUBDIRS = src
 
 doc:
 	markdown_py README.md > README.html
+
+test:
+	@echo "no tests yet"
