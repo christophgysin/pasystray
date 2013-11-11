@@ -105,7 +105,7 @@ AC_ARG_ENABLE([appindicator],
     AS_HELP_STRING([--disable-appindicator], [Disable optional appindicator support]))
 
 AS_IF([test "x$enable_appindicator" != xno],
-    [PKG_CHECK_MODULES(APPINDICATOR, [ appindicator3-0.1 >= 12.10.0 ], HAVE_APPINDICATOR=1,
+    [PKG_CHECK_MODULES(APPINDICATOR, [ appindicator3-0.1 ], HAVE_APPINDICATOR=1,
                        HAVE_APPINDICATOR=0)], HAVE_APPINDICATOR=0)
 
 AS_IF([test "x$enable_appindicator" = xyes && test "x$HAVE_APPINDICATOR" = x0],
