@@ -1,6 +1,6 @@
 PulseAudio system tray
 ======================
-[![Build Status](https://travis-ci.org/christophgysin/pasystray.png?branch=master)]
+![Build Status](https://travis-ci.org/christophgysin/pasystray.png?branch=master)
 
 A replacement for the deprecated padevchooser
 
