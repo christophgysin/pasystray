@@ -36,13 +36,13 @@ over status icon:
 * ctrl + scroll: adjust the default source volume
 
 over source/sink:
-* scroll up/down: adjust the volume of repsective stream
+* scroll up/down: adjust the volume of respective stream
 * left-click: set as default sink/source
 * middle-click: toggle mute
 * right-click: open menu to rename source/sink
 
 over playback/record stream:
-* scroll up/down: adjust the volume of repsective stream
+* scroll up/down: adjust the volume of respective stream
 * middle-click: toggle mute
 
 Troubleshooting
