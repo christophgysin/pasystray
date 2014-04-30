@@ -18,7 +18,6 @@ optdepends=(
 )
 provides=('pasystray')
 conflicts=('pasystray')
-replaces=('pasystray')
 backup=()
 options=()
 source=(git+https://github.com/christophgysin/pasystray.git)
