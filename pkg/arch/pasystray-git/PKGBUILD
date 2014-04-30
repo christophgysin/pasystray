@@ -29,8 +29,7 @@ _gitname=${pkgname%-git}
 
 pkgver() {
     cd $_pkgname
-    local ver="$(git describe --long)"
-    printf "%s" "${ver//-/.}"
+    git describe --long | sed -r "s/^${pkgname%-git}-//;s/([^-]*-g)/r\\1/;s/-/./g"
 }
 
 build() {
