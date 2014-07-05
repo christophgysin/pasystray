@@ -31,7 +31,7 @@
 #include "avahi.h"
 #include "x11-property.h"
 
-GMainLoop* loop;
+static GMainLoop* loop;
 menu_infos_t* mis;
 
 int main(int argc, char *argv[])
