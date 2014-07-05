@@ -22,8 +22,10 @@
 #ifndef PASYSTRAY_OPTIONS_H
 #define PASYSTRAY_OPTIONS_H
 
+#include "menu_info.h"
+
 extern gboolean version;
 
-void parse_options(int argc, char *argv[]);
+void parse_options(int argc, char *argv[], settings_t* settings);
 
 #endif /* PASYSTRAY_OPTIONS_H */

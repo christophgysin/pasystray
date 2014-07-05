@@ -36,17 +36,18 @@ menu_infos_t* mis;
 
 int main(int argc, char *argv[])
 {
-    parse_options(argc, argv);
+    settings_t settings;
+    parse_options(argc, argv, &settings);
     gtk_init(&argc, &argv);
 
-    init();
+    init(&settings);
     g_main_loop_run(loop);
     destroy();
 
     return 0;
 }
 
-void init()
+void init(settings_t* settings)
 {
     loop = g_main_loop_new(NULL, FALSE);
 
@@ -59,6 +60,7 @@ void init()
     mis = menu_infos_create();
     systray_create(mis);
     menu_infos_init(mis);
+    mis->settings = *settings;
 
     pulseaudio_init(mis);
     avahi_start(mis);

@@ -55,10 +55,16 @@ struct menu_info_t_ {
     char* default_name;
 };
 
+struct settings_t_ {
+    int max_volume;
+};
+typedef struct settings_t_ settings_t;
+
 struct menu_infos_t_ {
     systray_t systray;
     GtkMenuShell* menu;
     menu_info_t menu_info[MENU_COUNT];
+    settings_t settings;
 };
 
 struct menu_info_item_t_ {

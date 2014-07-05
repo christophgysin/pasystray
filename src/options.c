@@ -23,16 +23,19 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include "config.h"
+#include "menu_info.h"
 
 static gboolean version = FALSE;
+static int max_volume = 0;
 
 static GOptionEntry entries[] =
 {
     { "version", 'V', 0, G_OPTION_ARG_NONE, &version, "print version and exit", NULL },
+    { "max-volume", 'm', 0, G_OPTION_ARG_INT, &max_volume, "maximum volume (in percent)", "N" },
     { .long_name = NULL }
 };
 
-void parse_options(int argc, char *argv[])
+void parse_options(int argc, char *argv[], settings_t* settings)
 {
     GError *error = NULL;
     GOptionContext *context;
@@ -49,5 +52,10 @@ void parse_options(int argc, char *argv[])
     {
         g_print("%s\n", VERSION);
         exit(0);
+    }
+
+    if(max_volume > 0)
+    {
+        settings->max_volume = max_volume;
     }
 }

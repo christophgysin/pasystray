@@ -128,7 +128,14 @@ void pulseaudio_volume(menu_info_item_t* mii, int inc)
     if(inc < 0)
         volume = pa_cvolume_dec(mii->volume, -inc * PA_VOLUME_NORM / 50);
     else if(inc > 0)
-        volume = pa_cvolume_inc(mii->volume, inc * PA_VOLUME_NORM / 50);
+    {
+        int max_volume = mii->menu_info->menu_infos->settings.max_volume;
+        if(max_volume > 0)
+            volume = pa_cvolume_inc_clamp(mii->volume, inc * PA_VOLUME_NORM / 50,
+                    PA_VOLUME_NORM * max_volume / 100);
+        else
+            volume = pa_cvolume_inc(mii->volume, inc * PA_VOLUME_NORM / 50);
+    }
     else
         return;
 
