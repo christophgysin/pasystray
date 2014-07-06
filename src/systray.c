@@ -37,12 +37,12 @@ void systray_menu_create(menu_infos_t* mis)
 {
     mis->menu = GTK_MENU_SHELL(gtk_menu_new());
 
-    systray_rootmenu_add_submenu(mis, MENU_SERVER, "Default _Server", "network-wired");
+    systray_rootmenu_add_submenu(mis, MENU_SERVER, "Default _Server", "network-server");
     systray_rootmenu_add_submenu(mis, MENU_SINK, "Default S_ink", "audio-card");
     systray_rootmenu_add_submenu(mis, MENU_SOURCE, "Default S_ource", "audio-input-microphone");
     systray_rootmenu_add_submenu(mis, MENU_INPUT, "Playback S_treams", "player_play");
     systray_rootmenu_add_submenu(mis, MENU_OUTPUT, "Recording Stre_ams", "player_record");
-    systray_rootmenu_add_submenu(mis, MENU_MODULE, "_Modules", "system_run");
+    systray_rootmenu_add_submenu(mis, MENU_MODULE, "_Modules", "gtk-add");
     systray_menu_add_separator(mis->menu);
 
     static const char* COMMAND_PAMAN = "paman";
@@ -64,8 +64,8 @@ void systray_menu_create(menu_infos_t* mis)
     */
 
     systray_menu_add_separator(mis->menu);
-    systray_menu_add_action(mis->menu, "About", "about", G_CALLBACK(systray_about_dialog));
-    systray_menu_add_action(mis->menu, "Quit", "quit", G_CALLBACK(quit));
+    systray_menu_add_action(mis->menu, "About", "gtk-about", G_CALLBACK(systray_about_dialog));
+    systray_menu_add_action(mis->menu, "Quit", "gtk-quit", G_CALLBACK(quit));
 }
 
 void systray_rootmenu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* name, const char* icon)
