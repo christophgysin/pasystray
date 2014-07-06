@@ -24,8 +24,6 @@
 
 #include "menu_info.h"
 
-extern gboolean version;
-
 void parse_options(int argc, char *argv[], settings_t* settings);
 
 #endif /* PASYSTRAY_OPTIONS_H */

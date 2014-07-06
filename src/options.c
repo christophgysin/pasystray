@@ -23,7 +23,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include "config.h"
-#include "menu_info.h"
+#include "options.h"
 
 static gboolean version = FALSE;
 static int max_volume = 0;
