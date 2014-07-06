@@ -6,12 +6,11 @@ fix pulseaudio reconnect
 placement of device rename dialog close to systray
 
 FEATURES:
-debug output in release build (--debug)
 popup if can't rename device
 allow manual adding of servers
 module-device-manager autoload
 
 FUTURE:
 load avahi/notify support at runtime
-settings?
+settings dialog
 gettext and translations
