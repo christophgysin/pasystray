@@ -190,24 +190,26 @@ void systray_remove_radio_item(menu_info_t* mi, GtkWidget* item)
 
 GtkWidget* systray_add_item(GtkMenuShell* menu, const char* desc, const char* tooltip, const char* icon)
 {
-    GtkWidget* item =
-    /* TODO: GtkImageMenuItem is deprecated. Replace it with GMenu from GIO?
-        gtk_image_menu_item_new_with_mnemonic(desc);
-    */
-        gtk_menu_item_new_with_mnemonic(desc);
+    GtkWidget* item = gtk_menu_item_new();
 
-    gtk_menu_shell_append(menu, item);
+    GtkWidget* hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_container_add(GTK_CONTAINER(item), hbox);
+
+    if(icon)
+    {
+        GtkWidget* image = gtk_image_new_from_icon_name(icon, GTK_ICON_SIZE_MENU);
+        gtk_container_add(GTK_CONTAINER(hbox), image);
+    }
+
+    GtkWidget* label = gtk_label_new(NULL);
+    gtk_label_set_text_with_mnemonic(GTK_LABEL(label), desc);
+    gtk_container_add(GTK_CONTAINER(hbox), label);
 
     if(tooltip)
         systray_set_tooltip(item, tooltip);
 
-    /* TODO: GtkImageMenuItem is deprecated. Replace it with GMenu from GIO?
-    if(icon)
-        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-            gtk_image_new_from_icon_name(icon, GTK_ICON_SIZE_MENU));
-    */
-
-    gtk_widget_show(item);
+    gtk_menu_shell_append(menu, item);
+    gtk_widget_show_all(item);
 
     return item;
 }
