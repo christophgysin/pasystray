@@ -75,8 +75,6 @@ void pulseaudio_module_add(const pa_module_info* i, int is_last, void* userdata,
 
 void pulseaudio_quit(const char* msg);
 
-#ifdef DEBUG
 void pulseaudio_print_event(pa_subscription_event_type_t t, uint32_t index);
-#endif
 
 #endif /* PASYSTRAY_PULSEAUDIO_H */

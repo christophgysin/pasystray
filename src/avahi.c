@@ -82,17 +82,15 @@ void avahi_init(GMainLoop* loop)
         return;
     }
 
-#ifdef DEBUG
     const char* version = avahi_client_get_version_string(client);
     if(version == NULL)
     {
-        g_warning("Error getting version string: %s",
+        g_debug("Error getting version string: %s",
                 avahi_strerror(avahi_client_errno(client)));
         return;
     }
 
-    g_message("Avahi Server Version: %s", version);
-#endif
+    g_debug("Avahi Server Version: %s", version);
 }
 
 void avahi_start(menu_infos_t* mis)
@@ -145,10 +143,8 @@ static void avahi_browse_callback(AvahiServiceBrowser* b, AvahiIfIndex interface
             return;
 
         case AVAHI_BROWSER_NEW:
-#ifdef DEBUG
-            g_message("[avahi] new service '%s' of type '%s' in domain '%s'",
+            g_debug("[avahi] new service '%s' of type '%s' in domain '%s'",
                     name, type, domain);
-#endif
 
             /* We ignore the returned resolver object. In the callback
                function we free it. If the server is terminated before
@@ -227,11 +223,9 @@ void avahi_server_add(menu_info_t* mi, const char* name, const AvahiAddress* add
     avahi_address_snprint(a, sizeof(a), address);
 
     gchar* host_port = g_strdup_printf("%s:%u", a, port);
-#ifdef DEBUG
 
-    g_message("[avahi] new server detected: %s %s",
+    g_debug("[avahi] new server detected: %s %s",
             name, host_port);
-#endif
 
     char* text = avahi_string_list_info(txt);
 
@@ -258,9 +252,8 @@ void avahi_server_add(menu_info_t* mi, const char* name, const AvahiAddress* add
 
 void avahi_server_remove(menu_info_t* mi, const char* name)
 {
-#ifdef DEBUG
-    g_message("[avahi] remove server '%s'", name);
-#endif
+    g_debug("[avahi] remove server '%s'", name);
+
     menu_info_item_remove_by_name(mi, name);
 }
 

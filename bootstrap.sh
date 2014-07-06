@@ -4,5 +4,5 @@ aclocal
 autoconf
 autoheader
 automake --add-missing
-CFLAGS="-g -O0 -DDEBUG" ./configure --sysconfdir=/etc "$@"
+CFLAGS="-g -O0" ./configure --sysconfdir=/etc "$@"
 make clean

@@ -203,10 +203,8 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
    if(item == NULL)
        return menu_info_item_add(mi, index, name, desc, vol, mute, tooltip, icon, address, target);
 
-#ifdef DEBUG
-    g_message("[menu_info] updating %s %u %s (target: %d)",
+    g_debug("[menu_info] updating %s %u %s (target: %d)",
             menu_info_type_name(item->menu_info->type), index, desc, (int)target);
-#endif
 
     g_free(item->name);
     item->name = g_strdup(name);
@@ -229,10 +227,8 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     {
         case MENU_SERVER:
         case MENU_MODULE:
-#ifdef DEBUG
-            g_warning("[menu_info] *** unhandled %s update! (index: %u, desc: %s)",
+            g_debug("[menu_info] *** unhandled %s update! (index: %u, desc: %s)",
                     menu_info_type_name(mi->type), index, desc);
-#endif
             break;
         case MENU_SINK:
         case MENU_SOURCE:
@@ -258,10 +254,8 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
     menu_info_item_init(item);
     item->menu_info = mi;
 
-#ifdef DEBUG
-    g_message("[menu_info] adding %s %u %s (target: %d)",
+    g_debug("[menu_info] adding %s %u %s (target: %d)",
             menu_info_type_name(mi->type), index, desc, (int)target);
-#endif
 
     item->index = index;
     item->name = g_strdup(name);
@@ -376,10 +370,8 @@ void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name,
     gboolean active = mi->parent->target == index;
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(subitem->widget), active);
 
-#ifdef DEBUG
-    g_message("[menu_info] adding subitem %s %u '%s' %s", menu_info_type_name(mi->type),
+    g_debug("[menu_info] adding subitem %s %u '%s' %s", menu_info_type_name(mi->type),
             index, desc, active ? " (active)" : "");
-#endif
 
     g_hash_table_insert(mi->items, GUINT_TO_POINTER(index), subitem);
 
@@ -397,10 +389,8 @@ void menu_info_subitem_update(menu_info_t* mi, uint32_t index, const char* name,
 
     gboolean active = mi->parent->target == index;
 
-#ifdef DEBUG
-    g_message("[menu_info] updating subitem %s %u '%s' %s", menu_info_type_name(mi->type),
+    g_debug("[menu_info] updating subitem %s %u '%s' %s", menu_info_type_name(mi->type),
             index, desc, active ? " (active)" : "");
-#endif
 
     if(!g_str_equal(item->desc, desc))
         gtk_menu_item_set_label(GTK_MENU_ITEM(item->widget), desc);
@@ -440,10 +430,8 @@ menu_info_item_t* menu_info_item_get_by_desc(menu_info_t* mi, const char* desc)
 void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
         menu_info_item_t* mii)
 {
-#ifdef DEBUG
-    g_message("[systray] button-press-event mod:%s button:%i",
+    g_debug("[systray] button-press-event mod:%s button:%i",
             (event->state & GDK_CONTROL_MASK) ? "ctrl" : "", event->button);
-#endif
 
     switch(event->button)
     {
@@ -468,14 +456,12 @@ void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
 void menu_info_item_scrolled(GtkWidget* item, GdkEventScroll* event,
         menu_info_item_t* mii)
 {
-#ifdef DEBUG
-    g_message("[systray] scroll-event mod:%s dir:%s",
+    g_debug("[systray] scroll-event mod:%s dir:%s",
             (event->state & GDK_CONTROL_MASK) ? "ctrl" : "",
             (event->direction == GDK_SCROLL_UP) ? "up" :
             (event->direction == GDK_SCROLL_DOWN) ? "down" :
             (event->direction == GDK_SCROLL_LEFT) ? "left" :
             (event->direction == GDK_SCROLL_RIGHT) ? "right" : "???");
-#endif
 
     int inc = 0;
 
@@ -508,12 +494,10 @@ void menu_info_item_scrolled(GtkWidget* item, GdkEventScroll* event,
 void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event,
         menu_info_item_t* mii)
 {
-#ifdef DEBUG
-    g_message("move %s %s to %s %s",
+    g_debug("move %s %s to %s %s",
             menu_info_type_name(mii->menu_info->parent->menu_info->type),
             mii->menu_info->parent->desc,
             menu_info_type_name(mii->menu_info->type), mii->desc);
-#endif
 
     switch(mii->menu_info->type)
     {
@@ -581,10 +565,8 @@ void menu_info_item_remove(menu_info_t* mi, uint32_t index)
     if(!mii)
         return;
 
-#ifdef DEBUG
-    g_message("[menu_info] removing %s %u",
+    g_debug("[menu_info] removing %s %u",
             menu_info_type_name(mi->type), index);
-#endif
 
     systray_remove_item(mii);
 
@@ -602,10 +584,8 @@ void menu_info_item_remove_by_name(menu_info_t* mi, const char* name)
         return;
     }
 
-#ifdef DEBUG
-    g_message("[menu_info] removing %s %s (by name: '%s')",
+    g_debug("[menu_info] removing %s %s (by name: '%s')",
             menu_info_type_name(mi->type), mii->desc, name);
-#endif
 
     systray_remove_item(mii);
 

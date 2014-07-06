@@ -34,7 +34,6 @@ void ui_load()
     // GLADE_FILE is set in src/Makefile.am
     const char* filename = GLADE_FILE;
 
-#ifdef DEBUG
     /* try to load ui in current dir first */
     char* local_file = "pasystray.glade";
     if(g_file_test(local_file, G_FILE_TEST_EXISTS))
@@ -43,8 +42,7 @@ void ui_load()
     if(g_file_test(local_file, G_FILE_TEST_EXISTS))
         filename = local_file;
 
-    g_message("using UI file: %s", filename);
-#endif
+    g_debug("using UI file: %s", filename);
 
     guint ret = gtk_builder_add_from_file(builder, filename, &error);
 
@@ -60,13 +58,11 @@ void ui_load()
 
 void ui_update_systray_icon(menu_info_item_t* mii)
 {
-#ifdef DEBUG
-    g_message("pulseaudio_update_systray_icon(%s)", mii->name);
-#endif
+    g_debug("pulseaudio_update_systray_icon(%s)", mii->name);
 
     pa_volume_t volume = pa_cvolume_avg(mii->volume);
 
-    g_message("volume:%u%s", volume, mii->mute ? " muted" : "");
+    g_debug("volume:%u%s", volume, mii->mute ? " muted" : "");
 
     const char* icon_name = NULL;
 

@@ -48,9 +48,7 @@ void x11_property_init()
 
 void x11_property_set(const char* key, const char* value)
 {
-#ifdef DEBUG
-    g_message("[x11-property] setting '%s' to '%s'", key, value);
-#endif
+    g_debug("[x11-property] setting '%s' to '%s'", key, value);
 
     Atom atom = XInternAtom(display, key, False);
     XChangeProperty(display, window, atom, XA_STRING, 8, PropModeReplace,
@@ -59,9 +57,7 @@ void x11_property_set(const char* key, const char* value)
 
 void x11_property_del(const char* key)
 {
-#ifdef DEBUG
-    g_message("[x11-property] deleting '%s'", key);
-#endif
+    g_debug("[x11-property] deleting '%s'", key);
 
     Atom atom = XInternAtom(display, key, False);
     XDeleteProperty(display, window, atom);
@@ -88,9 +84,7 @@ char* x11_property_get(const char* key)
 
     value = g_memdup(prop, nitems + 1);
 
-#ifdef DEBUG
-    g_message("[x11-property] got '%s' = '%s'", key, value);
-#endif
+    g_debug("[x11-property] got '%s' = '%s'", key, value);
 
 finish:
     if(prop)

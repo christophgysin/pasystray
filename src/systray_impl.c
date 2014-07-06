@@ -38,9 +38,8 @@ static void systray_impl_scroll_cb(AppIndicator* appind, gint delta, GdkScrollDi
 
 systray_t systray_impl_create(menu_infos_t* mis)
 {
-#ifdef DEBUG
-    g_message("creating systray implementation using AppIndicator");
-#endif
+    g_debug("creating systray implementation using AppIndicator");
+
     AppIndicator* appind = app_indicator_new("pasystray", "pasystray", APP_INDICATOR_CATEGORY_HARDWARE);
     app_indicator_set_status(appind, APP_INDICATOR_STATUS_ACTIVE);
     app_indicator_set_icon_full(appind, "pasystray", "pasystray");
@@ -76,12 +75,11 @@ static GtkStatusIcon* systray_impl_create_statusicon()
     gtk_status_icon_set_from_icon_name(status_icon, "pasystray");
     gtk_status_icon_set_title(status_icon, "PulseAudio system tray");
 
-#ifdef DEBUG
     GError* error = NULL;
     gchar* exe_path = g_file_read_link("/proc/self/exe", &error);
     if(error)
     {
-        g_warning("failed to read /proc/self/exe: %s", error->message);
+        g_debug("failed to read /proc/self/exe: %s", error->message);
         g_error_free(error);
         g_free(exe_path);
         return status_icon;
@@ -96,19 +94,17 @@ static GtkStatusIcon* systray_impl_create_statusicon()
     if(g_file_test(icon_file, G_FILE_TEST_EXISTS))
     {
         gtk_status_icon_set_from_file(status_icon, icon_file);
-        g_message("using icon: %s", icon_file);
+        g_debug("using icon: %s", icon_file);
     }
     g_free(icon_file);
-#endif
 
     return status_icon;
 }
 
 systray_t systray_impl_create(menu_infos_t* mis)
 {
-#ifdef DEBUG
-    g_message("creating systray implementation using GtkStatusIcon");
-#endif
+    g_debug("creating systray implementation using GtkStatusIcon");
+
     GtkStatusIcon* icon = systray_impl_create_statusicon();
     g_signal_connect(icon, "button-press-event", G_CALLBACK(systray_click_cb), mis);
     g_signal_connect(icon, "scroll-event", G_CALLBACK(systray_impl_scroll_cb), mis);
@@ -118,11 +114,10 @@ systray_t systray_impl_create(menu_infos_t* mis)
     return icon;
 }
 
-#ifdef DEBUG
 void systray_impl_print_icon(gchar* icon_name, gpointer userdata)
 {
     if(icon_name)
-        g_message(" %s", icon_name);
+        g_debug(" %s", icon_name);
 }
 
 void systray_impl_list_icons(GtkIconTheme* icon_theme)
@@ -136,7 +131,6 @@ void systray_impl_list_icons(GtkIconTheme* icon_theme)
     g_list_foreach(sorted_icons, (GFunc)g_free, NULL);
     g_list_free(sorted_icons);
 }
-#endif
 
 void systray_impl_set_icon(systray_t systray, const char* icon_name)
 {
@@ -146,10 +140,8 @@ void systray_impl_set_icon(systray_t systray, const char* icon_name)
     if(gtk_icon_theme_has_icon(icon_theme, icon_name) == FALSE)
     {
         g_warning("[systray_impl] can't find icon %s in current icon theme", icon_name);
-#ifdef DEBUG
-        g_message("[systray_impl] available icons in current theme:");
+        g_debug("[systray_impl] available icons in current theme:");
         systray_impl_list_icons(icon_theme);
-#endif
     }
 
     gtk_status_icon_set_from_icon_name(icon, icon_name);

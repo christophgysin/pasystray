@@ -65,6 +65,7 @@ pasystray_CFLAGS = \
     $(AVAHI_CFLAGS) \
     $(APPINDICATOR_CFLAGS) \
     $(X11_CFLAGS) \
+    -DG_LOG_DOMAIN=\"pasystray\" \
     -DGLADE_FILE=\"$(gladedir)/pasystray.glade\"
 
 EXTRA_DIST = \

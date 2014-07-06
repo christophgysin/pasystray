@@ -65,7 +65,7 @@ void pulseaudio_connect()
 {
     if(pa_context_connect(context, server, PA_CONTEXT_NOFLAGS, NULL) < 0)
     {
-        g_message("pa_context_connect() failed: ");
+        g_warning("pa_context_connect() failed: ");
         pulseaudio_quit(pa_strerror(pa_context_errno(context)));
     }
 }
@@ -77,7 +77,7 @@ void pulseaudio_context_state_cb(pa_context* c, void* userdata)
     switch(pa_context_get_state(c))
     {
         case PA_CONTEXT_UNCONNECTED:
-            g_message("PulseAudio context unconnected!");
+            g_warning("PulseAudio context unconnected!");
             break;
 
         case PA_CONTEXT_READY:
@@ -104,35 +104,35 @@ void pulseaudio_context_state_cb(pa_context* c, void* userdata)
         }
 
         case PA_CONTEXT_FAILED:
-            g_message("[pulseaudio] context failed!");
+            g_warning("[pulseaudio] context failed!");
             menu_infos_clear(mis);
             pa_context_unref(context);
 
             pulseaudio_prepare_context();
-            g_message("[pulseaudio] trying again...");
+            g_debug("[pulseaudio] trying again...");
             pulseaudio_connect();
             break;
 
         case PA_CONTEXT_TERMINATED:
-            g_message("[pulseaudio] context terminated!");
+            g_warning("[pulseaudio] context terminated!");
             menu_infos_clear(mis);
             pa_context_unref(context);
 
             pulseaudio_prepare_context();
-            g_message("[pulseaudio] reconnecting...");
+            g_debug("[pulseaudio] reconnecting...");
             pulseaudio_connect();
             break;
 
         case PA_CONTEXT_CONNECTING:
-            g_message("[pulseaudio] connecting...");
+            g_debug("[pulseaudio] connecting...");
             break;
 
         case PA_CONTEXT_AUTHORIZING:
-            g_message("[pulseaudio] authorizing...");
+            g_debug("[pulseaudio] authorizing...");
             break;
 
         case PA_CONTEXT_SETTING_NAME:
-            g_message("[pulseaudio] setting name...");
+            g_debug("[pulseaudio] setting name...");
             break;
     }
 }
@@ -156,9 +156,7 @@ void pulseaudio_subscribed_cb(pa_context* c, int success, void* userdata)
 
 void pulseaudio_event_cb(pa_context* c, pa_subscription_event_type_t t, uint32_t index, void* userdata)
 {
-#ifdef DEBUG
     pulseaudio_print_event(t, index);
-#endif
 
     menu_infos_t* mis = userdata;
 
@@ -274,13 +272,12 @@ void pulseaudio_event_remove(pa_subscription_event_type_t facility, uint32_t ind
     }
 }
 
-#ifdef DEBUG
 void pulseaudio_print_event(pa_subscription_event_type_t t, uint32_t index)
 {
     pa_subscription_event_type_t type = t & PA_SUBSCRIPTION_EVENT_TYPE_MASK;
     pa_subscription_event_type_t facility = t & PA_SUBSCRIPTION_EVENT_FACILITY_MASK;
 
-    g_message("event %s on %s (%u)",
+    g_debug("event %s on %s (%u)",
         (type == PA_SUBSCRIPTION_EVENT_NEW) ? "new" :
         (type == PA_SUBSCRIPTION_EVENT_CHANGE) ? "change" :
         (type == PA_SUBSCRIPTION_EVENT_REMOVE) ? "remove" :
@@ -294,7 +291,6 @@ void pulseaudio_print_event(pa_subscription_event_type_t t, uint32_t index)
         "unknown",
         index);
 }
-#endif
 
 void pulseaudio_server_init_cb(pa_context* c, const pa_server_info* i, void* userdata)
 {

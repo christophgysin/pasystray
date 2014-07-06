@@ -93,10 +93,9 @@ void pulseaudio_move_success_cb(pa_context *c, int success, void *userdata)
 
 void pulseaudio_rename(menu_info_item_t* mii, const char* name)
 {
-#ifdef DEBUG
-    g_message("rename %s '%s' to '%s'",
+    g_debug("rename %s '%s' to '%s'",
             menu_info_type_name(mii->menu_info->type), mii->desc, name);
-#endif
+
     char *key = g_markup_printf_escaped("%s:%s", menu_info_type_name(mii->menu_info->type), mii->name);
 
     pa_operation* o;
@@ -119,9 +118,7 @@ void pulseaudio_rename_success_cb(pa_context *c, int success, void *userdata)
 
 void pulseaudio_volume(menu_info_item_t* mii, int inc)
 {
-#ifdef DEBUG
-    g_message("pulseaudio_volume(%s, %i)", mii->name, inc);
-#endif
+    g_debug("pulseaudio_volume(%s, %i)", mii->name, inc);
 
     /* increment/decrement in 2% steps */
     pa_cvolume* volume;
@@ -200,9 +197,7 @@ void pulseaudio_update_volume_notification(menu_info_item_t* mii)
 
 void pulseaudio_toggle_mute(menu_info_item_t* mii)
 {
-#ifdef DEBUG
-    g_message("pulseaudio_toggle_mute(%s)", mii->name);
-#endif
+    g_debug("pulseaudio_toggle_mute(%s)", mii->name);
 
     pa_operation* o = NULL;
 
