@@ -48,7 +48,9 @@ build() {
     autoconf
     autoheader
     automake --add-missing
-    ./configure --prefix=/usr
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc
 }
 
 package() {
