@@ -67,13 +67,13 @@ void ui_update_systray_icon(menu_info_item_t* mii)
     const char* icon_name = NULL;
 
     if(volume == PA_VOLUME_MUTED || mii->mute)
-        icon_name = "stock_volume-mute";
+        icon_name = "audio-volume-muted";
     else if(volume < (PA_VOLUME_NORM / 3))
-        icon_name = "stock_volume-min";
+        icon_name = "audio-volume-low";
     else if(volume < (PA_VOLUME_NORM / 3 * 2))
-        icon_name = "stock_volume-med";
+        icon_name = "audio-volume-medium";
     else
-        icon_name = "stock_volume-max";
+        icon_name = "audio-volume-high";
 
     menu_infos_t* mis = mii->menu_info->menu_infos;
     systray_impl_set_icon(mis->systray, icon_name);
