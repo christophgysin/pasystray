@@ -35,8 +35,10 @@ pkgver() {
 build() {
     cd "$srcdir"
     msg "Connecting to GIT server...."
-    if [ -d $_gitname ] ; then
-        cd $_gitname && git pull origin
+    if [[ -d $_gitname ]]; then
+        cd $_gitname
+        git fetch
+        git reset --hard origin/master
         msg "The local files are updated."
     else
         git clone --depth=1 $_gitroot $_gitname
