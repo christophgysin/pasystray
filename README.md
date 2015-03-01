@@ -30,15 +30,15 @@ Mouse bindings
 --------------
 
 over status icon:
-* middle-click: toggle mute default sink
-* ctrl + middle-click: toggle mute default source
+* middle-click / alt + left-click: toggle mute default sink
+* ctrl + middle-click / ctrl + alt + left-click: toggle mute default source
 * scroll up/down: adjust the default sink volume
 * ctrl + scroll: adjust the default source volume
 
 over source/sink:
 * scroll up/down: adjust the volume of respective stream
 * left-click: set as default sink/source
-* middle-click: toggle mute
+* middle-click / alt + left-click: toggle mute
 * right-click: open menu to rename source/sink
 
 over playback/record stream:
