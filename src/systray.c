@@ -328,17 +328,24 @@ void systray_about_dialog()
 void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata)
 {
     menu_infos_t* mis = userdata;
+    menu_info_t* mi = &mis->menu_info[(ev->state & GDK_CONTROL_MASK) ? MENU_SOURCE : MENU_SINK];
+    menu_info_item_t* mii = menu_info_item_get_by_name(mi, mi->default_name);
 
     switch(ev->button)
     {
         case 1:
+            {
+                if((ev->state & GDK_MOD1_MASK) && mii)
+                {
+                    pulseaudio_toggle_mute(mii);
+                    break;
+                }
+            }
         case 3:
             gtk_menu_popup(GTK_MENU(mis->menu), NULL, NULL, gtk_status_icon_position_menu, icon, ev->button, ev->time);
             break;
         case 2:
             {
-                menu_info_t* mi = &mis->menu_info[(ev->state & GDK_CONTROL_MASK) ? MENU_SOURCE : MENU_SINK];
-                menu_info_item_t* mii = menu_info_item_get_by_name(mi, mi->default_name);
                 if(mii)
                     pulseaudio_toggle_mute(mii);
             }

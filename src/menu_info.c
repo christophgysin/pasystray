@@ -435,9 +435,16 @@ void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
 
     switch(event->button)
     {
-        /* on left-click, set device as default */
+        /* on left-click, toggle mute if shift, alt or meta is pressed or set device as default */
         case 1:
-            pulseaudio_set_default(mii);
+            if(event->state & GDK_MOD1_MASK)
+            {
+                pulseaudio_toggle_mute(mii);
+            }
+            else
+            {
+                pulseaudio_set_default(mii);
+            }
             break;
         /* on middle-click, toggle mute device/stream */
         case 2:
