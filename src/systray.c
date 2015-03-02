@@ -334,21 +334,17 @@ void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata
     switch(ev->button)
     {
         case 1:
+            if((ev->state & GDK_MOD1_MASK) && mii)
             {
-                if((ev->state & GDK_MOD1_MASK) && mii)
-                {
-                    pulseaudio_toggle_mute(mii);
-                    break;
-                }
+                pulseaudio_toggle_mute(mii);
+                break;
             }
         case 3:
             gtk_menu_popup(GTK_MENU(mis->menu), NULL, NULL, gtk_status_icon_position_menu, icon, ev->button, ev->time);
             break;
         case 2:
-            {
-                if(mii)
-                    pulseaudio_toggle_mute(mii);
-            }
+            if(mii)
+                pulseaudio_toggle_mute(mii);
             break;
     }
 }

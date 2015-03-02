@@ -435,7 +435,8 @@ void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
 
     switch(event->button)
     {
-        /* on left-click, toggle mute if shift, alt or meta is pressed or set device as default */
+        /* on left-click, set device as default */
+        /* on alt + left-click, toggle mute device/stream */
         case 1:
             if(event->state & GDK_MOD1_MASK)
             {
