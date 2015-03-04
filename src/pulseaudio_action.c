@@ -91,7 +91,8 @@ void pulseaudio_move_success_cb(pa_context *c, int success, void *userdata)
                 menu_info_type_name(to->menu_info->type), to->name);
 }
 
-void pulseaudio_rename(menu_info_item_t* mii, const char* name)
+void pulseaudio_rename(menu_info_item_t* mii, const char* name,
+                       pa_context_success_cb_t success_callback)
 {
     g_debug("rename %s '%s' to '%s'",
             menu_info_type_name(mii->menu_info->type), mii->desc, name);
@@ -99,21 +100,11 @@ void pulseaudio_rename(menu_info_item_t* mii, const char* name)
     char *key = g_markup_printf_escaped("%s:%s", menu_info_type_name(mii->menu_info->type), mii->name);
 
     pa_operation* o;
-    if(!(o = pa_ext_device_manager_set_device_description(context, key, name, pulseaudio_rename_success_cb, mii))) {
+    if(!(o = pa_ext_device_manager_set_device_description(context, key, name, success_callback, mii))) {
         g_warning("pa_ext_device_manager_set_device_description(context, %s, %s) failed", key, name);
         return;
     }
     pa_operation_unref(o);
-}
-
-void pulseaudio_rename_success_cb(pa_context *c, int success, void *userdata)
-{
-    menu_info_item_t* mii = userdata;
-
-    // TODO: try to autoload module-device-manager?
-    if(!success)
-        g_warning("failed to rename %s '%s'! module-device-manager loaded?\n",
-                menu_info_type_name(mii->menu_info->type), mii->name);
 }
 
 void pulseaudio_volume(menu_info_item_t* mii, int inc)

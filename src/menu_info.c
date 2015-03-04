@@ -549,14 +549,30 @@ void menu_info_item_rename_dialog(menu_info_item_t* mii)
         char* name = g_strstrip(g_strdup(entry));
 
         if(!g_str_equal(name, mii->desc))
-            pulseaudio_rename(mii, name);
+            pulseaudio_rename(mii, name, menu_info_pulseaudio_rename_success_cb);
 
         g_free(name);
     }
 
     gtk_widget_hide(GTK_WIDGET(dialog));
-
 }
+
+void menu_info_pulseaudio_rename_success_cb(pa_context* c, int success, void* userdata)
+{
+    menu_info_item_t* mii = userdata;
+
+    // TODO: try to autoload module-device-manager?
+    if(!success)
+    {
+        GtkMessageDialog* dialog = ui_errordialog();
+        gtk_message_dialog_format_secondary_text(dialog,
+                "Failed to rename %s '%s'!\nIs module-device-manager loaded?",
+                menu_info_type_name(mii->menu_info->type), mii->name);
+
+        gtk_dialog_run(dialog);
+        gtk_widget_destroy(dialog);
+    }       
+}   
 
 void menu_info_module_unload_cb(GtkWidget* item, GdkEventButton* event, void* userdata)
 {
