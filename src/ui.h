@@ -32,5 +32,6 @@ GtkAboutDialog* ui_aboutdialog();
 GtkDialog* ui_renamedialog();
 GtkLabel* ui_renamedialog_label();
 GtkEntry* ui_renamedialog_entry();
+GtkMessageDialog* ui_errordialog();
 
 #endif /* PASYSTRAY_UI_H */
