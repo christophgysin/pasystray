@@ -119,4 +119,14 @@
       <action-widget response="-5">okbutton</action-widget>
     </action-widgets>
   </object>
+  <object class="GtkMessageDialog" id="errordialog">
+    <property name="can_focus">False</property>
+    <property name="border_width">5</property>
+    <property name="resizable">False</property>
+    <property name="type_hint">dialog</property>
+    <property name="title" translatable="yes">Error</property>
+    <property name="text" translatable="yes">An error occurred</property>
+    <property name="message_type">GTK_MESSAGE_ERROR</property>
+    <property name="buttons">GTK_BUTTONS_OK</property>
+  </object>
 </interface>
