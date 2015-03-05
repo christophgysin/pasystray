@@ -101,10 +101,7 @@ GtkEntry* ui_renamedialog_entry()
 
 GtkDialog* ui_errordialog(const gchar* message)
 {
-    GtkWidget* dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL,
-            GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "An error occured");
-    gtk_window_set_title(GTK_WINDOW(dialog), "pasystray");
-    gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), message);
-
+    GtkMessageDialog* dialog = (GtkMessageDialog*) gtk_builder_get_object(builder, "errordialog");
+    gtk_message_dialog_format_secondary_text(dialog, message);
     return GTK_DIALOG(dialog);
 }
