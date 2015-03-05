@@ -121,6 +121,7 @@ void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event,
 
 void menu_info_item_rename_cb(GtkWidget* item, GdkEventButton* event, void* userdata);
 void menu_info_item_rename_dialog(menu_info_item_t* mii);
+void menu_info_item_rename_error(menu_info_item_t* mii);
 
 void menu_info_module_unload_cb(GtkWidget* item, GdkEventButton* event, void* userdata);
 

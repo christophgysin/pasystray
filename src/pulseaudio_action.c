@@ -112,8 +112,7 @@ void pulseaudio_rename_success_cb(pa_context *c, int success, void *userdata)
 
     // TODO: try to autoload module-device-manager?
     if(!success)
-        g_warning("failed to rename %s '%s'! module-device-manager loaded?\n",
-                menu_info_type_name(mii->menu_info->type), mii->name);
+        menu_info_item_rename_error(mii);
 }
 
 void pulseaudio_volume(menu_info_item_t* mii, int inc)

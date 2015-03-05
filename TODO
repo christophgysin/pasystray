@@ -6,7 +6,6 @@ fix pulseaudio reconnect
 placement of device rename dialog close to systray
 
 FEATURES:
-popup if can't rename device
 allow manual adding of servers
 module-device-manager autoload
 
