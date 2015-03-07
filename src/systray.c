@@ -320,7 +320,7 @@ void systray_remove_item_from_all_submenus(menu_info_item_t* item, menu_info_t* 
 
 void systray_about_dialog()
 {
-    GtkAboutDialog* dialog = ui_aboutdialog();
+    GtkDialog* dialog = ui_aboutdialog();
     g_signal_connect_swapped(dialog, "response", G_CALLBACK(gtk_widget_hide), dialog);
     gtk_widget_show_all(GTK_WIDGET(dialog));
 }

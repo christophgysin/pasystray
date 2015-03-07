@@ -50,10 +50,6 @@ void ui_load()
     {
         g_error("[ui] %s", error->message);
     }
-
-    gtk_about_dialog_set_version(ui_aboutdialog(), PACKAGE_VERSION);
-    gtk_about_dialog_set_website(ui_aboutdialog(), PACKAGE_URL);
-    gtk_about_dialog_set_website_label(ui_aboutdialog(), PACKAGE_URL);
 }
 
 void ui_update_systray_icon(menu_info_item_t* mii)
@@ -79,9 +75,15 @@ void ui_update_systray_icon(menu_info_item_t* mii)
     systray_impl_set_icon(mis->systray, icon_name);
 }
 
-GtkAboutDialog* ui_aboutdialog()
+GtkDialog* ui_aboutdialog()
 {
-    return (GtkAboutDialog*) gtk_builder_get_object(builder, "aboutdialog");
+    GtkAboutDialog* aboutdialog = (GtkAboutDialog*) gtk_builder_get_object(builder, "aboutdialog");
+
+    gtk_about_dialog_set_version(aboutdialog, PACKAGE_VERSION);
+    gtk_about_dialog_set_website(aboutdialog, PACKAGE_URL);
+    gtk_about_dialog_set_website_label(aboutdialog, PACKAGE_URL);
+
+    return GTK_DIALOG(aboutdialog);
 }
 
 GtkDialog* ui_renamedialog()
