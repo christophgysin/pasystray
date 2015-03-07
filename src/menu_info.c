@@ -559,11 +559,11 @@ void menu_info_item_rename_dialog(menu_info_item_t* mii)
 
 void menu_info_item_rename_error(menu_info_item_t* mii)
 {
-    gchar* message = g_strdup_printf(
-            "Failed to rename %s '%s'!\nIs module-device-manager loaded?",
-            menu_info_type_name(mii->menu_info->type), mii->name);
-    GtkDialog* dialog = ui_errordialog(message);
-    g_free(message);
+    gchar* title = g_strdup_printf("Failed to rename %s",
+            menu_info_type_name(mii->menu_info->type));
+    GtkDialog* dialog = ui_errordialog(title,
+            "Is the module-device-manager loaded?");
+    g_free(title);
 
     gtk_dialog_run(dialog);
     gtk_widget_destroy(GTK_WIDGET(dialog));
