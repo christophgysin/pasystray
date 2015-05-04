@@ -24,7 +24,7 @@ To detect remote sinks/sources you need to enable module-zeroconf-discover on
 the local PulseAudio instance and module-zeroconf-publish on the remote side.
 
 To control a different server than the local instance, run pasystray as:
-$ PULSE_SERVER=remote_host pasystray
+  $ PULSE_SERVER=remote_host pasystray
 
 Mouse bindings
 --------------
