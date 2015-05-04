@@ -108,7 +108,7 @@ GtkDialog* ui_errordialog(const gchar* title, const gchar* message)
     gtk_message_dialog_set_markup(dialog, title);
 
     if(message)
-        gtk_message_dialog_format_secondary_text(dialog, message);
+        gtk_message_dialog_format_secondary_text(dialog, "%s", message);
 
     return GTK_DIALOG(dialog);
 }
