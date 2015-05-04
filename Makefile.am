@@ -29,6 +29,8 @@ desktop_DATA = data/pasystray.desktop
 xdgautostartdir = $(sysconfdir)/xdg/autostart
 xdgautostart_DATA = data/pasystray.desktop
 
+man_MANS = man/pasystray.1
+
 EXTRA_DIST = bootstrap.sh README.md LICENSE $(icons_DATA) $(pixmaps_DATA) $(desktop_DATA)
 
 SUBDIRS = src

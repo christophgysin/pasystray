@@ -1,0 +1,103 @@
+.\" (C) Copyright 2013 Scott Leggett <scott@sl.id.au>,
+.\" (C) Copyright 2015 Christoph Gysin <christoph.gysin@gmail.com>
+.\"
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH PASYSTRAY 1 "November  9, 2013"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+pasystray \- PulseAudio controller for the system tray
+.SH SYNOPSIS
+.B pasystray
+.RI [ options ]
+.SH DESCRIPTION
+.B pasystray
+enables control of various PulseAudio server settings from the X11 system tray.
+Clicking the tray icon will display a graphical menu, allowing the user to:
+.IP \[bu]
+adjust the volume of streams and sinks/sources
+.IP \[bu]
+transfer streams between sinks/sources
+.IP \[bu]
+switch the default sink/source
+.IP \[bu]
+set the default server (PULSE_SERVER)
+.IP \[bu]
+detect network PulseAudio services
+.IP \[bu]
+rename devices
+.SH MOUSE BINDINGS
+Status icon:
+.IP \[bu]
+Middle-click / Alt + Left-click: toggle mute, default sink
+.IP \[bu]
+Ctrl + Middle-click / Ctrl + Alt + Left-click: toggle mute, default source
+.IP \[bu]
+Scroll up/down: adjust volume, default sink
+.IP \[bu]
+Ctrl + Scroll up/down: adjust volume, default source
+.LP
+Source/Sink menu item:
+.IP \[bu]
+Scroll up/down: adjust volume
+.IP \[bu]
+Left-click: set as default sink/source
+.IP \[bu]
+Middle-click / Alt + Left-click: toggle mute
+.IP \[bu]
+Right-click: rename
+.LP
+Playback/record stream menu item:
+.IP \[bu]
+Scroll up/down: adjust volume
+.IP \[bu]
+Middle-click: toggle mute
+.SH OPTIONAL PULSEAUDIO MODULES
+.B pasystray
+can make use of the following PulseAudio modules:
+.IP \[bu]
+module-device-manager - device renaming
+.IP \[bu]
+module-zeroconf-discover - network device discovery
+.LP
+These modules may need to be loaded, using e.g.
+.BR pactl (1)
+or pasystray itself.
+.SH REMOTE SINKS/SOURCES
+In order to detect remote sinks/source, as well as enabling
+module-zeroconf-discover locally, module-zeroconf-publish must be enabled on
+the remote server.
+.SH REMOTE SERVER
+As with most PulseAudio-aware applications, the environment variable
+PULSE_SERVER may be set to the address of a remote host in order to use
+.B pasystray
+to control the server running on that host.
+.SH OPTIONS
+This program follows the usual GNU command line syntax, with long
+options starting with two dashes (`-').
+.TP
+.B \-V, \-\-version
+Show the program version.
+.TP
+.B \-d, \-\-debug
+Print debugging information.
+.TP
+.B \-m, \-\-max-volume=N
+Set the maximum volume (in percent).
+.SH SEE ALSO
+.BR pulseaudio (1),
+.BR pactl (1).
+.PP
+Homepage: https://github.com/christophgysin/pasystray
