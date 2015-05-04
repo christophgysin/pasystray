@@ -2,7 +2,6 @@ verify all mouse bindings works
 
 BUGS:
 mouse bindings, modifiers don't work with appindicator
-fix pulseaudio reconnect
 placement of device rename dialog close to systray
 
 FEATURES:

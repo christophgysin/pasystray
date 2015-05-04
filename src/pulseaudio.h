@@ -28,7 +28,7 @@
 
 void pulseaudio_init(menu_infos_t* mis);
 void pulseaudio_destroy();
-void pulseaudio_prepare_context();
+void pulseaudio_prepare_context(menu_infos_t* mis);
 void pulseaudio_connect();
 void pulseaudio_start();
 

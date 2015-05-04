@@ -38,8 +38,7 @@ void pulseaudio_init(menu_infos_t* mis)
     if(!(m = pa_glib_mainloop_new(g_main_context_default())))
         pulseaudio_quit("pa_glib_mainloop_new() failed.");
 
-    pulseaudio_prepare_context();
-    pa_context_set_state_callback(context, pulseaudio_context_state_cb, mis);
+    pulseaudio_prepare_context(mis);
 
     pulseaudio_connect();
 }
@@ -49,7 +48,7 @@ void pulseaudio_destroy()
     pulseaudio_quit(NULL);
 }
 
-void pulseaudio_prepare_context()
+void pulseaudio_prepare_context(menu_infos_t* mis)
 {
     pa_mainloop_api* mainloop_api = pa_glib_mainloop_get_api(m);
 
@@ -59,6 +58,8 @@ void pulseaudio_prepare_context()
     context = pa_context_new_with_proplist(mainloop_api, NULL, context_proplist);
     if(!context)
         pulseaudio_quit("pa_context_new() failed.");
+
+    pa_context_set_state_callback(context, pulseaudio_context_state_cb, mis);
 }
 
 void pulseaudio_connect()
@@ -108,7 +109,7 @@ void pulseaudio_context_state_cb(pa_context* c, void* userdata)
             menu_infos_clear(mis);
             pa_context_unref(context);
 
-            pulseaudio_prepare_context();
+            pulseaudio_prepare_context(mis);
             g_debug("[pulseaudio] trying again...");
             pulseaudio_connect();
             break;
@@ -118,7 +119,7 @@ void pulseaudio_context_state_cb(pa_context* c, void* userdata)
             menu_infos_clear(mis);
             pa_context_unref(context);
 
-            pulseaudio_prepare_context();
+            pulseaudio_prepare_context(mis);
             g_debug("[pulseaudio] reconnecting...");
             pulseaudio_connect();
             break;
