@@ -27,7 +27,7 @@
 
 #include <pulse/glib-mainloop.h>
 
-static pa_context* context = NULL;
+pa_context* context = NULL;
 
 static pa_glib_mainloop* m = NULL;
 static pa_proplist* context_proplist = NULL;
