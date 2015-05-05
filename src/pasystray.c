@@ -32,7 +32,7 @@
 #include "x11-property.h"
 
 static GMainLoop* loop;
-menu_infos_t* mis;
+static menu_infos_t* mis;
 
 int main(int argc, char *argv[])
 {
