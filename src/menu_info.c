@@ -200,8 +200,11 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     else
         item = menu_info_item_get(mi, index);
 
-   if(item == NULL)
-       return menu_info_item_add(mi, index, name, desc, vol, mute, tooltip, icon, address, target);
+    if(item == NULL)
+    {
+        menu_info_item_add(mi, index, name, desc, vol, mute, tooltip, icon, address, target);
+        return;
+    }
 
     g_debug("[menu_info] updating %s %u %s (target: %d)",
             menu_info_type_name(item->menu_info->type), index, desc, (int)target);
