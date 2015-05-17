@@ -8,4 +8,4 @@ Icon=pasystray
 StartupNotify=true
 Type=Application
 Categories=AudioVideo;Audio;
-Keywords=pulseaudio;tray;system tray;applet;volume
+Keywords=pulseaudio;tray;system tray;applet;volume;
