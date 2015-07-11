@@ -336,15 +336,21 @@ void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata
         case 1:
             /* on alt + left-click, toggle mute default sink */
             if((ev->state & GDK_MOD1_MASK) && mii)
+            {
                 pulseaudio_toggle_mute(mii);
+            }
             /* on left-click, show menu */
             else
+            {
                 gtk_menu_popup(GTK_MENU(mis->menu), NULL, NULL, gtk_status_icon_position_menu, icon, ev->button, ev->time);
+            }
             break;
         case 2:
             /* on middle-click, toggle mute default sink */
             if(mii)
+            {
                 pulseaudio_toggle_mute(mii);
+            }
             break;
         case 3:
             /* on right-click, show menu */
