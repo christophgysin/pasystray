@@ -339,6 +339,11 @@ void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata
             {
                 pulseaudio_toggle_mute(mii);
             }
+            /* on ctrl + left-click, start pavucontrol */
+            else if((ev->state & GDK_CONTROL_MASK) && mii)
+            {
+                g_spawn_command_line_async(COMMAND_PAVUCONTROL, NULL);
+            }
             /* on left-click, show menu */
             else
             {

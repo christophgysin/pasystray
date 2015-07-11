@@ -33,6 +33,7 @@ Mouse bindings
 
 over status icon:
 * left/right-click: open menu
+* ctrl + left-click: start pavucontrol
 * middle-click / alt + left-click: toggle mute default sink
 * ctrl + middle-click / ctrl + alt + left-click: toggle mute default source
 * scroll up/down: adjust the default sink volume
