@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.18.3 -->
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkAboutDialog" id="aboutdialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -37,6 +38,31 @@
       </object>
     </child>
   </object>
+  <object class="GtkMessageDialog" id="errordialog">
+    <property name="can_focus">False</property>
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">Error</property>
+    <property name="resizable">False</property>
+    <property name="type_hint">dialog</property>
+    <property name="message_type">error</property>
+    <property name="buttons">ok</property>
+    <property name="text" translatable="yes">An error occurred</property>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="messagedialog-vbox2">
+        <property name="can_focus">False</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="messagedialog-action_area2">
+            <property name="can_focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkDialog" id="renamedialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -47,27 +73,15 @@
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
-        <child>
-          <object class="GtkLabel" id="label">
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Rename &lt;device&gt; &lt;old name&gt; to:</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area3">
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="cancelbutton">
-                <property name="label">gtk-cancel</property>
+                <property name="label">Cancel</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="use_stock">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -77,10 +91,10 @@
             </child>
             <child>
               <object class="GtkButton" id="okbutton">
-                <property name="label">gtk-ok</property>
+                <property name="label">OK</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
-                <property name="use_stock">True</property>
+                <property name="image_position">bottom</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -93,6 +107,17 @@
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="label">
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Rename &lt;device&gt; &lt;old name&gt; to:</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -118,15 +143,5 @@
       <action-widget response="-6">cancelbutton</action-widget>
       <action-widget response="-5">okbutton</action-widget>
     </action-widgets>
-  </object>
-  <object class="GtkMessageDialog" id="errordialog">
-    <property name="can_focus">False</property>
-    <property name="border_width">5</property>
-    <property name="resizable">False</property>
-    <property name="type_hint">dialog</property>
-    <property name="title" translatable="yes">Error</property>
-    <property name="text" translatable="yes">An error occurred</property>
-    <property name="message_type">GTK_MESSAGE_ERROR</property>
-    <property name="buttons">GTK_BUTTONS_OK</property>
   </object>
 </interface>
