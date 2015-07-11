@@ -335,12 +335,13 @@ void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata
     {
         case 1:
             /* on alt + left-click, toggle mute default sink */
-            if((ev->state & GDK_MOD1_MASK) && mii)
+            if(ev->state & GDK_MOD1_MASK)
             {
-                pulseaudio_toggle_mute(mii);
+                if(mii)
+                    pulseaudio_toggle_mute(mii);
             }
             /* on ctrl + left-click, start pavucontrol */
-            else if((ev->state & GDK_CONTROL_MASK) && mii)
+            else if(ev->state & GDK_CONTROL_MASK)
             {
                 g_spawn_command_line_async(COMMAND_PAVUCONTROL, NULL);
             }
