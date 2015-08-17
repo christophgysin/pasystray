@@ -63,6 +63,11 @@ void parse_options(int argc, char *argv[], settings_t* settings)
         setenv("G_MESSAGES_DEBUG", "pasystray", 1);
     }
 
+    if(volume_max > 0)
+    {
+        settings->volume_max = volume_max;
+    }
+
     if(volume_inc > 0)
     {
         settings->volume_inc = volume_inc;
