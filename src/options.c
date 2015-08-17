@@ -27,13 +27,13 @@
 
 static gboolean version = FALSE;
 static gboolean debug = FALSE;
-static int max_volume = 0;
+static int volume_max = 0;
 
 static GOptionEntry entries[] =
 {
     { "version", 'V', 0, G_OPTION_ARG_NONE, &version, "print version and exit", NULL },
     { "debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "print debugging information", NULL },
-    { "max-volume", 'm', 0, G_OPTION_ARG_INT, &max_volume, "maximum volume (in percent)", "N" },
+    { "max-volume", 'm', 0, G_OPTION_ARG_INT, &volume_max, "maximum volume (in percent)", "N" },
     { .long_name = NULL }
 };
 
@@ -61,8 +61,8 @@ void parse_options(int argc, char *argv[], settings_t* settings)
         setenv("G_MESSAGES_DEBUG", "pasystray", 1);
     }
 
-    if(max_volume > 0)
+    if(volume_max > 0)
     {
-        settings->max_volume = max_volume;
+        settings->volume_max = volume_max;
     }
 }
