@@ -57,6 +57,7 @@ struct menu_info_t_ {
 
 struct settings_t_ {
     int volume_max;
+    int volume_inc;
 };
 typedef struct settings_t_ settings_t;
 

@@ -372,10 +372,10 @@ void systray_scroll_cb(systray_t* systray, guint state, GdkScrollDirection direc
     switch(direction)
     {
         case GDK_SCROLL_UP:
-            inc = 1;
+            inc = mis->settings.volume_inc;
             break;
         case GDK_SCROLL_DOWN:
-            inc = -1;
+            inc = -mis->settings.volume_inc;
             break;
         default:
             return;

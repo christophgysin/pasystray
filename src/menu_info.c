@@ -471,15 +471,17 @@ void menu_info_item_scrolled(GtkWidget* item, GdkEventScroll* event,
             (event->direction == GDK_SCROLL_LEFT) ? "left" :
             (event->direction == GDK_SCROLL_RIGHT) ? "right" : "???");
 
+    menu_infos_t* mis = mii->menu_info->menu_infos;
+
     int inc = 0;
 
     switch(event->direction)
     {
         case GDK_SCROLL_UP:
-            inc = 1;
+            inc = mis->settings.volume_inc;
             break;
         case GDK_SCROLL_DOWN:
-            inc = -1;
+            inc = -mis->settings.volume_inc;
             break;
         default:
             return;
