@@ -175,7 +175,12 @@ void pulseaudio_set_volume_success_cb(pa_context *c, int success, void *userdata
         return;
     }
 
-    pulseaudio_update_volume_notification(mii);
+    menu_infos_t* mis = mii->menu_info->menu_infos;
+
+    if(mis->settings.notify)
+    {
+        pulseaudio_update_volume_notification(mii);
+    }
 }
 
 void pulseaudio_update_volume_notification(menu_info_item_t* mii)

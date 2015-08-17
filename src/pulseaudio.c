@@ -358,14 +358,16 @@ void pulseaudio_sink_add(const pa_sink_info* i, int is_last, void* userdata, gbo
     if(is_last)
         return;
 
-    if(is_new)
+    menu_info_t* mi = userdata;
+    menu_infos_t* mis = mi->menu_infos;
+
+    if(is_new && mis->settings.notify)
     {
         gchar* msg = g_strdup_printf("new sink \"%s\"", i->description);
         notify(msg, i->name, NULL);
         g_free(msg);
     }
 
-    menu_info_t* mi = userdata;
     char* tooltip = sink_info_str(i);
     menu_info_item_update(mi, i->index, i->name, i->description, &i->volume,
             i->mute, tooltip, NULL, NULL, -1);
@@ -404,14 +406,16 @@ void pulseaudio_source_add(const pa_source_info* i, int is_last, void* userdata,
     if(class && g_str_equal(class, "monitor"))
         return;
 
-    if(is_new)
+    menu_info_t* mi = userdata;
+    menu_infos_t* mis = mi->menu_infos;
+
+    if(is_new && mis->settings.notify)
     {
         gchar* msg = g_strdup_printf("new source \"%s\"", i->description);
         notify(msg, i->name, NULL);
         g_free(msg);
     }
 
-    menu_info_t* mi = userdata;
     char* tooltip = source_info_str(i);
     menu_info_item_update(mi, i->index, i->name, i->description, &i->volume,
             i->mute, tooltip, NULL, NULL, -1);
