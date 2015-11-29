@@ -433,8 +433,10 @@ menu_info_item_t* menu_info_item_get_by_desc(menu_info_t* mi, const char* desc)
 void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
         menu_info_item_t* mii)
 {
-    g_debug("[systray] button-press-event mod:%s button:%i",
-            (event->state & GDK_CONTROL_MASK) ? "ctrl" : "", event->button);
+    g_debug("[menu_info] item clicked mod:%s%s button:%i",
+            (event->state & GDK_CONTROL_MASK) ? "[ctrl]" : "",
+            (event->state & GDK_MOD1_MASK) ? "[alt]" : "",
+            event->button);
 
     switch(event->button)
     {
@@ -464,7 +466,7 @@ void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
 void menu_info_item_scrolled(GtkWidget* item, GdkEventScroll* event,
         menu_info_item_t* mii)
 {
-    g_debug("[systray] scroll-event mod:%s dir:%s",
+    g_debug("[menu_info] scroll-event mod:%s dir:%s",
             (event->state & GDK_CONTROL_MASK) ? "ctrl" : "",
             (event->direction == GDK_SCROLL_UP) ? "up" :
             (event->direction == GDK_SCROLL_DOWN) ? "down" :
@@ -501,13 +503,13 @@ void menu_info_item_scrolled(GtkWidget* item, GdkEventScroll* event,
     }
 }
 
-void menu_info_subitem_clicked(GtkWidget* item, GdkEvent* event,
+void menu_info_subitem_clicked(GtkWidget* item, GdkEventButton* event,
         menu_info_item_t* mii)
 {
-    g_debug("move %s %s to %s %s",
-            menu_info_type_name(mii->menu_info->parent->menu_info->type),
-            mii->menu_info->parent->desc,
-            menu_info_type_name(mii->menu_info->type), mii->desc);
+    g_debug("[menu_info] subitem clicked mod:%s%s button:%i",
+            (event->state & GDK_CONTROL_MASK) ? "[ctrl]" : "",
+            (event->state & GDK_MOD1_MASK) ? "[alt]" : "",
+            event->button);
 
     switch(mii->menu_info->type)
     {

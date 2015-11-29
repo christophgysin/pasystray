@@ -331,6 +331,11 @@ void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata
     menu_info_t* mi = &mis->menu_info[(ev->state & GDK_CONTROL_MASK) ? MENU_SOURCE : MENU_SINK];
     menu_info_item_t* mii = menu_info_item_get_by_name(mi, mi->default_name);
 
+    g_debug("[systray] click mod:%s%s button:%i",
+            (ev->state & GDK_CONTROL_MASK) ? "[ctrl]" : "",
+            (ev->state & GDK_MOD1_MASK) ? "[alt]" : "",
+            ev->button);
+
     switch(ev->button)
     {
         case 1:

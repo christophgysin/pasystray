@@ -70,12 +70,18 @@ void pulseaudio_set_default_success_cb(pa_context *c, int success, void *userdat
 
 void pulseaudio_move_input_to_sink(menu_info_item_t* input, menu_info_item_t* sink)
 {
+    g_debug("[pulseaudio_action] move input %s to sink %s",
+            input->desc, sink->desc);
+
     pa_operation_unref(pa_context_move_sink_input_by_index(context, input->index,
                 sink->index, pulseaudio_move_success_cb, input));
 }
 
 void pulseaudio_move_output_to_source(menu_info_item_t* output, menu_info_item_t* source)
 {
+    g_debug("[pulseaudio_action] move output %s to source %s",
+            output->desc, source->desc);
+
     pa_operation_unref(pa_context_move_source_output_by_index(context, output->index,
                 source->index, pulseaudio_move_success_cb, output));
 }
