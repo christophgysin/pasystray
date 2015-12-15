@@ -1,9 +1,23 @@
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.7
+    packages:
+      - gcc-4.9
+      - clang-3.7
+      - libgtk-3-dev
+      - libpulse-dev
+      - libavahi-client-dev
+      - libavahi-glib-dev
+      - libnotify-dev
+      - libappindicator3-dev
 language: c
-before_install:
-    - sudo apt-get update -qq
-    - sudo apt-get install -qq libgtk-3-dev libpulse-dev libavahi-client-dev libavahi-glib-dev libnotify-dev libappindicator3-dev
-before_script:
-    - aclocal
-    - autoconf
-    - autoheader
-    - automake --add-missing
+script: ./.travis.sh
+env:
+  - CFLAGS=--std=c99
+  - USE_CC=gcc-4.9 CFLAGS=--std=c99
+  - USE_CC=gcc-4.9 CFLAGS=--std=c11
+  - USE_CC=clang-3.7 CFLAGS=--std=c99
+  - USE_CC=clang-3.7 CFLAGS=--std=c11
+sudo: false
