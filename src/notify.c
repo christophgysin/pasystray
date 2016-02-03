@@ -52,6 +52,7 @@ void notify_show(NotifyNotification* n)
 notify_handle_t notify(const char* msg, const char* body, const char* icon)
 {
     NotifyNotification* n = notify_notification_new(msg, body, icon);
+    notify_notification_set_urgency(n, NOTIFY_URGENCY_LOW);
     notify_show(n);
     return (notify_handle_t) n;
 }
