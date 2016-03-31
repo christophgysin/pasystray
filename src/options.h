@@ -24,6 +24,7 @@
 
 #include "menu_info.h"
 
-void parse_options(int argc, char *argv[], settings_t* settings);
+const GOptionEntry* get_options();
+void parse_options(settings_t* settings);
 
 #endif /* PASYSTRAY_OPTIONS_H */

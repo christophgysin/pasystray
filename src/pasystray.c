@@ -19,6 +19,7 @@
   USA.
 ***/
 
+#include <glib.h>
 #include <gtk/gtk.h>
 
 #include "pasystray.h"
@@ -36,15 +37,23 @@ static menu_infos_t* mis;
 
 int main(int argc, char *argv[])
 {
+    const GOptionEntry* options = get_options();
+    GError *error = NULL;
+    gtk_init_with_args(&argc, &argv, NULL, options, NULL, &error);
+    if(error)
+    {
+        g_print("option parsing failed: %s\n", error->message);
+        return EXIT_FAILURE;
+    }
+
     settings_t settings;
-    parse_options(argc, argv, &settings);
-    gtk_init(&argc, &argv);
+    parse_options(&settings);
 
     init(&settings);
     g_main_loop_run(loop);
     destroy();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 void init(settings_t* settings)
