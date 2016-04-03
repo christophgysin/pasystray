@@ -37,7 +37,7 @@ static menu_infos_t* mis;
 
 int main(int argc, char *argv[])
 {
-    const GOptionEntry* options = get_options();
+    GOptionEntry* options = get_options();
     GError *error = NULL;
     gtk_init_with_args(&argc, &argv, NULL, options, NULL, &error);
     if(error)
