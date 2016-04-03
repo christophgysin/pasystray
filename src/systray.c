@@ -192,18 +192,30 @@ GtkWidget* systray_add_item(GtkMenuShell* menu, const char* desc, const char* to
 {
     GtkWidget* item = gtk_menu_item_new();
 
+#if GTK_VERSION_MAJOR == 2
+    GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
+#else
     GtkWidget* hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+#endif
     gtk_container_add(GTK_CONTAINER(item), hbox);
 
     if(icon)
     {
         GtkWidget* image = gtk_image_new_from_icon_name(icon, GTK_ICON_SIZE_MENU);
+#if GTK_VERSION_MAJOR == 2
+        gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 0);
+#else
         gtk_container_add(GTK_CONTAINER(hbox), image);
+#endif
     }
 
     GtkWidget* label = gtk_label_new(NULL);
     gtk_label_set_text_with_mnemonic(GTK_LABEL(label), desc);
+#if GTK_VERSION_MAJOR == 2
+    gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 15);
+#else
     gtk_container_add(GTK_CONTAINER(hbox), label);
+#endif
 
     if(tooltip)
         systray_set_tooltip(item, tooltip);
