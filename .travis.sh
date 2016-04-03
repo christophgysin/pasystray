@@ -9,6 +9,6 @@ aclocal
 autoconf
 autoheader
 automake --add-missing
-./configure || (cat config.log; exit 1)
+./configure ${EXTRA_CONF:-} || (cat config.log; exit 1)
 make
 make test
