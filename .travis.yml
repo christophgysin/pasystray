@@ -8,8 +8,6 @@ addons:
       - clang-3.7
       - libgtk-3-dev
       - libpulse-dev
-      - libavahi-client-dev
-      - libavahi-glib-dev
       - libnotify-dev
       - libappindicator3-dev
 language: c
