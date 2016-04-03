@@ -105,8 +105,12 @@ AS_IF([test "x$HAVE_X11" = x1], AC_DEFINE([HAVE_X11], 1,
 AC_ARG_ENABLE([appindicator],
     AS_HELP_STRING([--disable-appindicator], [Disable optional appindicator support]))
 
+case ${with_gtk} in
+    2) APPINDICATOR_VERSION=appindicator-0.1;;
+    3) APPINDICATOR_VERSION=appindicator3-0.1;;
+esac
 AS_IF([test "x$enable_appindicator" != xno],
-    [PKG_CHECK_MODULES(APPINDICATOR, [ appindicator3-0.1 ], HAVE_APPINDICATOR=1,
+    [PKG_CHECK_MODULES(APPINDICATOR, [ $APPINDICATOR_VERSION ], HAVE_APPINDICATOR=1,
                        HAVE_APPINDICATOR=0)], HAVE_APPINDICATOR=0)
 
 AS_IF([test "x$enable_appindicator" = xyes && test "x$HAVE_APPINDICATOR" = x0],
