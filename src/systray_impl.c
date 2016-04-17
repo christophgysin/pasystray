@@ -57,7 +57,7 @@ void systray_impl_set_tooltip(systray_t systray, const char* markup)
 {
     // TODO: set tooltip?
 }
-#else
+#elif HAVE_STATUSICON
 
 #include "ui.h"
 
@@ -149,6 +149,47 @@ void systray_impl_set_tooltip(systray_t systray, const char* markup)
 {
     GtkStatusIcon* icon = systray;
     gtk_status_icon_set_tooltip_markup(icon, markup);
+}
+
+#else
+
+static void systray_impl_scroll_cb(GtkImage* image, GdkEventScroll* ev, gpointer userdata)
+{
+    menu_infos_t* mis = userdata;
+    systray_scroll_cb(ev->state, ev->direction, mis);
+}
+
+systray_t systray_impl_create(menu_infos_t* mis)
+{
+    GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_title(GTK_WINDOW(window), "pasystray");
+
+    GtkWidget *button = gtk_menu_button_new();
+    gtk_container_add(GTK_CONTAINER(window), button);
+    gtk_menu_button_set_popup(GTK_MENU_BUTTON(button), GTK_WIDGET(mis->menu));
+    gtk_widget_add_events(button, GDK_SCROLL_MASK);
+    g_signal_connect(button, "button-press-event", G_CALLBACK(systray_click_cb), mis);
+    g_signal_connect(button, "scroll-event", G_CALLBACK(systray_impl_scroll_cb), mis);
+
+    GtkWidget *image = gtk_image_new();
+    gtk_image_set_from_icon_name(GTK_IMAGE(image), "pasystray", GTK_ICON_SIZE_DIALOG);
+    gtk_button_set_image(GTK_BUTTON(button), image);
+
+    gtk_widget_show_all(window);
+
+    return image;
+}
+
+void systray_impl_set_icon(systray_t systray, const char* icon_name)
+{
+    GtkImage *image = systray;
+    gtk_image_set_from_icon_name(image, icon_name, GTK_ICON_SIZE_DIALOG);
+}
+
+void systray_impl_set_tooltip(systray_t systray, const char* markup)
+{
+    GtkImage *image = systray;
+    gtk_widget_set_tooltip_markup(GTK_WIDGET(image), markup);
 }
 
 #endif

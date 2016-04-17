@@ -101,6 +101,18 @@ AM_CONDITIONAL([HAVE_X11], [test "x$HAVE_X11" = x1])
 AS_IF([test "x$HAVE_X11" = x1], AC_DEFINE([HAVE_X11], 1,
       [Have X11?]))
 
+### optional gtk stausicon support ###########################################
+AC_ARG_ENABLE([statusicon],
+    AS_HELP_STRING([--disable-statusicon], [Disable optional statusicon support]))
+
+AS_IF([test "x$enable_statusicon" != xno],
+    HAVE_STATUSICON=1, HAVE_STATUSICON=0)
+
+AC_SUBST(HAVE_STATUSICON)
+AM_CONDITIONAL([HAVE_STATUSICON], [test "x$HAVE_STATUSICON" = x1])
+AS_IF([test "x$HAVE_STATUSICON" = x1], AC_DEFINE([HAVE_STATUSICON], 1,
+      [Have StatusIcon?]))
+
 ### optional libappindicator support ###########################################
 AC_ARG_ENABLE([appindicator],
     AS_HELP_STRING([--disable-appindicator], [Disable optional appindicator support]))
