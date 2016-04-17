@@ -121,7 +121,7 @@ AC_SUBST(APPINDICATOR_LIBS)
 AC_SUBST(HAVE_APPINDICATOR)
 AM_CONDITIONAL([HAVE_APPINDICATOR], [test "x$HAVE_APPINDICATOR" = x1])
 AS_IF([test "x$HAVE_APPINDICATOR" = x1], AC_DEFINE([HAVE_APPINDICATOR], 1,
-      [Have APPINDICATOR?]))
+      [Have AppIndicator?]))
 ################################################################################
 
 if test "x$GCC" = xyes -o "x$CLANG" = xyes; then
