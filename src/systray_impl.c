@@ -37,7 +37,7 @@ static void systray_impl_scroll_cb(AppIndicator* appind, gint delta, GdkScrollDi
 
 systray_t systray_impl_create(menu_infos_t* mis)
 {
-    g_debug("creating systray implementation using AppIndicator");
+    g_debug("[systray_impl] using AppIndicator");
 
     AppIndicator* appind = app_indicator_new("pasystray", "pasystray", APP_INDICATOR_CATEGORY_HARDWARE);
     app_indicator_set_status(appind, APP_INDICATOR_STATUS_ACTIVE);
@@ -101,7 +101,7 @@ static GtkStatusIcon* systray_impl_create_statusicon()
 
 systray_t systray_impl_create(menu_infos_t* mis)
 {
-    g_debug("creating systray implementation using GtkStatusIcon");
+    g_debug("[systray_impl] using GtkStatusIcon");
 
     GtkStatusIcon* icon = systray_impl_create_statusicon();
     g_signal_connect(icon, "button-press-event", G_CALLBACK(systray_click_cb), mis);
@@ -161,6 +161,8 @@ static void systray_impl_scroll_cb(GtkImage* image, GdkEventScroll* ev, gpointer
 
 systray_t systray_impl_create(menu_infos_t* mis)
 {
+    g_debug("[systray_impl] using GtkWindow");
+
     GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window), "pasystray");
 
