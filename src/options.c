@@ -30,6 +30,7 @@ static gboolean debug = FALSE;
 static int volume_max = 0;
 static int volume_inc = 1;
 static gboolean no_notify = FALSE;
+static gboolean monitors = FALSE;
 
 static GOptionEntry entries[] =
 {
@@ -39,6 +40,7 @@ static GOptionEntry entries[] =
     { "volume-max", 'm', 0, G_OPTION_ARG_INT, &volume_max, "maximum volume (in percent)", "N" },
     { "volume-inc", 'i', 0, G_OPTION_ARG_INT, &volume_inc, "volume increment", "N" },
     { "no-notify", 'n', 0, G_OPTION_ARG_NONE, &no_notify, "disable all notifications", NULL },
+    { "include-monitors", 'n', 0, G_OPTION_ARG_NONE, &monitors, "include monitor sources", NULL },
     { .long_name = NULL }
 };
 
@@ -77,4 +79,6 @@ void parse_options(settings_t* settings)
     {
         settings->notify = FALSE;
     }
+
+    settings->monitors = monitors;
 }

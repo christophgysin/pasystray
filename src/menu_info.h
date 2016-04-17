@@ -59,6 +59,7 @@ struct settings_t_ {
     int volume_max;
     int volume_inc;
     gboolean notify;
+    gboolean monitors;
 };
 typedef struct settings_t_ settings_t;
 

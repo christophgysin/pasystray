@@ -402,12 +402,12 @@ void pulseaudio_source_add(const pa_source_info* i, int is_last, void* userdata,
 
     const char* class = pa_proplist_gets(i->proplist, PA_PROP_DEVICE_CLASS);
 
-    // ignore monitors
-    if(class && g_str_equal(class, "monitor"))
-        return;
-
     menu_info_t* mi = userdata;
     menu_infos_t* mis = mi->menu_infos;
+
+    // ignore monitors
+    if(!mis->settings.monitors && class && g_str_equal(class, "monitor"))
+        return;
 
     if(is_new && mis->settings.notify)
     {
