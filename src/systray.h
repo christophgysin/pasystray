@@ -60,7 +60,7 @@ void systray_remove_item_from_all_submenus(menu_info_item_t* item, menu_info_t* 
 void systray_about_dialog();
 
 void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata);
-void systray_scroll_cb(systray_t* systray, guint state, GdkScrollDirection direction, menu_infos_t* mis);
+void systray_scroll_cb(guint state, GdkScrollDirection direction, menu_infos_t* mis);
 void start_application_cb(GtkMenuItem* menuitem, const char* command);
 
 void systray_set_tooltip(GtkWidget* item, const char* tooltip);

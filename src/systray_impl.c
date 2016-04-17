@@ -30,10 +30,9 @@
 
 static void systray_impl_scroll_cb(AppIndicator* appind, gint delta, GdkScrollDirection direction, gpointer userdata)
 {
-    systray_t systray = appind;
     guint state = 0; // TODO: get modifiers?
     menu_infos_t* mis = userdata;
-    systray_scroll_cb(systray, state, direction, mis);
+    systray_scroll_cb(state, direction, mis);
 }
 
 systray_t systray_impl_create(menu_infos_t* mis)
@@ -64,9 +63,8 @@ void systray_impl_set_tooltip(systray_t systray, const char* markup)
 
 static void systray_impl_scroll_cb(GtkStatusIcon* icon, GdkEventScroll* ev, gpointer userdata)
 {
-    systray_t systray = icon;
     menu_infos_t* mis = userdata;
-    systray_scroll_cb(systray, ev->state, ev->direction, mis);
+    systray_scroll_cb(ev->state, ev->direction, mis);
 }
 
 static GtkStatusIcon* systray_impl_create_statusicon()
