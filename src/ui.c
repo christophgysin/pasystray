@@ -71,6 +71,8 @@ void ui_update_systray_icon(menu_info_item_t* mii)
     else
         icon_name = "audio-volume-high";
 
+    g_free(mii->icon);
+    mii->icon = g_strdup(icon_name);
     menu_infos_t* mis = mii->menu_info->menu_infos;
     systray_impl_set_icon(mis->systray, icon_name);
 }
