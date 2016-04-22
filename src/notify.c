@@ -53,6 +53,7 @@ notify_handle_t notify(const char* msg, const char* body, const char* icon)
 {
     NotifyNotification* n = notify_notification_new(msg, body, icon);
     notify_notification_set_urgency(n, NOTIFY_URGENCY_LOW);
+    notify_notification_set_timeout(n, 2000);
     notify_show(n);
     return (notify_handle_t) n;
 }
@@ -60,6 +61,7 @@ notify_handle_t notify(const char* msg, const char* body, const char* icon)
 void notify_update(notify_handle_t h, const char* msg, const char* body, const char* icon)
 {
     NotifyNotification* n = (NotifyNotification*) h;
+    notify_notification_set_timeout(n, 2000); // reset time
 
     if(!notify_notification_update(n, msg, body, icon))
         g_error("[notify] invalid arguments passed to notify_update()");
