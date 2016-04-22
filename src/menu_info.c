@@ -227,18 +227,18 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
         item->desc = g_strdup(desc);
     }
 
-    if (mis->settings.notify == NOTIFY_ALWAYS &&
-        pa_cvolume_equal(item->volume, vol))
-    {
-        pulseaudio_update_volume_notification(item);
-    }
-
     g_free(item->volume);
     item->volume = g_memdup(vol, sizeof(pa_cvolume));
     item->mute = mute;
     item->target = target;
     g_free(item->address);
     item->address = g_strdup(address);
+
+    if (mis->settings.notify == NOTIFY_ALWAYS &&
+        pa_cvolume_equal(item->volume, vol))
+    {
+        pulseaudio_update_volume_notification(item);
+    }
 
     menu_type_t submenu_type = menu_info_submenu_type(mi->type);
     menu_info_t* submenu = &mi->menu_infos->menu_info[submenu_type];
