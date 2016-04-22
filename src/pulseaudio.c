@@ -361,7 +361,7 @@ void pulseaudio_sink_add(const pa_sink_info* i, int is_last, void* userdata, gbo
     menu_info_t* mi = userdata;
     menu_infos_t* mis = mi->menu_infos;
 
-    if(is_new && mis->settings.notify)
+    if(is_new && mis->settings.notify != NOTIFY_NEVER)
     {
         gchar* msg = g_strdup_printf("new sink \"%s\"", i->description);
         notify(msg, i->name, NULL);
@@ -409,7 +409,7 @@ void pulseaudio_source_add(const pa_source_info* i, int is_last, void* userdata,
     if(!mis->settings.monitors && class && g_str_equal(class, "monitor"))
         return;
 
-    if(is_new && mis->settings.notify)
+    if(is_new && mis->settings.notify != NOTIFY_NEVER)
     {
         gchar* msg = g_strdup_printf("new source \"%s\"", i->description);
         notify(msg, i->name, NULL);

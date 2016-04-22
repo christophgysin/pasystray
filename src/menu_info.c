@@ -206,6 +206,8 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
         return;
     }
 
+    menu_infos_t* mis = item->menu_info->menu_infos;
+
     g_debug("[menu_info] updating %s %u %s (target: %d)",
             menu_info_type_name(item->menu_info->type), index, desc, (int)target);
 
@@ -223,6 +225,12 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     else
     {
         item->desc = g_strdup(desc);
+    }
+
+    if (mis->settings.notify == NOTIFY_ALWAYS &&
+        pa_cvolume_equal(item->volume, vol))
+    {
+        pulseaudio_update_volume_notification(item);
     }
 
     g_free(item->volume);
