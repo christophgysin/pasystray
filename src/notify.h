@@ -27,7 +27,7 @@
 typedef void* notify_handle_t;
 
 void notify_initialize();
-notify_handle_t notify(const char* msg, const char* body, const char* icon);
-void notify_update(notify_handle_t h, const char* msg, const char* body, const char* icon);
+notify_handle_t notify(const char* msg, const char* body, const char* icon, gint value);
+void notify_update(notify_handle_t h, const char* msg, const char* body, const char* icon, gint value);
 
 #endif /* PASYSTRAY_NOTIFY_H */
