@@ -55,10 +55,16 @@ struct menu_info_t_ {
     char* default_name;
 };
 
+typedef enum {
+    NOTIFY_NEVER,
+    NOTIFY_DEFAULT,
+    NOTIFY_ALWAYS,
+} notify_t;
+
 struct settings_t_ {
     int volume_max;
     int volume_inc;
-    gboolean notify;
+    notify_t notify;
     gboolean monitors;
 };
 typedef struct settings_t_ settings_t;
