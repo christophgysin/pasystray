@@ -73,6 +73,7 @@ void ui_update_systray_icon(menu_info_item_t* mii)
 
     menu_infos_t* mis = mii->menu_info->menu_infos;
     systray_impl_set_icon(mis->systray, icon_name);
+    mii->icon = g_strdup(icon_name);
 }
 
 GtkDialog* ui_aboutdialog()
