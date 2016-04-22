@@ -364,7 +364,7 @@ void pulseaudio_sink_add(const pa_sink_info* i, int is_last, void* userdata, gbo
     if(is_new && mis->settings.notify != NOTIFY_NEVER)
     {
         gchar* msg = g_strdup_printf("new sink \"%s\"", i->description);
-        notify(msg, i->name, NULL);
+        notify(msg, i->name, NULL, -1);
         g_free(msg);
     }
 
@@ -412,7 +412,7 @@ void pulseaudio_source_add(const pa_source_info* i, int is_last, void* userdata,
     if(is_new && mis->settings.notify != NOTIFY_NEVER)
     {
         gchar* msg = g_strdup_printf("new source \"%s\"", i->description);
-        notify(msg, i->name, NULL);
+        notify(msg, i->name, NULL, -1);
         g_free(msg);
     }
 

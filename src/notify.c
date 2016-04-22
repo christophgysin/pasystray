@@ -49,19 +49,23 @@ void notify_show(NotifyNotification* n)
                 error->code);
 }
 
-notify_handle_t notify(const char* msg, const char* body, const char* icon)
+notify_handle_t notify(const char* msg, const char* body, const char* icon, gint value)
 {
     NotifyNotification* n = notify_notification_new(msg, body, icon);
     notify_notification_set_urgency(n, NOTIFY_URGENCY_LOW);
     notify_notification_set_timeout(n, 2000);
+    if(value > -1)
+        notify_notification_set_hint_int32 (n, "value", value);
     notify_show(n);
     return (notify_handle_t) n;
 }
 
-void notify_update(notify_handle_t h, const char* msg, const char* body, const char* icon)
+void notify_update(notify_handle_t h, const char* msg, const char* body, const char* icon, gint value)
 {
     NotifyNotification* n = (NotifyNotification*) h;
     notify_notification_set_timeout(n, 2000); // reset time
+    if(value > -1)
+        notify_notification_set_hint_int32 (n, "value", value);
 
     if(!notify_notification_update(n, msg, body, icon))
         g_error("[notify] invalid arguments passed to notify_update()");
