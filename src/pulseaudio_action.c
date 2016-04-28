@@ -25,6 +25,7 @@
 #include <pulse/ext-device-manager.h>
 
 #include "notify.h"
+#include "ui.h"
 #include "x11-property.h"
 
 extern pa_context* context;
