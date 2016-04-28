@@ -52,9 +52,9 @@ void ui_load()
     }
 }
 
-void ui_update_systray_icon(menu_info_item_t* mii)
+void ui_set_volume_icon(menu_info_item_t* mii)
 {
-    g_debug("pulseaudio_update_systray_icon(%s)", mii->name);
+    g_debug("pulseaudio_set_volume_icon(%s)", mii->name);
 
     pa_volume_t volume = pa_cvolume_avg(mii->volume);
 
@@ -71,9 +71,17 @@ void ui_update_systray_icon(menu_info_item_t* mii)
     else
         icon_name = "audio-volume-high";
 
-    menu_infos_t* mis = mii->menu_info->menu_infos;
-    systray_impl_set_icon(mis->systray, icon_name);
     mii->icon = g_strdup(icon_name);
+}
+
+void ui_update_systray_icon(menu_info_item_t* mii)
+{
+    g_debug("pulseaudio_update_systray_icon(%s)", mii->name);
+
+    ui_set_volume_icon(mii);
+
+    menu_infos_t* mis = mii->menu_info->menu_infos;
+    systray_impl_set_icon(mis->systray, mii->icon);
 }
 
 GtkDialog* ui_aboutdialog()
