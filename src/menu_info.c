@@ -254,6 +254,7 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
             break;
         case MENU_SINK:
         case MENU_SOURCE:
+            ui_set_volume_icon(item); // update sink item
             systray_update_item_in_all_submenus(item, submenu);
             break;
         case MENU_INPUT:
