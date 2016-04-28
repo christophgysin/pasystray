@@ -183,6 +183,10 @@ void pulseaudio_set_volume_success_cb(pa_context *c, int success, void *userdata
 
     menu_infos_t* mis = mii->menu_info->menu_infos;
 
+    /* update sink icon */
+    if(mii->menu_info->type == MENU_SINK)
+        ui_set_volume_icon(mii);
+
     if(mis->settings.notify != NOTIFY_NEVER)
     {
         pulseaudio_update_volume_notification(mii);
