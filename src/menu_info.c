@@ -254,6 +254,7 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
             break;
         case MENU_SINK:
         case MENU_SOURCE:
+            ui_set_volume_icon(item); // update sink item
             systray_update_item_in_all_submenus(item, submenu);
             break;
         case MENU_INPUT:
@@ -261,10 +262,6 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
             systray_update_all_items_in_submenu(submenu, item);
             break;
     }
-
-    /* update sink icon */
-    if(mi->type == MENU_SINK || mi->type == MENU_SOURCE)
-        ui_set_volume_icon(item);
 
     /* if this is the default sink, update status icon acording to volume */
     if(mi->type == MENU_SINK && item == menu_info_item_get_by_name(mi, mi->default_name))
