@@ -53,7 +53,7 @@ notify_handle_t notify(const char* msg, const char* body, const char* icon, gint
 {
     NotifyNotification* n = notify_notification_new(msg, body, icon);
     notify_notification_set_urgency(n, NOTIFY_URGENCY_LOW);
-    notify_notification_set_timeout(n, 2000);
+    notify_notification_set_timeout(n, 2000); // timeout in ms
     if(value > -1)
         notify_notification_set_hint_int32 (n, "value", value);
     notify_show(n);
@@ -63,7 +63,7 @@ notify_handle_t notify(const char* msg, const char* body, const char* icon, gint
 void notify_update(notify_handle_t h, const char* msg, const char* body, const char* icon, gint value)
 {
     NotifyNotification* n = (NotifyNotification*) h;
-    notify_notification_set_timeout(n, 2000); // reset time
+    notify_notification_set_timeout(n, 2000); // timeout in ms
     if(value > -1)
         notify_notification_set_hint_int32 (n, "value", value);
 
