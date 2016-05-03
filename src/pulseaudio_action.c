@@ -183,6 +183,10 @@ void pulseaudio_set_volume_success_cb(pa_context *c, int success, void *userdata
 
     menu_infos_t* mis = mii->menu_info->menu_infos;
 
+    /* update sink icon */
+    if(mii->menu_info->type == MENU_SINK || mii->menu_info->type == MENU_SOURCE)
+        ui_set_volume_icon(mii);
+
     if(mis->settings.notify != NOTIFY_NEVER)
     {
         pulseaudio_update_volume_notification(mii);
@@ -194,10 +198,12 @@ void pulseaudio_update_volume_notification(menu_info_item_t* mii)
     gchar* msg = g_strdup_printf("%s %s",
                 menu_info_type_name(mii->menu_info->type), mii->desc);
 
+    gint volume = (mii->volume->values[0]*100+PA_VOLUME_NORM/2)/PA_VOLUME_NORM;
+
     if(!mii->notify)
-        mii->notify = notify(msg, NULL, mii->icon);
+        mii->notify = notify(msg, NULL, mii->icon, volume);
     else
-        notify_update(mii->notify, msg, NULL, mii->icon);
+        notify_update(mii->notify, msg, NULL, mii->icon, volume);
 
     g_free(msg);
 }
