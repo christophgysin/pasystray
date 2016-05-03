@@ -71,6 +71,7 @@ void ui_set_volume_icon(menu_info_item_t* mii)
     else
         icon_name = "audio-volume-high";
 
+    g_free(mii->icon);
     mii->icon = g_strdup(icon_name);
 }
 
