@@ -83,6 +83,14 @@ void pulseaudio_move_input_to_sink(menu_info_item_t* input, menu_info_item_t* si
                 sink->index, pulseaudio_move_success_cb, input));
 }
 
+void pulseaudio_move_all_inputs_to_sink(menu_info_item_t* sink)
+{
+    g_debug("[pulseaudio_action] move all inputs to sink %s", sink->desc);
+
+    pa_operation_unref(pa_context_get_sink_input_info_list(context,
+                pulseaudio_move_all_inputs_to_sink_cb, sink));
+}
+
 void pulseaudio_move_output_to_source(menu_info_item_t* output, menu_info_item_t* source)
 {
     g_debug("[pulseaudio_action] move output %s to source %s",
@@ -125,6 +133,25 @@ void pulseaudio_move_success_cb(pa_context *c, int success, void *userdata)
         g_warning("failed to move %s '%s' to %s '%s'!\n",
                 menu_info_type_name(from->menu_info->type), from->name,
                 menu_info_type_name(to->menu_info->type), to->name);
+}
+
+void pulseaudio_move_all_inputs_to_sink_cb(pa_context* c, const pa_sink_input_info* i, int is_last, void* userdata)
+{
+  if(is_last < 0)
+  {
+      g_message("Failed to get input information: %s",
+              pa_strerror(pa_context_errno(context)));
+      return;
+  }
+
+  if(is_last)
+      return;
+
+    menu_info_item_t* sink = userdata;
+    menu_info_item_t* input = i;
+
+    pa_operation_unref(pa_context_move_sink_input_by_index(c, input->index,
+            sink->index, pulseaudio_move_success_cb, input));
 }
 
 void pulseaudio_rename(menu_info_item_t* mii, const char* name)

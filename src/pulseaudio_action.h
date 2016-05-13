@@ -33,6 +33,9 @@ void pulseaudio_move_output_to_source(menu_info_item_t* output, menu_info_item_t
 void pulseaudio_move_all(menu_info_item_t* mii);
 void pulseaudio_move_success_cb(pa_context *c, int success, void *userdata);
 
+void pulseaudio_move_all_inputs_to_sink(menu_info_item_t* sink);
+void pulseaudio_move_all_inputs_to_sink_cb(pa_context* c, const pa_sink_input_info* i, int is_last, void* userdata);
+
 void pulseaudio_rename(menu_info_item_t* mii, const char* name);
 void pulseaudio_rename_success_cb(pa_context *c, int success, void *userdata);
 
