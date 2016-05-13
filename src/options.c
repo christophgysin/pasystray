@@ -32,6 +32,7 @@ static int volume_inc = 1;
 static gboolean no_notify = FALSE;
 static gboolean always_notify = FALSE;
 static gboolean monitors = FALSE;
+static gboolean sync_default = FALSE;
 
 static GOptionEntry entries[] =
 {
@@ -44,6 +45,7 @@ static GOptionEntry entries[] =
     { "always-notify", 'a', 0, G_OPTION_ARG_NONE, &always_notify,
         "enable notifications for all changes in pulsaudio", NULL },
     { "include-monitors", 'n', 0, G_OPTION_ARG_NONE, &monitors, "include monitor sources", NULL },
+    { "sync-default", 's', 0, G_OPTION_ARG_NONE, &sync_default, "sync default sink on input stream sink change", NULL },
     { .long_name = NULL }
 };
 
@@ -88,4 +90,6 @@ void parse_options(settings_t* settings)
     }
 
     settings->monitors = monitors;
+
+    settings->sync_default = sync_default;
 }

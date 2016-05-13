@@ -66,6 +66,7 @@ struct settings_t_ {
     int volume_inc;
     notify_t notify;
     gboolean monitors;
+    gboolean sync_default;
 };
 typedef struct settings_t_ settings_t;
 
