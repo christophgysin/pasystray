@@ -31,16 +31,13 @@ pa_context* context = NULL;
 
 static pa_glib_mainloop* m = NULL;
 static pa_proplist* context_proplist = NULL;
-static char* server = NULL;
 
 void pulseaudio_init(menu_infos_t* mis)
 {
     if(!(m = pa_glib_mainloop_new(g_main_context_default())))
         pulseaudio_quit("pa_glib_mainloop_new() failed.");
 
-    pulseaudio_prepare_context(mis);
-
-    pulseaudio_connect();
+    pulseaudio_connect(mis);
 }
 
 void pulseaudio_destroy()
@@ -62,13 +59,35 @@ void pulseaudio_prepare_context(menu_infos_t* mis)
     pa_context_set_state_callback(context, pulseaudio_context_state_cb, mis);
 }
 
-void pulseaudio_connect()
+void pulseaudio_connect(menu_infos_t* mis)
 {
-    if(pa_context_connect(context, server, PA_CONTEXT_NOFLAGS, NULL) < 0)
+    pulseaudio_prepare_context(mis);
+
+    if(pa_context_connect(context, NULL, PA_CONTEXT_NOFAIL, NULL) < 0)
     {
-        g_warning("pa_context_connect() failed: ");
-        pulseaudio_quit(pa_strerror(pa_context_errno(context)));
+        g_warning("pa_context_connect() failed: %s",
+            pa_strerror(pa_context_errno(context)));
     }
+}
+
+void pulseaudio_reconnect_cb(pa_mainloop_api *api, pa_time_event *event, const struct timeval *tv, void *userdata)
+{
+    menu_infos_t* mis = userdata;
+    pulseaudio_connect(mis);
+}
+
+void pulseaudio_reconnect(menu_infos_t* mis)
+{
+    systray_impl_set_icon(mis->systray, "pasystray");
+
+    pa_mainloop_api* api = pa_glib_mainloop_get_api(m);
+
+    struct timeval tv;
+    struct timeval* delay_tv = pa_gettimeofday(&tv);
+    pa_timeval_add(delay_tv, 1 * PA_USEC_PER_SEC);
+
+    // reconnect with 1s delay
+    api->time_new(api, delay_tv, pulseaudio_reconnect_cb, mis);
 }
 
 void pulseaudio_context_state_cb(pa_context* c, void* userdata)
@@ -109,9 +128,8 @@ void pulseaudio_context_state_cb(pa_context* c, void* userdata)
             menu_infos_clear(mis);
             pa_context_unref(context);
 
-            pulseaudio_prepare_context(mis);
             g_debug("[pulseaudio] trying again...");
-            pulseaudio_connect();
+            pulseaudio_reconnect(mis);
             break;
 
         case PA_CONTEXT_TERMINATED:
@@ -119,9 +137,8 @@ void pulseaudio_context_state_cb(pa_context* c, void* userdata)
             menu_infos_clear(mis);
             pa_context_unref(context);
 
-            pulseaudio_prepare_context(mis);
             g_debug("[pulseaudio] reconnecting...");
-            pulseaudio_connect();
+            pulseaudio_reconnect(mis);
             break;
 
         case PA_CONTEXT_CONNECTING:
