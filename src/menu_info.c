@@ -377,19 +377,30 @@ GtkMenuShell* menu_info_item_context_menu(menu_info_item_t* mii)
 
         case MENU_SINK:
         case MENU_SOURCE:
+        {
+            menu_type_t type = (mii->menu_info->type == MENU_SINK) ? MENU_INPUT : MENU_OUTPUT;
+            gchar* label = g_strdup_printf("move all %ss here",
+                    menu_info_type_name(type));
+            item = gtk_menu_item_new_with_label(label);
+            g_free(label);
+            g_signal_connect(item, "button-press-event",
+                    G_CALLBACK(menu_info_item_move_all_cb), mii);
+            gtk_menu_shell_append(menu, item);
+
             item = gtk_menu_item_new_with_label("rename");
             g_signal_connect(item, "button-press-event",
                     G_CALLBACK(menu_info_item_rename_cb), mii);
+            gtk_menu_shell_append(menu, item);
             break;
-
+        }
         case MENU_MODULE:
             item = gtk_menu_item_new_with_label("unload");
             g_signal_connect(item, "button-press-event",
                     G_CALLBACK(menu_info_module_unload_cb), mii);
+            gtk_menu_shell_append(menu, item);
             break;
     }
 
-    gtk_menu_shell_append(menu, item);
     gtk_widget_show_all(GTK_WIDGET(menu));
     return menu;
 }
@@ -560,6 +571,12 @@ void menu_info_subitem_clicked(GtkWidget* item, GdkEventButton* event,
             pulseaudio_move_output_to_source(mii->menu_info->parent, mii);
             break;
     }
+}
+
+void menu_info_item_move_all_cb(GtkWidget* item, GdkEventButton* event, void* userdata)
+{
+    menu_info_item_t* mii = userdata;
+    pulseaudio_move_all(mii);
 }
 
 void menu_info_item_rename_cb(GtkWidget* item, GdkEventButton* event, void* userdata)

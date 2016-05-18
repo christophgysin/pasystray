@@ -87,6 +87,30 @@ void pulseaudio_move_output_to_source(menu_info_item_t* output, menu_info_item_t
                 source->index, pulseaudio_move_success_cb, output));
 }
 
+void pulseaudio_move_all(menu_info_item_t* mii)
+{
+    menu_infos_t* mis = mii->menu_info->menu_infos;
+    menu_type_t target_type = mii->menu_info->type;
+    menu_type_t source_type = (target_type == MENU_SINK) ? MENU_INPUT : MENU_OUTPUT;
+
+    g_debug("[pulseaudio_action] move all %s to %s %s",
+            menu_info_type_name(source_type),
+            menu_info_type_name(target_type),
+            mii->desc);
+
+    GHashTableIter iter;
+    gpointer key;
+    gpointer value;
+    g_hash_table_iter_init(&iter, mis->menu_info[MENU_INPUT].items);
+    while (g_hash_table_iter_next(&iter, &key, &value))
+    {
+        if (target_type == MENU_SINK)
+            pulseaudio_move_input_to_sink(value, mii);
+        else if (target_type == MENU_SOURCE)
+            pulseaudio_move_output_to_source(value, mii);
+    }
+}
+
 void pulseaudio_move_success_cb(pa_context *c, int success, void *userdata)
 {
     menu_info_item_t* to = userdata;

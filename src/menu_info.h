@@ -128,6 +128,8 @@ void menu_info_item_scrolled(GtkWidget* item, GdkEventScroll* event,
 void menu_info_subitem_clicked(GtkWidget* item, GdkEventButton* event,
         menu_info_item_t* mii);
 
+void menu_info_item_move_all_cb(GtkWidget* item, GdkEventButton* event, void* userdata);
+
 void menu_info_item_rename_cb(GtkWidget* item, GdkEventButton* event, void* userdata);
 void menu_info_item_rename_dialog(menu_info_item_t* mii);
 void menu_info_item_rename_error(menu_info_item_t* mii);
