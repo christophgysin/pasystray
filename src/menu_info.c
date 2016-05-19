@@ -19,6 +19,7 @@
   USA.
 ***/
 
+#include <string.h>
 #include <glib.h>
 
 #include "menu_info.h"
@@ -194,9 +195,19 @@ char* menu_info_item_label(menu_info_item_t* mii)
     if(!mii->volume)
         return g_strdup(mii->desc);
 
+    gchar* desc = mii->desc;
+
+    const int DESC_MAX = 80;
+    gchar desc_buf[DESC_MAX + 1];
+    if (strlen(mii->desc) > DESC_MAX)
+    {
+        g_snprintf(desc_buf, DESC_MAX+1, "%.*s...", DESC_MAX-3, mii->desc);
+        desc = desc_buf;
+    }
+
     char vol_buf[PA_CVOLUME_SNPRINT_MAX];
     gchar* label = g_strdup_printf("%s %s%s",
-        mii->desc,
+        desc,
         pa_volume_snprint(vol_buf, sizeof(vol_buf), mii->volume->values[0]),
         mii->mute ? " [muted]" : "");
 
