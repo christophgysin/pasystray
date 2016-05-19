@@ -44,7 +44,7 @@ void systray_remove_placeholder(menu_info_t* mi);
 GtkWidget* systray_add_menu_item(menu_info_t* mi, const char* desc, const char* tooltip, const char* icon);
 void systray_remove_menu_item(menu_info_t* mi, GtkWidget* item);
 
-GtkWidget* systray_add_radio_item(menu_info_t* m, const char* desc, const char* tooltip);
+GtkWidget* systray_add_radio_item(menu_info_item_t* mii, const char* tooltip);
 void systray_remove_radio_item(menu_info_t* mi, GtkWidget* item);
 
 GtkWidget* systray_add_item(GtkMenuShell* menu, const char* desc, const char* tooltip, const char* icon);

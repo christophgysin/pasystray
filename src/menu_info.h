@@ -106,6 +106,8 @@ void menu_info_item_destroy(menu_info_item_t* mii);
 
 const char* menu_info_type_name(menu_type_t type);
 menu_type_t menu_info_submenu_type(menu_type_t menu_type);
+char* menu_info_item_label(menu_info_item_t* mii);
+
 void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
         const char* desc, const pa_cvolume* vol, int mute, char* tooltip,
         const char* icon, const char* address, uint32_t target);

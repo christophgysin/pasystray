@@ -156,9 +156,12 @@ void systray_remove_menu_item(menu_info_t* mi, GtkWidget* item)
     systray_add_placeholder(mi);
 }
 
-GtkWidget* systray_add_radio_item(menu_info_t* mi, const char* desc, const char* tooltip)
+GtkWidget* systray_add_radio_item(menu_info_item_t* mii, const char* tooltip)
 {
-    GtkWidget* item = gtk_radio_menu_item_new_with_label(mi->group, desc);
+    menu_info_t* mi = mii->menu_info;
+    gchar* label = menu_info_item_label(mii);
+    GtkWidget* item = gtk_radio_menu_item_new_with_label(mi->group, label);
+    g_free(label);
 
     if(tooltip)
         systray_set_tooltip(item, tooltip);
