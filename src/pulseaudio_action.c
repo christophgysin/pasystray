@@ -64,7 +64,12 @@ void pulseaudio_set_default_success_cb(pa_context *c, int success, void *userdat
 {
     menu_info_item_t* mii = userdata;
 
-    if(!success)
+    if(success)
+    {
+        if(mii->menu_info->type == MENU_SINK)
+            ui_update_systray_icon(mii);
+    }
+    else
         g_warning("failed to set default to %s \"%s\"!\n",
                 menu_info_type_name(mii->menu_info->type), mii->name);
 }
