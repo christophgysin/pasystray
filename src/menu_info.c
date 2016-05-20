@@ -192,9 +192,6 @@ menu_type_t menu_info_submenu_type(menu_type_t menu_type)
 
 char* menu_info_item_label(menu_info_item_t* mii)
 {
-    if(!mii->volume)
-        return g_strdup(mii->desc);
-
     gchar* desc = mii->desc;
 
     const size_t DESC_MAX = 80;
@@ -204,6 +201,9 @@ char* menu_info_item_label(menu_info_item_t* mii)
         g_snprintf(desc_buf, DESC_MAX+1, "%.*s...", (int)DESC_MAX-3, mii->desc);
         desc = desc_buf;
     }
+
+    if(!mii->volume)
+        return g_strdup(desc);
 
     char vol_buf[PA_CVOLUME_SNPRINT_MAX];
     gchar* label = g_strdup_printf("%s %s%s",
