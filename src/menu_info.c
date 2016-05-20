@@ -343,10 +343,14 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
             break;
         case MENU_INPUT:
         case MENU_OUTPUT:
+        {
+            gchar* label = menu_info_item_label(item);
             item->widget = systray_menu_add_submenu(mi->menu, item->submenu,
-                    item->desc, tooltip, icon);
+                    label, tooltip, icon);
+            g_free(label);
             systray_add_all_items_to_submenu(submenu, item);
             break;
+        }
         case MENU_MODULE:
             item->context = menu_info_item_context_menu(item);
             item->widget = systray_add_menu_item(mi, item->desc, tooltip, icon);
@@ -447,8 +451,10 @@ void menu_info_subitem_update(menu_info_t* mi, uint32_t index, const char* name,
     g_debug("[menu_info] updating subitem %s %u '%s' %s", menu_info_type_name(mi->type),
             index, desc, active ? " (active)" : "");
 
-    if(!g_str_equal(item->desc, desc))
-        gtk_menu_item_set_label(GTK_MENU_ITEM(item->widget), desc);
+    gchar* label = menu_info_item_label(item);
+    gtk_menu_item_set_label(GTK_MENU_ITEM(item->widget), label);
+    g_free(label);
+
     if(active)
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget), TRUE);
 }
