@@ -197,11 +197,11 @@ char* menu_info_item_label(menu_info_item_t* mii)
 
     gchar* desc = mii->desc;
 
-    const int DESC_MAX = 80;
+    const size_t DESC_MAX = 80;
     gchar desc_buf[DESC_MAX + 1];
     if (strlen(mii->desc) > DESC_MAX)
     {
-        g_snprintf(desc_buf, DESC_MAX+1, "%.*s...", DESC_MAX-3, mii->desc);
+        g_snprintf(desc_buf, DESC_MAX+1, "%.*s...", (int)DESC_MAX-3, mii->desc);
         desc = desc_buf;
     }
 
