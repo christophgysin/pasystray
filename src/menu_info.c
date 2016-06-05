@@ -496,6 +496,8 @@ void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
             (event->state & GDK_MOD1_MASK) ? "[alt]" : "",
             event->button);
 
+    menu_infos_t* mis = mii->menu_info->menu_infos;
+
     switch(event->button)
     {
         case 1:
@@ -506,6 +508,8 @@ void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
             /* on left-click, set device as default */
             else
                 pulseaudio_set_default(mii);
+                if(mis->settings.sync_streams)
+                    pulseaudio_move_all_inputs_to_sink(mii);
             break;
         /* on middle-click, toggle mute device/stream */
         case 2:
@@ -569,6 +573,8 @@ void menu_info_subitem_clicked(GtkWidget* item, GdkEventButton* event,
             (event->state & GDK_MOD1_MASK) ? "[alt]" : "",
             event->button);
 
+    menu_infos_t* mis = mii->menu_info->menu_infos;
+
     switch(mii->menu_info->type)
     {
         case MENU_SERVER:
@@ -578,6 +584,8 @@ void menu_info_subitem_clicked(GtkWidget* item, GdkEventButton* event,
             break;
         case MENU_SINK:
             pulseaudio_move_input_to_sink(mii->menu_info->parent, mii);
+            if(mis->settings.sync_default)
+                pulseaudio_set_default(mii);
             break;
         case MENU_SOURCE:
             pulseaudio_move_output_to_source(mii->menu_info->parent, mii);
