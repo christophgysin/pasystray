@@ -8,7 +8,7 @@
     <property name="icon_name">pasystray</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">pasystray</property>
-    <property name="copyright" translatable="yes">Copyright © 2011-2013</property>
+    <property name="copyright" translatable="yes">Copyright © 2011-2016</property>
     <property name="comments" translatable="yes">PulseAudio system tray</property>
     <property name="authors">Christoph Gysin &lt;christoph.gysin@gmail.com&gt;</property>
     <property name="logo_icon_name">pasystray</property>
