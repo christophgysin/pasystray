@@ -17,21 +17,29 @@
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 #  USA.
 
+EXTRA_DIST = \
+    LICENSE \
+    README.md \
+    bootstrap.sh
+
 iconsdir =  $(datadir)/icons/hicolor/scalable/apps
 icons_DATA = data/pasystray.svg
+EXTRA_DIST += $(icons_DATA)
 
 pixmapsdir = $(datadir)/pixmaps
 pixmaps_DATA = data/pasystray.png
+EXTRA_DIST += $(pixmaps_DATA)
 
 desktopdir = $(datadir)/applications
 desktop_DATA = data/pasystray.desktop
+EXTRA_DIST += $(desktop_DATA)
 
 xdgautostartdir = $(sysconfdir)/xdg/autostart
 xdgautostart_DATA = data/pasystray.desktop
+EXTRA_DIST += $(xdgautostart_DATA)
 
 man_MANS = man/pasystray.1
-
-EXTRA_DIST = bootstrap.sh README.md LICENSE $(icons_DATA) $(pixmaps_DATA) $(desktop_DATA)
+EXTRA_DIST += $(man_MANS)
 
 SUBDIRS = src
 

@@ -18,9 +18,10 @@
 #  USA.
 
 gladedir = $(pkgdatadir)
+glade_DATA = pasystray.glade
+EXTRA_DIST = $(glade_DATA)
 
 bin_PROGRAMS = pasystray
-glade_DATA = pasystray.glade
 
 pasystray_SOURCES = \
     avahi.c \
@@ -67,6 +68,3 @@ pasystray_CFLAGS = \
     $(X11_CFLAGS) \
     -DG_LOG_DOMAIN=\"pasystray\" \
     -DGLADE_FILE=\"$(gladedir)/pasystray.glade\"
-
-EXTRA_DIST = \
-    $(glade_DATA)
