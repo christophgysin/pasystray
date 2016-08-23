@@ -26,8 +26,8 @@
 #include "notify.h"
 
 void notify_initialize(){}
-notify_handle_t notify(const char* msg, const char* body, const char* icon){ return 0; }
-void notify_update(notify_handle_t h, const char* msg, const char* body, const char* icon){}
+notify_handle_t notify(const char* msg, const char* body, const char* icon, gint value){ return 0; }
+void notify_update(notify_handle_t h, const char* msg, const char* body, const char* icon, gint value){}
 
 #else
 
