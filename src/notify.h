@@ -22,6 +22,8 @@
 #ifndef PASYSTRAY_NOTIFY_H
 #define PASYSTRAY_NOTIFY_H
 
+#include <glib.h>
+
 #include "config.h"
 
 typedef void* notify_handle_t;
