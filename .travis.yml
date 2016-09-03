@@ -15,6 +15,11 @@ script: ./.travis.sh
 env:
   - CFLAGS=--std=c99
   - CFLAGS=--std=c99 EXTRA_CONF=--with-gtk=2
+  - CFLAGS=--std=c99 EXTRA_CONF=--disable-avahi
+  - CFLAGS=--std=c99 EXTRA_CONF=--disable-notify
+  - CFLAGS=--std=c99 EXTRA_CONF=--disable-x11
+  - CFLAGS=--std=c99 EXTRA_CONF=--disable-statusicon
+  - CFLAGS=--std=c99 EXTRA_CONF=--disable-appindicator
   - USE_CC=gcc-4.9 CFLAGS=--std=c99
   - USE_CC=gcc-4.9 CFLAGS=--std=c11
   - USE_CC=clang-3.7 CFLAGS=--std=c99
