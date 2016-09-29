@@ -389,7 +389,7 @@ GtkMenuShell* menu_info_item_context_menu(menu_info_item_t* mii)
         case MENU_SOURCE:
         {
             menu_type_t type = (mii->menu_info->type == MENU_SINK) ? MENU_INPUT : MENU_OUTPUT;
-            gchar* label = g_strdup_printf("move all %ss here",
+            gchar* label = g_strdup_printf("Move all %ss here",
                     menu_info_type_name(type));
             item = gtk_menu_item_new_with_label(label);
             g_free(label);
@@ -397,14 +397,14 @@ GtkMenuShell* menu_info_item_context_menu(menu_info_item_t* mii)
                     G_CALLBACK(menu_info_item_move_all_cb), mii);
             gtk_menu_shell_append(menu, item);
 
-            item = gtk_menu_item_new_with_label("rename");
+            item = gtk_menu_item_new_with_label("Rename");
             g_signal_connect(item, "button-press-event",
                     G_CALLBACK(menu_info_item_rename_cb), mii);
             gtk_menu_shell_append(menu, item);
             break;
         }
         case MENU_MODULE:
-            item = gtk_menu_item_new_with_label("unload");
+            item = gtk_menu_item_new_with_label("Unload");
             g_signal_connect(item, "button-press-event",
                     G_CALLBACK(menu_info_module_unload_cb), mii);
             gtk_menu_shell_append(menu, item);
