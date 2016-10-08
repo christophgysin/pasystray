@@ -236,23 +236,36 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     g_debug("[menu_info] updating %s %u %s (target: %d)",
             menu_info_type_name(item->menu_info->type), index, desc, (int)target);
 
-    g_free(item->name);
-    item->name = g_strdup(name);
+    if (name != item->name)
+    {
+        g_free(item->name);
+        item->name = g_strdup(name);
+    }
 
-    g_free(item->desc);
-    item->desc = g_strdup(desc);
+    if (desc != item->desc)
+    {
+        g_free(item->desc);
+        item->desc = g_strdup(desc);
+    }
 
     /* only notify on volume / mute changes */
     int notify = 0;
     if ((vol && !pa_cvolume_equal(item->volume, vol)) || mute != item->mute)
         notify = 1;
 
-    g_free(item->volume);
-    item->volume = g_memdup(vol, sizeof(pa_cvolume));
+    if (vol != item->volume)
+    {
+        g_free(item->volume);
+        item->volume = g_memdup(vol, sizeof(pa_cvolume));
+    }
     item->mute = mute;
     item->target = target;
-    g_free(item->address);
-    item->address = g_strdup(address);
+
+    if (address != item->address)
+    {
+        g_free(item->address);
+        item->address = g_strdup(address);
+    }
 
     menu_type_t submenu_type = menu_info_submenu_type(mi->type);
     menu_info_t* submenu = &mi->menu_infos->menu_info[submenu_type];
@@ -261,7 +274,8 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     gtk_menu_item_set_label(GTK_MENU_ITEM(item->widget), label);
     g_free(label);
 
-    systray_set_tooltip(GTK_WIDGET(item->widget), tooltip);
+    if (tooltip)
+        systray_set_tooltip(GTK_WIDGET(item->widget), tooltip);
 
     switch(mi->type)
     {
