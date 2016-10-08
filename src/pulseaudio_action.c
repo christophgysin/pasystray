@@ -118,13 +118,11 @@ void pulseaudio_move_all(menu_info_item_t* mii)
 
 void pulseaudio_move_success_cb(pa_context *c, int success, void *userdata)
 {
-    menu_info_item_t* to = userdata;
-    menu_info_item_t* from = to->menu_info->parent;
+    menu_info_item_t* mii = userdata;
 
     if(!success)
-        g_warning("failed to move %s '%s' to %s '%s'!\n",
-                menu_info_type_name(from->menu_info->type), from->name,
-                menu_info_type_name(to->menu_info->type), to->name);
+        g_warning("failed to move %s '%s'!\n",
+                menu_info_type_name(mii->menu_info->type), mii->desc);
 }
 
 void pulseaudio_rename(menu_info_item_t* mii, const char* name)
