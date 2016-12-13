@@ -111,19 +111,47 @@ void parse_options(settings_t* settings)
             {
                 // TODO: Implement
             }
-            else if(!g_strcmp0(notify_mode[i], "none"))
+            else if(g_str_equal(notify_mode[i], "none"))
             {
                 // TODO: Implement
             }
-            else if(!g_strcmp0(notify_mode[i], "sink_all"))
+            else if(g_str_equal(notify_mode[i], "sink_all"))
             {
                 settings->n_sink_all = TRUE;
             }
-            else if(!g_strcmp0(notify_mode[i], "sink_default"))
+            else if(g_str_equal(notify_mode[i], "sink_default"))
             {
                 settings->n_sink_default = TRUE; 
             }
-
+            else if(g_str_equal(notify_mode[i], "source_all"))
+            {
+                settings->n_source_all = TRUE;
+            }
+            else if(g_str_equal(notify_mode[i], "source_default"))
+            {
+                settings->n_source_default = TRUE;
+            }
+            else if(g_str_equal(notify_mode[i], "stream_all"))
+            {
+                settings->n_stream_output = TRUE;
+                settings->n_stream_input = TRUE;
+            }
+            else if(g_str_equal(notify_mode[i], "stream_output"))
+            {
+                settings->n_stream_output = TRUE;
+            }
+            else if(g_str_equal(notify_mode[i], "stream_input"))
+            {
+                settings->n_stream_input = TRUE;
+            }
+            else if(g_str_equal(notify_mode[i], "help"))
+            {
+                // TODO: Implement
+            }
+            else
+            {
+                // TODO: Implement
+            }
         }
     }
 
