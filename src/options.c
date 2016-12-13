@@ -32,7 +32,6 @@ static int volume_inc = 1;
 static gboolean no_notify = FALSE;
 static gboolean always_notify = FALSE;
 static gboolean monitors = FALSE;
-// static gchar notify_mode[10][20];
 static gchar **notify_mode;
 
 static GOptionEntry entries[] =
@@ -80,16 +79,6 @@ void parse_options(settings_t* settings)
         settings->volume_inc = volume_inc;
     }
 
-    settings->notify = NOTIFY_DEFAULT;
-    if(no_notify)
-    {
-        settings->notify = NOTIFY_NEVER; // TODO: Translate this to granular notification setting format
-    }
-    if(always_notify)
-    {
-        settings->notify = NOTIFY_ALWAYS; // TODO: Translate this to granular notification setting format
-    }
-
     // Set some default values close to previous behavior
     settings->n_new = TRUE;
     settings->n_sink_all = FALSE;
@@ -98,21 +87,23 @@ void parse_options(settings_t* settings)
     settings->n_source_default = FALSE;
     settings->n_stream_output = FALSE;
     settings->n_stream_input = FALSE;
+    settings->n_systray_action = TRUE;
     if(notify_mode)
     {
         /*  PLANNED MODES
-            all             notify for all detected changes
-            none            notify none
-            new             notify when new sinks/sources are detected
-            sink_all        notify for changes to all sinks
-            sink_default    notify for changes to the default sink
-            source_all
-            source_default  notify for the default source
-            stream_all      notify for all streams   
-            stream_output   notify for output (playback) streams
-            stream_input    notify for input (recording) streams
+            all                     notify for all detected changes
+            none                    notify none
+            new                     notify when new sinks/sources are detected
+            sink_all                notify for changes to all sinks
+            sink_default            notify for changes to the default sink
+            source_all              notify for changes to all sources
+            source_default          notify for changes to the default source
+            stream_all              notify for all streams   
+            stream_output           notify for output (playback) streams
+            stream_input            notify for input (recording) streams
+            systray_action          notify for changes made through pasystray
 
-            help            SPECIAL: List possible modes and exit
+            help                    SPECIAL: List possible modes and exit
         */
         for (int i = 0; notify_mode[i]; i++) {
             if(!g_strcmp0(notify_mode[i], "all"))
@@ -124,7 +115,7 @@ void parse_options(settings_t* settings)
                 settings->n_source_default = TRUE;
                 settings->n_stream_output = TRUE;
                 settings->n_stream_input = TRUE;
-
+                settings->n_systray_action = TRUE;
             }
             else if(g_str_equal(notify_mode[i], "none"))
             {
@@ -135,6 +126,7 @@ void parse_options(settings_t* settings)
                 settings->n_source_default = FALSE;
                 settings->n_stream_output = FALSE;
                 settings->n_stream_input = FALSE;
+                settings->n_systray_action = FALSE;
             }
             else if(g_str_equal(notify_mode[i], "new"))
             {
@@ -178,6 +170,29 @@ void parse_options(settings_t* settings)
                 // TODO: Implement
             }
         }
+    }
+
+    if(no_notify)
+    {
+        settings->n_new = FALSE;
+        settings->n_sink_all = FALSE;
+        settings->n_sink_default = FALSE;
+        settings->n_source_all = FALSE;
+        settings->n_source_default = FALSE;
+        settings->n_stream_output = FALSE;
+        settings->n_stream_input = FALSE;
+        settings->n_systray_action = FALSE;
+    }
+    if(always_notify)
+    {
+        settings->n_new = TRUE;
+        settings->n_sink_all = TRUE;
+        settings->n_sink_default = TRUE;
+        settings->n_source_all = TRUE;
+        settings->n_source_default = TRUE;
+        settings->n_stream_output = TRUE;
+        settings->n_stream_input = TRUE;
+        settings->n_systray_action = TRUE;
     }
 
     settings->monitors = monitors;

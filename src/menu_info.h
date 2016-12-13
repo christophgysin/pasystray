@@ -55,18 +55,11 @@ struct menu_info_t_ {
     char* default_name;
 };
 
-typedef enum {
-    NOTIFY_NEVER,
-    NOTIFY_DEFAULT,
-    NOTIFY_ALWAYS,
-} notify_t;
-
 struct settings_t_ {
     int volume_max;
     int volume_inc;
-    notify_t notify;
     gboolean monitors;
-    // Granular notification options below
+    // Notification options below
     gboolean n_new;
     gboolean n_sink_all;
     gboolean n_sink_default;
@@ -75,6 +68,7 @@ struct settings_t_ {
     gboolean n_stream_all;
     gboolean n_stream_output;
     gboolean n_stream_input;
+    gboolean n_systray_action;
 };
 typedef struct settings_t_ settings_t;
 

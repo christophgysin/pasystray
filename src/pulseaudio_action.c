@@ -217,7 +217,7 @@ void pulseaudio_set_volume_success_cb(pa_context *c, int success, void *userdata
     if(mii->menu_info->type == MENU_SINK || mii->menu_info->type == MENU_SOURCE)
         ui_set_volume_icon(mii);
 
-    if(mis->settings.notify != NOTIFY_NEVER)
+    if(mis->settings.n_systray_action)
     {
         pulseaudio_update_volume_notification(mii);
     }
