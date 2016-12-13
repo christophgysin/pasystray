@@ -83,13 +83,14 @@ void parse_options(settings_t* settings)
     settings->notify = NOTIFY_DEFAULT;
     if(no_notify)
     {
-        settings->notify = NOTIFY_NEVER;
+        settings->notify = NOTIFY_NEVER; // TODO: Translate this to granular notification setting format
     }
     if(always_notify)
     {
-        settings->notify = NOTIFY_ALWAYS;
+        settings->notify = NOTIFY_ALWAYS; // TODO: Translate this to granular notification setting format
     }
 
+    settings->n_new = FALSE;
     if(notify_mode)
     {
         /*  PLANNED MODES
@@ -114,6 +115,10 @@ void parse_options(settings_t* settings)
             else if(g_str_equal(notify_mode[i], "none"))
             {
                 // TODO: Implement
+            }
+            else if(g_str_equal(notify_mode[i], "new"))
+            {
+                settings->n_new = TRUE;
             }
             else if(g_str_equal(notify_mode[i], "sink_all"))
             {
