@@ -45,7 +45,8 @@ static GOptionEntry entries[] =
     { "always-notify", 'a', 0, G_OPTION_ARG_NONE, &always_notify,
         "enable notifications for all changes in pulsaudio", NULL },
     { "include-monitors", 'n', 0, G_OPTION_ARG_NONE, &monitors, "include monitor sources", NULL },
-    { "notify", 'N', 0, G_OPTION_ARG_STRING_ARRAY, &notify_mode, "notify mode", "NOTIFICATION TYPE" },
+    { "notify", 'N', 0, G_OPTION_ARG_STRING_ARRAY, &notify_mode,
+        "Set notification options, use --notify=help for a list of valid options", "OPTION" },
     { .long_name = NULL }
 };
 
@@ -90,21 +91,6 @@ void parse_options(settings_t* settings)
     settings->n_systray_action = TRUE;
     if(notify_mode)
     {
-        /*  PLANNED MODES
-            all                     notify for all detected changes
-            none                    notify none
-            new                     notify when new sinks/sources are detected
-            sink_all                notify for changes to all sinks
-            sink_default            notify for changes to the default sink
-            source_all              notify for changes to all sources
-            source_default          notify for changes to the default source
-            stream_all              notify for all streams   
-            stream_output           notify for output (playback) streams
-            stream_input            notify for input (recording) streams
-            systray_action          notify for changes made through pasystray
-
-            help                    SPECIAL: List possible modes and exit
-        */
         for (int i = 0; notify_mode[i]; i++) {
             if(!g_strcmp0(notify_mode[i], "all"))
             {
@@ -163,11 +149,28 @@ void parse_options(settings_t* settings)
             }
             else if(g_str_equal(notify_mode[i], "help"))
             {
-                // TODO: Implement
+                gchar *help_text=(
+                    "Notification options:\n"
+                    "  all                     Notify for all detected changes\n"
+                    "  none                    Never notify, except for options set after this one\n"
+                    "  new                     Notify when new sinks/sources are added\n"
+                    "  sink_all                Notify for changes to all sinks\n"
+                    "  sink_default            Notify for changes to the default sink\n"
+                    "  source_all              Notify for changes to all sources\n"
+                    "  source_default          Notify for changes to the default source\n"
+                    "  stream_all              Notify for all streams\n"
+                    "  stream_output           Notify for output (playback) streams\n"
+                    "  stream_input            Notify for input (recording) streams\n"
+                    "  systray_action          Notify for changes made through pasystray\n"
+                    "  help                    List possible options and exit\n"
+                );
+
+                g_print("%s",help_text);
+                exit(0);
             }
             else
             {
-                // TODO: Implement
+                g_print("Warning: Invalid notification option \"%s\". Run 'pasystray --notify=help' for a list of valid options.\n", notify_mode[i]);
             }
         }
     }
