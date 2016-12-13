@@ -238,12 +238,14 @@ void pulseaudio_process_update_volume_notification(menu_info_item_t* mii)
         case MENU_SINK:
             if(mis->settings.n_sink_all)
                 notify = TRUE;
-            else if(mis->settings.n_sink_default && mii == menu_info_item_get_by_name(mi, mi->default_name))
-            {
+            else if(mis->settings.n_sink_default && g_str_equal(mii->name, mi->default_name))
                 notify = TRUE;
-            }
             break;
         case MENU_SOURCE:
+            if(mis->settings.n_source_all)
+                notify = TRUE;
+            else if(mis->settings.n_source_default && g_str_equal(mii->name, mi->default_name))
+                notify = TRUE;
             break;
         case MENU_INPUT:
 
