@@ -90,7 +90,14 @@ void parse_options(settings_t* settings)
         settings->notify = NOTIFY_ALWAYS; // TODO: Translate this to granular notification setting format
     }
 
-    settings->n_new = FALSE;
+    // Set some default values close to previous behavior
+    settings->n_new = TRUE;
+    settings->n_sink_all = FALSE;
+    settings->n_sink_default = FALSE;
+    settings->n_source_all = FALSE;
+    settings->n_source_default = FALSE;
+    settings->n_stream_output = FALSE;
+    settings->n_stream_input = FALSE;
     if(notify_mode)
     {
         /*  PLANNED MODES
@@ -110,11 +117,24 @@ void parse_options(settings_t* settings)
         for (int i = 0; notify_mode[i]; i++) {
             if(!g_strcmp0(notify_mode[i], "all"))
             {
-                // TODO: Implement
+                settings->n_new = TRUE;
+                settings->n_sink_all = TRUE;
+                settings->n_sink_default = TRUE;
+                settings->n_source_all = TRUE;
+                settings->n_source_default = TRUE;
+                settings->n_stream_output = TRUE;
+                settings->n_stream_input = TRUE;
+
             }
             else if(g_str_equal(notify_mode[i], "none"))
             {
-                // TODO: Implement
+                settings->n_new = FALSE;
+                settings->n_sink_all = FALSE;
+                settings->n_sink_default = FALSE;
+                settings->n_source_all = FALSE;
+                settings->n_source_default = FALSE;
+                settings->n_stream_output = FALSE;
+                settings->n_stream_input = FALSE;
             }
             else if(g_str_equal(notify_mode[i], "new"))
             {
@@ -126,7 +146,7 @@ void parse_options(settings_t* settings)
             }
             else if(g_str_equal(notify_mode[i], "sink_default"))
             {
-                settings->n_sink_default = TRUE; 
+                settings->n_sink_default = TRUE;
             }
             else if(g_str_equal(notify_mode[i], "source_all"))
             {
