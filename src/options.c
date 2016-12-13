@@ -32,6 +32,8 @@ static int volume_inc = 1;
 static gboolean no_notify = FALSE;
 static gboolean always_notify = FALSE;
 static gboolean monitors = FALSE;
+// static gchar notify_mode[10][20];
+static gchar **notify_mode;
 
 static GOptionEntry entries[] =
 {
@@ -44,6 +46,7 @@ static GOptionEntry entries[] =
     { "always-notify", 'a', 0, G_OPTION_ARG_NONE, &always_notify,
         "enable notifications for all changes in pulsaudio", NULL },
     { "include-monitors", 'n', 0, G_OPTION_ARG_NONE, &monitors, "include monitor sources", NULL },
+    { "notify", 'N', 0, G_OPTION_ARG_STRING_ARRAY, &notify_mode, "notify mode", "NOTIFICATION TYPE" },
     { .long_name = NULL }
 };
 
@@ -85,6 +88,43 @@ void parse_options(settings_t* settings)
     if(always_notify)
     {
         settings->notify = NOTIFY_ALWAYS;
+    }
+
+    if(notify_mode)
+    {
+        /*  PLANNED MODES
+            all             notify for all detected changes
+            none            notify none
+            new             notify when new sinks/sources are detected
+            sink_all        notify for changes to all sinks
+            sink_default    notify for changes to the default sink
+            source_all
+            source_default  notify for the default source
+            stream_all      notify for all streams   
+            stream_output   notify for output (playback) streams
+            stream_input    notify for input (recording) streams
+
+            help            SPECIAL: List possible modes and exit
+        */
+        for (int i = 0; notify_mode[i]; i++) {
+            if(!g_strcmp0(notify_mode[i], "all"))
+            {
+                // TODO: Implement
+            }
+            else if(!g_strcmp0(notify_mode[i], "none"))
+            {
+                // TODO: Implement
+            }
+            else if(!g_strcmp0(notify_mode[i], "sink_all"))
+            {
+                settings->n_sink_all = TRUE;
+            }
+            else if(!g_strcmp0(notify_mode[i], "sink_default"))
+            {
+                settings->n_sink_default = TRUE; 
+            }
+
+        }
     }
 
     settings->monitors = monitors;

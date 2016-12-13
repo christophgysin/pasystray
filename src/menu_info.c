@@ -285,8 +285,8 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     if(mi->type == MENU_SINK && item == menu_info_item_get_by_name(mi, mi->default_name))
         ui_update_systray_icon(item);
 
-    if(notify && mis->settings.notify == NOTIFY_ALWAYS)
-        pulseaudio_update_volume_notification(item);
+    if(notify)
+        pulseaudio_process_update_volume_notification(item);
 }
 
 void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,

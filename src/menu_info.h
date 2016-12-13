@@ -66,6 +66,15 @@ struct settings_t_ {
     int volume_inc;
     notify_t notify;
     gboolean monitors;
+    // Granular notification options below
+    gboolean n_new;
+    gboolean n_sink_all;
+    gboolean n_sink_default;
+    gboolean n_source_all;
+    gboolean n_source_default;
+    gboolean n_stream_all;
+    gboolean n_stream_output;
+    gboolean n_stream_input;
 };
 typedef struct settings_t_ settings_t;
 
