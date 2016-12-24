@@ -35,15 +35,15 @@ static gboolean monitors = FALSE;
 
 static GOptionEntry entries[] =
 {
-    { "version", 'V', 0, G_OPTION_ARG_NONE, &version, "print version and exit", NULL },
-    { "debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "print debugging information", NULL },
-    { "max-volume", 0, 0, G_OPTION_ARG_INT, &volume_max, "deprecated, use volume-max instead", "N" },
-    { "volume-max", 'm', 0, G_OPTION_ARG_INT, &volume_max, "maximum volume (in percent)", "N" },
-    { "volume-inc", 'i', 0, G_OPTION_ARG_INT, &volume_inc, "volume increment", "N" },
-    { "no-notify", 'n', 0, G_OPTION_ARG_NONE, &no_notify, "disable all notifications", NULL },
+    { "version", 'V', 0, G_OPTION_ARG_NONE, &version, "Print version and exit", NULL },
+    { "debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "Print debugging information", NULL },
+    { "max-volume", 0, 0, G_OPTION_ARG_INT, &volume_max, "Deprecated, use volume-max instead", "N" },
+    { "volume-max", 'm', 0, G_OPTION_ARG_INT, &volume_max, "Maximum volume (in percent)", "N" },
+    { "volume-inc", 'i', 0, G_OPTION_ARG_INT, &volume_inc, "Volume increment", "N" },
+    { "no-notify", 'n', 0, G_OPTION_ARG_NONE, &no_notify, "Disable all notifications", NULL },
     { "always-notify", 'a', 0, G_OPTION_ARG_NONE, &always_notify,
-        "enable notifications for all changes in pulsaudio", NULL },
-    { "include-monitors", 'n', 0, G_OPTION_ARG_NONE, &monitors, "include monitor sources", NULL },
+        "Enable notifications for all changes in pulsaudio", NULL },
+    { "include-monitors", 'n', 0, G_OPTION_ARG_NONE, &monitors, "Include monitor sources", NULL },
     { .long_name = NULL }
 };
 
