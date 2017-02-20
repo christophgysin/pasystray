@@ -56,7 +56,8 @@ GOptionEntry* get_options()
 }
 
 // Set some default values close to previous behavior
-void notify_default(settings_t* settings) {
+void notify_default(settings_t* settings)
+{
     settings->n_new = TRUE;
     settings->n_sink = FALSE;
     settings->n_sink_default = FALSE;
@@ -67,7 +68,8 @@ void notify_default(settings_t* settings) {
     settings->n_systray_action = TRUE;
 }
 
-void notify_all(settings_t* settings) {
+void notify_all(settings_t* settings)
+{
     settings->n_new = TRUE;
     settings->n_sink = TRUE;
     settings->n_sink_default = TRUE;
@@ -78,7 +80,8 @@ void notify_all(settings_t* settings) {
     settings->n_systray_action = TRUE;
 }
 
-void notify_none(settings_t* settings) {
+void notify_none(settings_t* settings)
+{
     settings->n_new = FALSE;
     settings->n_sink = FALSE;
     settings->n_sink_default = FALSE;
