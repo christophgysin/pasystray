@@ -38,7 +38,6 @@ static GOptionEntry entries[] =
 {
     { "version", 'V', 0, G_OPTION_ARG_NONE, &version, "Print version and exit", NULL },
     { "debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "Print debugging information", NULL },
-    { "max-volume", 0, 0, G_OPTION_ARG_INT, &volume_max, "Deprecated, use volume-max instead", "N" },
     { "volume-max", 'm', 0, G_OPTION_ARG_INT, &volume_max, "Maximum volume (in percent)", "N" },
     { "volume-inc", 'i', 0, G_OPTION_ARG_INT, &volume_inc, "Volume increment", "N" },
     { "no-notify", 'n', 0, G_OPTION_ARG_NONE, &no_notify, "Disable all notifications", NULL },
