@@ -51,6 +51,8 @@ void notify_show(NotifyNotification* n)
 
 notify_handle_t notify(const char* msg, const char* body, const char* icon, gint value)
 {
+    if(!icon)
+        icon = "audio-card";
     NotifyNotification* n = notify_notification_new(msg, body, icon);
     notify_notification_set_urgency(n, NOTIFY_URGENCY_LOW);
     notify_notification_set_timeout(n, 2000); // timeout in ms
@@ -62,6 +64,8 @@ notify_handle_t notify(const char* msg, const char* body, const char* icon, gint
 
 void notify_update(notify_handle_t h, const char* msg, const char* body, const char* icon, gint value)
 {
+    if(!icon)
+        icon = "audio-card";
     NotifyNotification* n = (NotifyNotification*) h;
     notify_notification_set_timeout(n, 2000); // timeout in ms
     if(value > -1)
