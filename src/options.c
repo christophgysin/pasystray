@@ -94,6 +94,29 @@ void notify_none(settings_t* settings)
     settings->n_systray_action = FALSE;
 }
 
+void notify_usage() {
+    gchar *help_text=(
+        "Notification options:\n"
+        "  all                     Notify for all detected changes\n"
+        "  none                    Never notify, except for options set after this one\n"
+        "  new                     Notify when new sinks/sources are added\n"
+        "  sink                    Notify for changes to all sinks\n"
+        "  sink_default            Notify for changes to the default sink\n"
+        "  source                  Notify for changes to all sources\n"
+        "  source_default          Notify for changes to the default source\n"
+        "  stream                  Notify for all streams\n"
+        "  stream_output           Notify for output (playback) streams\n"
+        "  stream_input            Notify for input (recording) streams\n"
+        "  systray_action          Notify for changes made through pasystray\n"
+        "\n"
+        "  text                    Don't send value hint (displayed as progress bar)\n"
+        "\n"
+        "  help                    List possible options and exit\n"
+    );
+
+    g_print("%s",help_text);
+}
+
 void parse_options(settings_t* settings)
 {
     if(version)
@@ -171,31 +194,14 @@ void parse_options(settings_t* settings)
             }
             else if(g_str_equal(notify_mode[i], "help"))
             {
-                gchar *help_text=(
-                    "Notification options:\n"
-                    "  all                     Notify for all detected changes\n"
-                    "  none                    Never notify, except for options set after this one\n"
-                    "  new                     Notify when new sinks/sources are added\n"
-                    "  sink                    Notify for changes to all sinks\n"
-                    "  sink_default            Notify for changes to the default sink\n"
-                    "  source                  Notify for changes to all sources\n"
-                    "  source_default          Notify for changes to the default source\n"
-                    "  stream                  Notify for all streams\n"
-                    "  stream_output           Notify for output (playback) streams\n"
-                    "  stream_input            Notify for input (recording) streams\n"
-                    "  systray_action          Notify for changes made through pasystray\n"
-                    "\n"
-                    "  text                    Don't send value hint (displayed as progress bar)\n"
-                    "\n"
-                    "  help                    List possible options and exit\n"
-                );
-
-                g_print("%s",help_text);
+                notify_usage();
                 exit(0);
             }
             else
             {
-                g_print("Warning: Invalid notification option \"%s\". Run 'pasystray --notify=help' for a list of valid options.\n", notify_mode[i]);
+                g_warning("Invalid notification option \"%s\".\n", notify_mode[i]);
+                notify_usage();
+                exit(1);
             }
         }
     }
