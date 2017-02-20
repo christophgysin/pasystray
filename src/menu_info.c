@@ -231,8 +231,6 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
         return;
     }
 
-    menu_infos_t* mis = item->menu_info->menu_infos;
-
     g_debug("[menu_info] updating %s %u %s (target: %d)",
             menu_info_type_name(item->menu_info->type), index, desc, (int)target);
 
