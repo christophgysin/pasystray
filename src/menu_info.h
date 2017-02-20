@@ -69,6 +69,7 @@ struct settings_t_ {
     gboolean n_stream_output;
     gboolean n_stream_input;
     gboolean n_systray_action;
+    gboolean n_text;
 };
 typedef struct settings_t_ settings_t;
 

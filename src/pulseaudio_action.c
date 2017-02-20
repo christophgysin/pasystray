@@ -260,12 +260,18 @@ void pulseaudio_process_update_volume_notification(menu_info_item_t* mii)
 
 void pulseaudio_update_volume_notification(menu_info_item_t* mii)
 {
+    menu_infos_t* mis = mii->menu_info->menu_infos;
+
     gchar* label = menu_info_item_label(mii);
     gchar* msg = g_strdup_printf("%s %s",
                 menu_info_type_name(mii->menu_info->type), label);
     g_free(label);
 
-    gint volume = (mii->volume->values[0]*100+PA_VOLUME_NORM/2)/PA_VOLUME_NORM;
+    gint volume = -1;
+
+    if (!mis->settings.n_text)
+        volume = (mii->volume->values[0]*100+PA_VOLUME_NORM/2)/PA_VOLUME_NORM;
+
     if(!mii->notify)
         mii->notify = notify(msg, NULL, mii->icon, volume);
     else

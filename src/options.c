@@ -66,6 +66,8 @@ void notify_default(settings_t* settings)
     settings->n_stream_output = FALSE;
     settings->n_stream_input = FALSE;
     settings->n_systray_action = TRUE;
+
+    settings->n_text = FALSE;
 }
 
 void notify_all(settings_t* settings)
@@ -163,6 +165,10 @@ void parse_options(settings_t* settings)
             {
                 settings->n_stream_input = TRUE;
             }
+            else if(g_str_equal(notify_mode[i], "text"))
+            {
+                settings->n_text = TRUE;
+            }
             else if(g_str_equal(notify_mode[i], "help"))
             {
                 gchar *help_text=(
@@ -178,6 +184,9 @@ void parse_options(settings_t* settings)
                     "  stream_output           Notify for output (playback) streams\n"
                     "  stream_input            Notify for input (recording) streams\n"
                     "  systray_action          Notify for changes made through pasystray\n"
+                    "\n"
+                    "  text                    Don't send value hint (displayed as progress bar)\n"
+                    "\n"
                     "  help                    List possible options and exit\n"
                 );
 
