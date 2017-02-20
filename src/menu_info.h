@@ -61,11 +61,11 @@ struct settings_t_ {
     gboolean monitors;
     // Notification options below
     gboolean n_new;
-    gboolean n_sink_all;
+    gboolean n_sink;
     gboolean n_sink_default;
-    gboolean n_source_all;
+    gboolean n_source;
     gboolean n_source_default;
-    gboolean n_stream_all;
+    gboolean n_stream;
     gboolean n_stream_output;
     gboolean n_stream_input;
     gboolean n_systray_action;
