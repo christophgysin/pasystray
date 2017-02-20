@@ -231,38 +231,31 @@ void pulseaudio_process_update_volume_notification(menu_info_item_t* mii)
 {
     menu_infos_t* mis = mii->menu_info->menu_infos;
     menu_info_t* mi = mii->menu_info;
-    gboolean notify = FALSE;
-    // Check for type
+
     switch(mi->type)
     {
         case MENU_SERVER:
         case MENU_MODULE:
-            /* nothing to do here */
-            break;
-        case MENU_SINK:
-            if(mis->settings.n_sink_all)
-                notify = TRUE;
-            else if(mis->settings.n_sink_default && g_str_equal(mii->name, mi->default_name))
-                notify = TRUE;
-            break;
-        case MENU_SOURCE:
-            if(mis->settings.n_source_all)
-                notify = TRUE;
-            else if(mis->settings.n_source_default && g_str_equal(mii->name, mi->default_name))
-                notify = TRUE;
-            break;
         case MENU_INPUT:
-
-            break;
         case MENU_OUTPUT:
             break;
+
+        case MENU_SINK:
+            if(mis->settings.n_sink)
+                break;
+            if(mis->settings.n_sink_default && g_str_equal(mii->name, mi->default_name))
+                break;
+            return;
+
+        case MENU_SOURCE:
+            if(mis->settings.n_source)
+                break;
+            if(mis->settings.n_source_default && g_str_equal(mii->name, mi->default_name))
+                break;
+            return;
     }
 
-
-    if(notify)
-    {
-        pulseaudio_update_volume_notification(mii);
-    }
+    pulseaudio_update_volume_notification(mii);
 }
 
 void pulseaudio_update_volume_notification(menu_info_item_t* mii)

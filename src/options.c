@@ -55,6 +55,40 @@ GOptionEntry* get_options()
     return entries;
 }
 
+// Set some default values close to previous behavior
+void notify_default(settings_t* settings) {
+    settings->n_new = TRUE;
+    settings->n_sink = FALSE;
+    settings->n_sink_default = FALSE;
+    settings->n_source = FALSE;
+    settings->n_source_default = FALSE;
+    settings->n_stream_output = FALSE;
+    settings->n_stream_input = FALSE;
+    settings->n_systray_action = TRUE;
+}
+
+void notify_all(settings_t* settings) {
+    settings->n_new = TRUE;
+    settings->n_sink = TRUE;
+    settings->n_sink_default = TRUE;
+    settings->n_source = TRUE;
+    settings->n_source_default = TRUE;
+    settings->n_stream_output = TRUE;
+    settings->n_stream_input = TRUE;
+    settings->n_systray_action = TRUE;
+}
+
+void notify_none(settings_t* settings) {
+    settings->n_new = FALSE;
+    settings->n_sink = FALSE;
+    settings->n_sink_default = FALSE;
+    settings->n_source = FALSE;
+    settings->n_source_default = FALSE;
+    settings->n_stream_output = FALSE;
+    settings->n_stream_input = FALSE;
+    settings->n_systray_action = FALSE;
+}
+
 void parse_options(settings_t* settings)
 {
     if(version)
@@ -80,61 +114,40 @@ void parse_options(settings_t* settings)
         settings->volume_inc = volume_inc;
     }
 
-    // Set some default values close to previous behavior
-    settings->n_new = TRUE;
-    settings->n_sink_all = FALSE;
-    settings->n_sink_default = FALSE;
-    settings->n_source_all = FALSE;
-    settings->n_source_default = FALSE;
-    settings->n_stream_output = FALSE;
-    settings->n_stream_input = FALSE;
-    settings->n_systray_action = TRUE;
+    notify_default(settings);
+
     if(notify_mode)
     {
         for (int i = 0; notify_mode[i]; i++) {
             if(!g_strcmp0(notify_mode[i], "all"))
             {
-                settings->n_new = TRUE;
-                settings->n_sink_all = TRUE;
-                settings->n_sink_default = TRUE;
-                settings->n_source_all = TRUE;
-                settings->n_source_default = TRUE;
-                settings->n_stream_output = TRUE;
-                settings->n_stream_input = TRUE;
-                settings->n_systray_action = TRUE;
+                notify_all(settings);
             }
             else if(g_str_equal(notify_mode[i], "none"))
             {
-                settings->n_new = FALSE;
-                settings->n_sink_all = FALSE;
-                settings->n_sink_default = FALSE;
-                settings->n_source_all = FALSE;
-                settings->n_source_default = FALSE;
-                settings->n_stream_output = FALSE;
-                settings->n_stream_input = FALSE;
-                settings->n_systray_action = FALSE;
+                notify_none(settings);
             }
             else if(g_str_equal(notify_mode[i], "new"))
             {
                 settings->n_new = TRUE;
             }
-            else if(g_str_equal(notify_mode[i], "sink_all"))
+            else if(g_str_equal(notify_mode[i], "sink"))
             {
-                settings->n_sink_all = TRUE;
+                settings->n_sink = TRUE;
             }
             else if(g_str_equal(notify_mode[i], "sink_default"))
             {
                 settings->n_sink_default = TRUE;
             }
-            else if(g_str_equal(notify_mode[i], "source_all"))
+            else if(g_str_equal(notify_mode[i], "source"))
             {
-                settings->n_source_all = TRUE;
+                settings->n_source = TRUE;
             }
             else if(g_str_equal(notify_mode[i], "source_default"))
             {
                 settings->n_source_default = TRUE;
             }
-            else if(g_str_equal(notify_mode[i], "stream_all"))
+            else if(g_str_equal(notify_mode[i], "stream"))
             {
                 settings->n_stream_output = TRUE;
                 settings->n_stream_input = TRUE;
@@ -154,11 +167,11 @@ void parse_options(settings_t* settings)
                     "  all                     Notify for all detected changes\n"
                     "  none                    Never notify, except for options set after this one\n"
                     "  new                     Notify when new sinks/sources are added\n"
-                    "  sink_all                Notify for changes to all sinks\n"
+                    "  sink                    Notify for changes to all sinks\n"
                     "  sink_default            Notify for changes to the default sink\n"
-                    "  source_all              Notify for changes to all sources\n"
+                    "  source                  Notify for changes to all sources\n"
                     "  source_default          Notify for changes to the default source\n"
-                    "  stream_all              Notify for all streams\n"
+                    "  stream                  Notify for all streams\n"
                     "  stream_output           Notify for output (playback) streams\n"
                     "  stream_input            Notify for input (recording) streams\n"
                     "  systray_action          Notify for changes made through pasystray\n"
@@ -178,9 +191,9 @@ void parse_options(settings_t* settings)
     if(no_notify)
     {
         settings->n_new = FALSE;
-        settings->n_sink_all = FALSE;
+        settings->n_sink = FALSE;
         settings->n_sink_default = FALSE;
-        settings->n_source_all = FALSE;
+        settings->n_source = FALSE;
         settings->n_source_default = FALSE;
         settings->n_stream_output = FALSE;
         settings->n_stream_input = FALSE;
@@ -189,9 +202,9 @@ void parse_options(settings_t* settings)
     if(always_notify)
     {
         settings->n_new = TRUE;
-        settings->n_sink_all = TRUE;
+        settings->n_sink = TRUE;
         settings->n_sink_default = TRUE;
-        settings->n_source_all = TRUE;
+        settings->n_source = TRUE;
         settings->n_source_default = TRUE;
         settings->n_stream_output = TRUE;
         settings->n_stream_input = TRUE;
