@@ -40,9 +40,10 @@ static GOptionEntry entries[] =
     { "debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "Print debugging information", NULL },
     { "volume-max", 'm', 0, G_OPTION_ARG_INT, &volume_max, "Maximum volume (in percent)", "N" },
     { "volume-inc", 'i', 0, G_OPTION_ARG_INT, &volume_inc, "Volume increment", "N" },
-    { "no-notify", 'n', 0, G_OPTION_ARG_NONE, &no_notify, "Disable all notifications", NULL },
+    { "no-notify", 'n', 0, G_OPTION_ARG_NONE, &no_notify,
+        "Deprecated, use --notify=none instead", NULL },
     { "always-notify", 'a', 0, G_OPTION_ARG_NONE, &always_notify,
-        "Enable notifications for all changes in pulsaudio", NULL },
+        "Deprecated, use --notify=all instead", NULL },
     { "include-monitors", 'n', 0, G_OPTION_ARG_NONE, &monitors, "Include monitor sources", NULL },
     { "notify", 'N', 0, G_OPTION_ARG_STRING_ARRAY, &notify_mode,
         "Set notification options, use --notify=help for a list of valid options", "OPTION" },
@@ -189,25 +190,13 @@ void parse_options(settings_t* settings)
 
     if(no_notify)
     {
-        settings->n_new = FALSE;
-        settings->n_sink = FALSE;
-        settings->n_sink_default = FALSE;
-        settings->n_source = FALSE;
-        settings->n_source_default = FALSE;
-        settings->n_stream_output = FALSE;
-        settings->n_stream_input = FALSE;
-        settings->n_systray_action = FALSE;
+        g_warning("--no-notify is deprecated, use --notify=none instead");
+        notify_none(settings);
     }
     if(always_notify)
     {
-        settings->n_new = TRUE;
-        settings->n_sink = TRUE;
-        settings->n_sink_default = TRUE;
-        settings->n_source = TRUE;
-        settings->n_source_default = TRUE;
-        settings->n_stream_output = TRUE;
-        settings->n_stream_input = TRUE;
-        settings->n_systray_action = TRUE;
+        g_warning("--always-notify is deprecated, use --notify=all instead");
+        notify_all(settings);
     }
 
     settings->monitors = monitors;
