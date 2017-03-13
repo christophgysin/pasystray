@@ -19,6 +19,7 @@
   USA.
 ***/
 
+#include <glib.h>
 #include "ui.h"
 #include "config.h"
 #include "systray_impl.h"
@@ -35,16 +36,19 @@ void ui_load()
     const char* filename = GLADE_FILE;
 
     /* try to load ui in current dir first */
-    char* local_file = "pasystray.glade";
+    gchar* local_file = g_strdup_printf("pasystray.gtk%u.glade", GTK_VERSION_MAJOR);
     if(g_file_test(local_file, G_FILE_TEST_EXISTS))
         filename = local_file;
-    local_file = "src/pasystray.glade";
-    if(g_file_test(local_file, G_FILE_TEST_EXISTS))
-        filename = local_file;
+    gchar* local_file_src = g_strdup_printf("src/pasystray.gtk%u.glade", GTK_VERSION_MAJOR);
+    if(g_file_test(local_file_src, G_FILE_TEST_EXISTS))
+        filename = local_file_src;
 
     g_debug("using UI file: %s", filename);
 
     guint ret = gtk_builder_add_from_file(builder, filename, &error);
+
+    g_free(local_file);
+    g_free(local_file_src);
 
     if(!ret)
     {
