@@ -31,8 +31,12 @@ AM_PROG_CC_C_O
 AC_ARG_WITH(gtk, AC_HELP_STRING([--with-gtk=2|3], [choose GTK version (default: 3)]),, with_gtk=3)
 AC_MSG_CHECKING([GTK version to use])
 case ${with_gtk} in
-    2) GTK_VERSION=gtk+-2.0;;
-    3) GTK_VERSION=gtk+-3.0;;
+    2) GTK_VERSION=gtk+-2.0
+       GTK_VERSION_MAJOR=2
+       ;;
+    3) GTK_VERSION=gtk+-3.0
+       GTK_VERSION_MAJOR=3
+       ;;
     *) AC_MSG_ERROR([unknown GTK version!]);;
 esac
 AC_MSG_RESULT($GTK_VERSION)
@@ -41,6 +45,7 @@ PKG_CHECK_MODULES(GTK, [ $GTK_VERSION ])
 AC_DEFINE_UNQUOTED(GTK_VERSION_MAJOR, $with_gtk, [Have GTK version?])
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
+AC_SUBST(GTK_VERSION_MAJOR)
 
 ### check for pulseaudio libs #################################################
 PKG_CHECK_MODULES(PULSEAUDIO, [ libpulse >= 1.0 libpulse-mainloop-glib >= 1.0 ])

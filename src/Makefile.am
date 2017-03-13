@@ -18,7 +18,8 @@
 #  USA.
 
 gladedir = $(pkgdatadir)
-glade_DATA = pasystray.glade
+gladefile = pasystray.gtk$(GTK_VERSION_MAJOR).glade
+glade_DATA = $(gladefile)
 EXTRA_DIST = $(glade_DATA)
 
 bin_PROGRAMS = pasystray
@@ -67,4 +68,4 @@ pasystray_CFLAGS = \
     $(APPINDICATOR_CFLAGS) \
     $(X11_CFLAGS) \
     -DG_LOG_DOMAIN=\"pasystray\" \
-    -DGLADE_FILE=\"$(gladedir)/pasystray.glade\"
+    -DGLADE_FILE=\"$(gladedir)/$(gladefile)\"
