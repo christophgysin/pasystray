@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
 rm -rf autom4te.cache
 rm -f config.cache
 aclocal
