@@ -45,6 +45,7 @@ void pulseaudio_set_default(menu_info_item_t* mii)
         case MENU_SINK:
             o = pa_context_set_default_sink(context, mii->name,
                     pulseaudio_set_default_success_cb, mii);
+            ui_update_systray_icon(mii);
             break;
         case MENU_SOURCE:
             o = pa_context_set_default_source(context, mii->name,
