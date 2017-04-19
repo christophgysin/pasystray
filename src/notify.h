@@ -26,6 +26,10 @@
 
 #include "config.h"
 
+#ifndef HAVE_NOTIFY
+typedef int gint;
+#endif
+
 typedef void* notify_handle_t;
 
 void notify_initialize();
