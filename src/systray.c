@@ -64,6 +64,13 @@ void systray_menu_create(menu_infos_t* mis)
     */
 
     systray_menu_add_separator(mis->menu);
+
+    GtkMenuShell* submenu = GTK_MENU_SHELL(gtk_menu_new());
+    GtkWidget* item = systray_add_item(mis->menu, "More...", NULL, NULL);
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), GTK_WIDGET(submenu));
+    systray_menu_add_action(submenu, "Terminate server", "process-stop",
+        G_CALLBACK(pulseaudio_terminate));
+
     systray_menu_add_action(mis->menu, "About", "help-about", G_CALLBACK(systray_about_dialog));
     systray_menu_add_action(mis->menu, "Quit", "application-exit", G_CALLBACK(quit));
 }

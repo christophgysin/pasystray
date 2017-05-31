@@ -50,4 +50,6 @@ void pulseaudio_module_load_success_cb(pa_context *c, uint32_t idx, void *userda
 void pulseaudio_module_unload(menu_info_item_t* mii);
 void pulseaudio_module_unload_success_cb(pa_context *c, int success, void *userdata);
 
+void pulseaudio_terminate(void);
+
 #endif /* PASYSTRAY_PULSEAUDIO_ACTION_H */

@@ -347,3 +347,8 @@ void pulseaudio_module_unload_success_cb(pa_context *c, int success, void *userd
     if(!success)
         g_warning("failed to unload module %s!\n", mii->name);
 }
+
+void pulseaudio_terminate(void)
+{
+    pa_operation_unref(pa_context_exit_daemon(context, NULL, NULL));
+}
