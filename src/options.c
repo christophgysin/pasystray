@@ -163,6 +163,10 @@ void parse_options(settings_t* settings)
             {
                 settings->n_stream_input = TRUE;
             }
+            else if(g_str_equal(notify_mode[i], "systray_action"))
+            {
+                settings->n_systray_action = TRUE;
+            }
             else if(g_str_equal(notify_mode[i], "help"))
             {
                 gchar *help_text=(
