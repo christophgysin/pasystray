@@ -144,8 +144,10 @@ void systray_remove_placeholder(menu_info_t* mi)
     if(g_hash_table_size(mi->items) == 0)
     {
         GList* children = gtk_container_get_children(GTK_CONTAINER(mi->menu));
-        if(children)
+        if(children) {
             gtk_container_remove(GTK_CONTAINER(mi->menu), GTK_WIDGET(children->data));
+            g_list_free(children);
+        }
     }
 }
 
@@ -192,10 +194,12 @@ void systray_remove_radio_item(menu_info_t* mi, GtkWidget* item)
 
     /* update group */
     GList* children = gtk_container_get_children(GTK_CONTAINER(mi->menu));
-    if(children)
+    if(children) {
         mi->group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(children->data));
-    else
+        g_list_free(children);
+    } else {
         mi->group = NULL;
+    }
 }
 
 GtkWidget* systray_add_item(GtkMenuShell* menu, const char* desc, const char* tooltip, const char* icon)
