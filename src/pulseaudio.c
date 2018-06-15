@@ -102,14 +102,21 @@ void pulseaudio_context_state_cb(pa_context* c, void* userdata)
 
         case PA_CONTEXT_READY:
         {
-            char* tooltip = context_info_str(context);
-            char* escaped = g_markup_escape_text(tooltip, -1);
-            char* markup = g_strdup_printf(
+            if(mis->settings.icon_tooltip)
+            {
+                char* tooltip = context_info_str(context);
+                char* escaped = g_markup_escape_text(tooltip, -1);
+                char* markup = g_strdup_printf(
                     "<span font_family=\"monospace\" font_size=\"x-small\">%s</span>", escaped);
-            systray_impl_set_tooltip(mis->systray, markup);
-            g_free(escaped);
-            g_free(tooltip);
-            g_free(markup);
+                systray_impl_set_tooltip(mis->systray, markup);
+                g_free(escaped);
+                g_free(tooltip);
+                g_free(markup);
+            }
+            else
+            {
+                systray_impl_set_has_tooltip(mis->systray, FALSE);
+            }
 
             pa_context_set_subscribe_callback(context, pulseaudio_event_cb, mis);
             pa_operation_unref(pa_context_subscribe(context,

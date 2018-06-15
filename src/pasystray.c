@@ -67,9 +67,9 @@ void init(settings_t* settings)
     ui_load();
 
     mis = menu_infos_create();
+    mis->settings = *settings;
     systray_create(mis);
     menu_infos_init(mis);
-    mis->settings = *settings;
 
     pulseaudio_init(mis);
     avahi_start(mis);

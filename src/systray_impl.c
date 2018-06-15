@@ -57,6 +57,11 @@ void systray_impl_set_tooltip(systray_t systray, const char* markup)
 {
     // TODO: set tooltip?
 }
+
+void systray_impl_set_has_tooltip(systray_t systray, gboolean has_tooltip)
+{
+    // TODO: enable/disable tooltip?
+}
 #elif HAVE_STATUSICON
 
 #include "ui.h"
@@ -151,6 +156,12 @@ void systray_impl_set_tooltip(systray_t systray, const char* markup)
     gtk_status_icon_set_tooltip_markup(icon, markup);
 }
 
+void systray_impl_set_has_tooltip(systray_t systray, gboolean has_tooltip)
+{
+    GtkStatusIcon* icon = systray;
+    gtk_status_icon_set_has_tooltip(icon, has_tooltip);
+}
+
 #else
 
 static void systray_impl_scroll_cb(GtkImage* image, GdkEventScroll* ev, gpointer userdata)
@@ -192,6 +203,12 @@ void systray_impl_set_tooltip(systray_t systray, const char* markup)
 {
     GtkImage *image = systray;
     gtk_widget_set_tooltip_markup(GTK_WIDGET(image), markup);
+}
+
+void systray_impl_set_has_tooltip(systray_t systray, gboolean has_tooltip)
+{
+    GtkImage *image = systray;
+    gtk_widget_set_has_tooltip(GTK_WIDGET(image), has_tooltip);
 }
 
 #endif
