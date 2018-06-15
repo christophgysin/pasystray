@@ -29,6 +29,7 @@ static gboolean version = FALSE;
 static gboolean debug = FALSE;
 static int volume_max = 0;
 static int volume_inc = 1;
+static gboolean icon_tooltip = TRUE;
 static gboolean no_notify = FALSE;
 static gboolean always_notify = FALSE;
 static gboolean monitors = FALSE;
@@ -40,6 +41,8 @@ static GOptionEntry entries[] =
     { "debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "Print debugging information", NULL },
     { "volume-max", 'm', 0, G_OPTION_ARG_INT, &volume_max, "Maximum volume (in percent)", "N" },
     { "volume-inc", 'i', 0, G_OPTION_ARG_INT, &volume_inc, "Volume increment", "N" },
+    { "no-icon-tooltip", 't', G_OPTION_FLAG_REVERSE, G_OPTION_ARG_NONE,
+        &icon_tooltip, "Disable the status icon tooltip for the connected state", NULL },
     { "no-notify", 'n', 0, G_OPTION_ARG_NONE, &no_notify,
         "Deprecated, use --notify=none instead", NULL },
     { "always-notify", 'a', 0, G_OPTION_ARG_NONE, &always_notify,
@@ -116,6 +119,8 @@ void parse_options(settings_t* settings)
     {
         settings->volume_inc = volume_inc;
     }
+
+    settings->icon_tooltip = icon_tooltip;
 
     notify_default(settings);
 

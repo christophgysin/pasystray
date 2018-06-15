@@ -27,5 +27,6 @@
 systray_t systray_impl_create(menu_infos_t* mis);
 void systray_impl_set_icon(systray_t systray, const char* icon_name);
 void systray_impl_set_tooltip(systray_t systray, const char* markup);
+void systray_impl_set_has_tooltip(systray_t systray, gboolean has_tooltip);
 
 #endif /* PASYSTRAY_SYSTRAY_IMPL_H */
