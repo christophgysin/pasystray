@@ -72,7 +72,8 @@ void systray_menu_create(menu_infos_t* mis)
         G_CALLBACK(pulseaudio_terminate));
 
     systray_menu_add_action(mis->menu, "About", "help-about", G_CALLBACK(systray_about_dialog));
-    systray_menu_add_action(mis->menu, "Quit", "application-exit", G_CALLBACK(quit));
+    if(!mis->settings.foolproof)
+        systray_menu_add_action(mis->menu, "Quit", "application-exit", G_CALLBACK(quit));
 }
 
 void systray_rootmenu_add_submenu(menu_infos_t* mis, menu_type_t type, const char* name, const char* icon)

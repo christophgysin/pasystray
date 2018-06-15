@@ -59,6 +59,7 @@ struct settings_t_ {
     int volume_max;
     int volume_inc;
     gboolean icon_tooltip;
+    gboolean foolproof;
     gboolean monitors;
     // Notification options below
     gboolean n_new;
