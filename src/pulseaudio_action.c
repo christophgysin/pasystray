@@ -236,9 +236,17 @@ void pulseaudio_process_update_volume_notification(menu_info_item_t* mii)
     {
         case MENU_SERVER:
         case MENU_MODULE:
+            return;
+
         case MENU_INPUT:
+            if(mis->settings.n_stream_input)
+                break;
+            return;
+
         case MENU_OUTPUT:
-            break;
+            if(mis->settings.n_stream_output)
+                break;
+            return;
 
         case MENU_SINK:
             if(mis->settings.n_sink)
@@ -253,6 +261,9 @@ void pulseaudio_process_update_volume_notification(menu_info_item_t* mii)
             if(mis->settings.n_source_default && g_str_equal(mii->name, mi->default_name))
                 break;
             return;
+
+        default:
+          return;
     }
 
     pulseaudio_update_volume_notification(mii);
