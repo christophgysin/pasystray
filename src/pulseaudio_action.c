@@ -239,12 +239,12 @@ void pulseaudio_process_update_volume_notification(menu_info_item_t* mii)
             return;
 
         case MENU_INPUT:
-            if(mis->settings.n_stream_input)
+            if(mis->settings.n_stream || mis->settings.n_stream_input)
                 break;
             return;
 
         case MENU_OUTPUT:
-            if(mis->settings.n_stream_output)
+            if(mis->settings.n_stream || mis->settings.n_stream_output)
                 break;
             return;
 
