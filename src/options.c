@@ -66,6 +66,7 @@ void notify_default(settings_t* settings)
     settings->n_sink_default = FALSE;
     settings->n_source = FALSE;
     settings->n_source_default = FALSE;
+    settings->n_stream = FALSE;
     settings->n_stream_output = FALSE;
     settings->n_stream_input = FALSE;
     settings->n_systray_action = TRUE;
@@ -78,6 +79,7 @@ void notify_all(settings_t* settings)
     settings->n_sink_default = TRUE;
     settings->n_source = TRUE;
     settings->n_source_default = TRUE;
+    settings->n_stream = TRUE;
     settings->n_stream_output = TRUE;
     settings->n_stream_input = TRUE;
     settings->n_systray_action = TRUE;
@@ -90,6 +92,7 @@ void notify_none(settings_t* settings)
     settings->n_sink_default = FALSE;
     settings->n_source = FALSE;
     settings->n_source_default = FALSE;
+    settings->n_stream = FALSE;
     settings->n_stream_output = FALSE;
     settings->n_stream_input = FALSE;
     settings->n_systray_action = FALSE;
