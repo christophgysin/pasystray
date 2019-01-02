@@ -1,6 +1,6 @@
 #  This file is part of PaSystray
 #
-#  Copyright (C) 2011-2018  Christoph Gysin
+#  Copyright (C) 2011-2019  Christoph Gysin
 #
 #  PaSystray is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU Lesser General Public License as
@@ -19,7 +19,7 @@
 
 AC_PREREQ([2.68])
 
-AC_INIT([pasystray], [0.7.0], [christoph.gysin@gmail.com], [pasystray],
+AC_INIT([pasystray], [0.7.1], [christoph.gysin@gmail.com], [pasystray],
         [http://github.com/christophgysin/pasystray])
 AC_CONFIG_SRCDIR([src/pasystray.c])
 AC_CONFIG_HEADERS([src/config.h])
