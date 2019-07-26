@@ -162,15 +162,15 @@ void pulseaudio_volume(menu_info_item_t* mii, int inc)
     /* increment/decrement in 2% steps */
     pa_cvolume* volume;
     if(inc < 0)
-        volume = pa_cvolume_dec(mii->volume, -inc * PA_VOLUME_NORM / 50);
+        volume = pa_cvolume_dec(mii->volume, -inc * PA_VOLUME_NORM / 100);
     else if(inc > 0)
     {
         int volume_max = mii->menu_info->menu_infos->settings.volume_max;
         if(volume_max > 0)
-            volume = pa_cvolume_inc_clamp(mii->volume, inc * PA_VOLUME_NORM / 50,
+            volume = pa_cvolume_inc_clamp(mii->volume, inc * PA_VOLUME_NORM / 100,
                     PA_VOLUME_NORM * volume_max / 100);
         else
-            volume = pa_cvolume_inc(mii->volume, inc * PA_VOLUME_NORM / 50);
+            volume = pa_cvolume_inc(mii->volume, inc * PA_VOLUME_NORM / 100);
     }
     else
         return;
