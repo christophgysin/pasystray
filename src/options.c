@@ -28,7 +28,7 @@
 static gboolean version = FALSE;
 static gboolean debug = FALSE;
 static int volume_max = 0;
-static int volume_inc = 1;
+static int volume_inc = 2;
 static gboolean icon_tooltip = TRUE;
 static gboolean no_notify = FALSE;
 static gboolean always_notify = FALSE;
@@ -114,7 +114,7 @@ void parse_options(settings_t* settings)
         settings->volume_max = volume_max;
     }
 
-    settings->volume_inc = 1;
+    settings->volume_inc = 2;
     if(volume_inc > 0)
     {
         settings->volume_inc = volume_inc;
