@@ -204,32 +204,13 @@ void systray_remove_radio_item(menu_info_t* mi, GtkWidget* item)
 
 GtkWidget* systray_add_item(GtkMenuShell* menu, const char* desc, const char* tooltip, const char* icon)
 {
-    GtkWidget* item = gtk_menu_item_new();
-
-#if GTK_VERSION_MAJOR == 2
-    GtkWidget* hbox = gtk_hbox_new(FALSE, 0);
-#else
-    GtkWidget* hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-#endif
-    gtk_container_add(GTK_CONTAINER(item), hbox);
+    GtkWidget* item = gtk_image_menu_item_new_with_mnemonic(desc);
 
     if(icon)
     {
         GtkWidget* image = gtk_image_new_from_icon_name(icon, GTK_ICON_SIZE_MENU);
-#if GTK_VERSION_MAJOR == 2
-        gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 0);
-#else
-        gtk_container_add(GTK_CONTAINER(hbox), image);
-#endif
+        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), image);
     }
-
-    GtkWidget* label = gtk_label_new(NULL);
-    gtk_label_set_text_with_mnemonic(GTK_LABEL(label), desc);
-#if GTK_VERSION_MAJOR == 2
-    gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 15);
-#else
-    gtk_container_add(GTK_CONTAINER(hbox), label);
-#endif
 
     if(tooltip)
         systray_set_tooltip(item, tooltip);
