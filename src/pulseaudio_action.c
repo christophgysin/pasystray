@@ -277,10 +277,14 @@ void pulseaudio_update_volume_notification(menu_info_item_t* mii)
     g_free(label);
 
     gint volume = (mii->volume->values[0]*100+PA_VOLUME_NORM/2)/PA_VOLUME_NORM;
+
+    int volume_max = mii->menu_info->menu_infos->settings.volume_max;
+    gint value = (volume_max > 0) ? volume * 100 / volume_max : volume;
+
     if(!mii->notify)
-        mii->notify = notify(msg, NULL, mii->icon, volume);
+        mii->notify = notify(msg, NULL, mii->icon, value);
     else
-        notify_update(mii->notify, msg, NULL, mii->icon, volume);
+        notify_update(mii->notify, msg, NULL, mii->icon, value);
 
     g_free(msg);
 }
