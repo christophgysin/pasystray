@@ -28,6 +28,7 @@
 #include "systray_impl.h"
 
 static const char* COMMAND_PAMAN = "paman";
+static const char* COMMAND_PAEQUALIZER = "qpaeq";
 static const char* COMMAND_PAVUCONTROL = "pavucontrol";
 static const char* COMMAND_PAVUMETER = "pavumeter";
 static const char* COMMAND_PAVUMETER_REC = "pavumeter --record";
@@ -52,6 +53,7 @@ void systray_menu_create(menu_infos_t* mis)
     systray_menu_add_separator(mis->menu);
 
     systray_menu_add_application(mis->menu, "_Manager...", NULL, COMMAND_PAMAN);
+    systray_menu_add_application(mis->menu, "_Equalizer...", NULL, COMMAND_PAEQUALIZER);
     systray_menu_add_application(mis->menu, "Volume _Control...", NULL, COMMAND_PAVUCONTROL);
     systray_menu_add_application(mis->menu, "Volume Meter (_Playback)...", NULL, COMMAND_PAVUMETER);
     systray_menu_add_application(mis->menu, "Volume Meter (_Recording)...", NULL, COMMAND_PAVUMETER_REC);
