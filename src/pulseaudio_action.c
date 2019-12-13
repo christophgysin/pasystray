@@ -365,5 +365,8 @@ void pulseaudio_module_unload_success_cb(pa_context *c, int success, void *userd
 
 void pulseaudio_terminate(void)
 {
-    pa_operation_unref(pa_context_exit_daemon(context, NULL, NULL));
+    pa_operation* exit_op = pa_context_exit_daemon(context, NULL, NULL);
+    if (exit_op) {
+        pa_operation_unref(exit_op);
+    }
 }
