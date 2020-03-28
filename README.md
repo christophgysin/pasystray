@@ -26,6 +26,15 @@ To control a different server than the local instance, run pasystray as:
 $ PULSE_SERVER=remote_host pasystray
 ```
 
+Additionnals functionnalities
+-----------------------------
+
+pasystray is able to manage the following list of pulse audio control:
+* paman
+* pavucontrol
+* pavumeter
+* paprefs
+
 Mouse Bindings
 --------------
 
