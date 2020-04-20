@@ -369,6 +369,8 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
             break;
     }
 
+    g_signal_connect(item->widget, "activate",
+            G_CALLBACK(menu_info_item_activated), item);
     g_signal_connect(item->widget, "button-press-event",
             G_CALLBACK(menu_info_item_clicked), item);
     gtk_widget_add_events(item->widget, GDK_SCROLL_MASK);
@@ -448,6 +450,9 @@ void menu_info_subitem_add(menu_info_t* mi, uint32_t index, const char* name,
 
     g_signal_connect(subitem->widget, "button-press-event",
             G_CALLBACK(menu_info_subitem_clicked), subitem);
+
+    g_signal_connect(subitem->widget, "activate",
+            G_CALLBACK(menu_info_subitem_activated), subitem);
 }
 
 void menu_info_subitem_update(menu_info_t* mi, uint32_t index, const char* name,
@@ -498,6 +503,23 @@ gboolean desc_equal(gpointer key, gpointer value, gpointer user_data)
 menu_info_item_t* menu_info_item_get_by_desc(menu_info_t* mi, const char* desc)
 {
     return g_hash_table_find(mi->items, desc_equal, (gpointer)desc);
+}
+
+void menu_info_item_activated(GtkWidget* item, menu_info_item_t* mii)
+{
+    if (GTK_IS_CHECK_MENU_ITEM(item)
+            && !gtk_check_menu_item_get_active(GTK_MENU_ITEM(item)))
+    {
+        /* Ignore activation of deselected item  */
+        return;
+    }
+
+    g_debug("[menu_info] subitem activated: %s %s",
+            menu_info_type_name(mii->menu_info->type),
+            mii->name);
+
+    /* on left-click, set device as default */
+    pulseaudio_set_default(mii);
 }
 
 void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
@@ -573,13 +595,18 @@ void menu_info_item_scrolled(GtkWidget* item, GdkEventScroll* event,
     }
 }
 
-void menu_info_subitem_clicked(GtkWidget* item, GdkEventButton* event,
-        menu_info_item_t* mii)
-{
-    g_debug("[menu_info] subitem clicked mod:%s%s button:%i",
-            (event->state & GDK_CONTROL_MASK) ? "[ctrl]" : "",
-            (event->state & GDK_MOD1_MASK) ? "[alt]" : "",
-            event->button);
+void menu_info_subitem_activated(GtkWidget* item, menu_info_item_t* mii) {
+
+    if (GTK_IS_CHECK_MENU_ITEM(item)
+            && !gtk_check_menu_item_get_active(GTK_MENU_ITEM(item)))
+    {
+        /* Ignore activation of deselected item  */
+        return;
+    }
+
+    g_debug("[menu_info] subitem activated: %s %s",
+            menu_info_type_name(mii->menu_info->type),
+            mii->name);
 
     switch(mii->menu_info->type)
     {
@@ -595,6 +622,15 @@ void menu_info_subitem_clicked(GtkWidget* item, GdkEventButton* event,
             pulseaudio_move_output_to_source(mii->menu_info->parent, mii);
             break;
     }
+}
+
+void menu_info_subitem_clicked(GtkWidget* item, GdkEventButton* event,
+        menu_info_item_t* mii)
+{
+    g_debug("[menu_info] subitem clicked mod:%s%s button:%i",
+            (event->state & GDK_CONTROL_MASK) ? "[ctrl]" : "",
+            (event->state & GDK_MOD1_MASK) ? "[alt]" : "",
+            event->button);
 }
 
 void menu_info_item_move_all_cb(GtkWidget* item, GdkEventButton* event, void* userdata)
