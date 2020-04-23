@@ -39,9 +39,9 @@ over status icon:
 
 over source/sink:
 * scroll up/down: adjust the volume of respective stream
-* left-click: set as default sink/source
+* left-click: set as default source/sink
 * middle-click / alt + left-click: toggle mute
-* right-click: open menu to rename source/sink
+* right-click: open menu to move all outputs/inputs to this source/sink or rename it
 
 over playback/record stream:
 * scroll up/down: adjust the volume of respective stream
