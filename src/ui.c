@@ -20,11 +20,41 @@
 ***/
 
 #include <glib.h>
+#include "menu_info.h"
 #include "ui.h"
 #include "config.h"
 #include "systray_impl.h"
 
+typedef enum {
+    ICON_IDX_MUTED = 0,
+    ICON_IDX_LOW = 1,
+    ICON_IDX_MEDIUM = 2,
+    ICON_IDX_HIGH = 3
+} icon_idx_t;
+
+enum { ICON_IDX_COUNT = 4 };
+
+typedef const gchar* icon_set_t[ICON_IDX_COUNT];
+
+static icon_set_t volume_icon_names = {
+    [ICON_IDX_MUTED] = "audio-volume-muted",
+    [ICON_IDX_LOW] = "audio-volume-low",
+    [ICON_IDX_MEDIUM] = "audio-volume-medium",
+    [ICON_IDX_HIGH] = "audio-volume-high"
+};
+
+static icon_set_t mic_icon_names = {
+    [ICON_IDX_MUTED] = "microphone-sensitivity-muted",
+    [ICON_IDX_LOW] = "microphone-sensitivity-low",
+    [ICON_IDX_MEDIUM] = "microphone-sensitivity-medium",
+    [ICON_IDX_HIGH] = "microphone-sensitivity-high"
+};
+
+static icon_set_t ui_icon_names[MENU_COUNT];
+
 static GtkBuilder* builder;
+
+static void ui_load_icons(void);
 
 void ui_load()
 {
@@ -50,6 +80,8 @@ void ui_load()
     g_free(local_file);
     g_free(local_file_src);
 
+    ui_load_icons();
+
     if(!ret)
     {
         g_error("[ui] %s", error->message);
@@ -65,16 +97,18 @@ void ui_set_volume_icon(menu_info_item_t* mii)
     g_debug("volume:%u%s", volume, mii->mute ? " muted" : "");
 
     const char* icon_name = NULL;
+    icon_idx_t idx;
 
     if(volume == PA_VOLUME_MUTED || mii->mute)
-        icon_name = "audio-volume-muted";
+        idx = ICON_IDX_MUTED;
     else if(volume < (PA_VOLUME_NORM / 3))
-        icon_name = "audio-volume-low";
+        idx = ICON_IDX_LOW;
     else if(volume < (PA_VOLUME_NORM / 3 * 2))
-        icon_name = "audio-volume-medium";
+        idx = ICON_IDX_MEDIUM;
     else
-        icon_name = "audio-volume-high";
+        idx = ICON_IDX_HIGH;
 
+    icon_name = ui_icon_names[mii->menu_info->type][idx];
     g_free(mii->icon);
     mii->icon = g_strdup(icon_name);
 }
@@ -125,4 +159,25 @@ GtkDialog* ui_errordialog(const gchar* title, const gchar* message)
         gtk_message_dialog_format_secondary_text(dialog, "%s", message);
 
     return GTK_DIALOG(dialog);
+}
+
+static const gchar* ui_find_icon_name(GtkIconTheme* theme, const gchar* name, const gchar* fallback)
+{
+    const gchar* s = g_strdup_printf("%s-symbolic", name);
+    if(gtk_icon_theme_has_icon(theme, s))
+        return s;
+    g_free(s);
+    if(gtk_icon_theme_has_icon(theme, name))
+        return g_strdup(name);
+    return g_strdup(fallback);
+}
+
+static void ui_load_icons(void) {
+    GtkIconTheme* theme = gtk_icon_theme_get_default();
+    for(menu_type_t mt = 0; mt < MENU_COUNT; mt++) {
+        const gchar** preferred_names = (mt == MENU_SOURCE ? mic_icon_names : volume_icon_names);
+        for(icon_idx_t i = 0; i < ICON_IDX_COUNT; i++) {
+            ui_icon_names[mt][i] = ui_find_icon_name(theme, preferred_names[i], volume_icon_names[i]);
+        }
+    }
 }
