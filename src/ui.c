@@ -99,7 +99,7 @@ void ui_set_volume_icon(menu_info_item_t* mii)
     const char* icon_name = NULL;
     icon_idx_t idx;
 
-    if(volume == PA_VOLUME_MUTED || mii->mute)
+    if(mii->mute)
         idx = ICON_IDX_MUTED;
     else if(volume < (PA_VOLUME_NORM / 3))
         idx = ICON_IDX_LOW;
