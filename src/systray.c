@@ -19,6 +19,7 @@
   USA.
 ***/
 
+#include <glib/gi18n.h>
 #include "systray.h"
 
 #include "pasystray.h"
@@ -348,9 +349,22 @@ void systray_remove_item_from_all_submenus(menu_info_item_t* item, menu_info_t* 
 
 void systray_about_dialog()
 {
-    GtkDialog* dialog = ui_aboutdialog();
-    g_signal_connect_swapped(dialog, "response", G_CALLBACK(gtk_widget_hide), dialog);
-    gtk_widget_show_all(GTK_WIDGET(dialog));
+    char *authors[] = { _("Christoph Gysin <christoph.gysin@gmail.com>"),
+                        NULL };
+
+    gtk_show_about_dialog(NULL,
+                          "program-name", "pasystray",
+                          "version", PACKAGE_VERSION,
+                          "logo-icon-name", "pasystray",
+                          "comments", _("PulseAudio system tray"),
+                          "authors", authors,
+                          "copyright", _("Copyright © 2011-2016"),
+#if GTK_CHECK_VERSION(3,0,0)
+                          "license-type", GTK_LICENSE_LGPL_2_1,
+#endif
+                          "website", PACKAGE_URL,
+                          "website-label", PACKAGE_URL,
+                          NULL);
 }
 
 void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata)

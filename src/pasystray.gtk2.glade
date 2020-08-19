@@ -2,32 +2,6 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy toplevel-contextual -->
-  <object class="GtkAboutDialog" id="aboutdialog">
-    <property name="can_focus">False</property>
-    <property name="border_width">5</property>
-    <property name="icon_name">pasystray</property>
-    <property name="type_hint">dialog</property>
-    <property name="program_name">pasystray</property>
-    <property name="copyright" translatable="yes">Copyright © 2011-2016</property>
-    <property name="comments" translatable="yes">PulseAudio system tray</property>
-    <property name="authors">Christoph Gysin &lt;christoph.gysin@gmail.com&gt;</property>
-    <property name="logo_icon_name">pasystray</property>
-    <child internal-child="vbox">
-      <object class="GtkVBox" id="aboutdialog-vbox">
-        <property name="can_focus">False</property>
-        <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="aboutdialog-action_area">
-            <property name="can_focus">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkMessageDialog" id="errordialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
