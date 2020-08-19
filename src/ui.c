@@ -123,17 +123,6 @@ void ui_update_systray_icon(menu_info_item_t* mii)
     systray_impl_set_icon(mis->systray, mii->icon);
 }
 
-GtkDialog* ui_aboutdialog()
-{
-    GtkAboutDialog* aboutdialog = (GtkAboutDialog*) gtk_builder_get_object(builder, "aboutdialog");
-
-    gtk_about_dialog_set_version(aboutdialog, PACKAGE_VERSION);
-    gtk_about_dialog_set_website(aboutdialog, PACKAGE_URL);
-    gtk_about_dialog_set_website_label(aboutdialog, PACKAGE_URL);
-
-    return GTK_DIALOG(aboutdialog);
-}
-
 GtkDialog* ui_renamedialog()
 {
     return (GtkDialog*) gtk_builder_get_object(builder, "renamedialog");
