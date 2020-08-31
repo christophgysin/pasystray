@@ -21,7 +21,7 @@
 
 #include "config.h"
 
-#ifndef HAVE_NOTIFY
+#if ! HAVE_NOTIFY
 
 #include "notify.h"
 

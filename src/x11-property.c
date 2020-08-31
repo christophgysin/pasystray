@@ -21,7 +21,7 @@
 
 #include "config.h"
 
-#ifndef HAVE_X11
+#if ! HAVE_X11
 
 #include <stdlib.h>
 
