@@ -58,6 +58,7 @@ struct menu_info_t_ {
 struct settings_t_ {
     int volume_max;
     int volume_inc;
+    gboolean reverse_scroll;
     gboolean icon_tooltip;
     gboolean monitors;
     // Notification options below

@@ -427,14 +427,15 @@ void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata
 void systray_scroll_cb(guint state, GdkScrollDirection direction, menu_infos_t* mis)
 {
     int inc = 0;
+    int reverse_factor = mis->settings.reverse_scroll ? -1 : 1;
 
     switch(direction)
     {
         case GDK_SCROLL_UP:
-            inc = mis->settings.volume_inc;
+            inc = reverse_factor * mis->settings.volume_inc;
             break;
         case GDK_SCROLL_DOWN:
-            inc = -mis->settings.volume_inc;
+            inc = reverse_factor * -mis->settings.volume_inc;
             break;
         default:
             return;
