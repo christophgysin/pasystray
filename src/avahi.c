@@ -21,7 +21,7 @@
 
 #include "config.h"
 
-#ifndef HAVE_AVAHI
+#if ! HAVE_AVAHI
 
 #include "avahi.h"
 

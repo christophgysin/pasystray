@@ -24,7 +24,7 @@
 #include "config.h"
 #include "systray.h"
 
-#ifdef HAVE_APPINDICATOR
+#if HAVE_APPINDICATOR
 
 #include <libappindicator/app-indicator.h>
 

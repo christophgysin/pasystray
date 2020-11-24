@@ -1,0 +1,32 @@
+/* Have GTK version? */
+#mesondefine GTK_VERSION_MAJOR
+
+/* Have AppIndicator? */
+#mesondefine HAVE_APPINDICATOR
+
+/* Have avahi-client? */
+#mesondefine HAVE_AVAHI
+
+/* Have libnotify? */
+#mesondefine HAVE_NOTIFY
+
+/* Have StatusIcon? */
+#mesondefine HAVE_STATUSICON
+
+/* Have X11? */
+#mesondefine HAVE_X11
+
+#mesondefine G_LOG_DOMAIN
+#mesondefine GLADE_FILE
+
+/* Define to the full name of this package. */
+#mesondefine PACKAGE_NAME
+
+/* Define to the home page for this package. */
+#mesondefine PACKAGE_URL
+
+/* Define to the version of this package. */
+#mesondefine PACKAGE_VERSION
+
+/* Version number of package */
+#mesondefine VERSION

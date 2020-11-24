@@ -1,0 +1,6 @@
+option('gtk', type: 'combo', choices: ['2', '3'], value: '3')
+option('avahi', type: 'feature', value: 'auto')
+option('notify', type: 'feature', value: 'auto')
+option('x11', type: 'feature', value: 'auto')
+option('statusicon', type: 'boolean', value: 'true')
+option('appindicator', type: 'feature', value: 'auto')
