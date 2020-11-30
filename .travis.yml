@@ -11,6 +11,9 @@ addons:
       - libnotify-dev
       - libappindicator3-dev
 language: c
+arch:
+  - AMD64
+  - ppc64le
 script: ./.travis.sh
 env:
   - CFLAGS=--std=c99
