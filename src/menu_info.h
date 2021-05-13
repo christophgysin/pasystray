@@ -61,6 +61,8 @@ struct settings_t_ {
     gboolean reverse_scroll;
     gboolean icon_tooltip;
     gboolean monitors;
+    // Grab volume control keys
+    gboolean key_grabbing;
     // Notification options below
     gboolean n_new;
     gboolean n_sink;

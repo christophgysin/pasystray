@@ -34,6 +34,7 @@ static gboolean icon_tooltip = TRUE;
 static gboolean no_notify = FALSE;
 static gboolean always_notify = FALSE;
 static gboolean monitors = FALSE;
+static gboolean key_grabbing = FALSE;
 static gchar **notify_mode;
 
 static GOptionEntry entries[] =
@@ -51,6 +52,7 @@ static GOptionEntry entries[] =
     { "always-notify", 'a', 0, G_OPTION_ARG_NONE, &always_notify,
         "Deprecated, use --notify=all instead", NULL },
     { "include-monitors", 'n', 0, G_OPTION_ARG_NONE, &monitors, "Include monitor sources", NULL },
+    { "key-grabbing",  'g', 0, G_OPTION_ARG_NONE, &key_grabbing, "Grab volume control keys", NULL },
     { "notify", 'N', 0, G_OPTION_ARG_STRING_ARRAY, &notify_mode,
         "Set notification options, use --notify=help for a list of valid options", "OPTION" },
     { .long_name = NULL }
@@ -216,4 +218,5 @@ void parse_options(settings_t* settings)
     }
 
     settings->monitors = monitors;
+    settings->key_grabbing = key_grabbing;
 }
