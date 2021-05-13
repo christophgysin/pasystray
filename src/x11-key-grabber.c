@@ -29,22 +29,49 @@
  *
  */
 
+#include <glib.h>
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #include <X11/Xlib.h>
 
 #include "x11-key-grabber.h"
+#include "pulseaudio_action.h"
 
 #define NUM_KEYS_TO_GRAB 3
 
-static key_grabber_cb volume_raise_cb = NULL;
-static key_grabber_cb volume_lower_cb = NULL;
-static key_grabber_cb volume_mute_cb = NULL;
+void volume_raise_cb(unsigned int state, menu_infos_t *mis)
+{
+    menu_info_t* mi = &mis->menu_info[(state & ControlMask) ? MENU_SOURCE : MENU_SINK];
+    menu_info_item_t* mii = menu_info_item_get_by_name(mi, mi->default_name);
+
+    g_debug("[key_grabber] %sXF86AudioRaiseVolume pressed\n", (state & ControlMask) ? "Ctrl-" : "");
+    if(mii)
+        pulseaudio_volume(mii, mis->settings.volume_inc);
+}
+
+void volume_lower_cb(unsigned int state, menu_infos_t *mis)
+{
+    menu_info_t* mi = &mis->menu_info[(state & ControlMask) ? MENU_SOURCE : MENU_SINK];
+    menu_info_item_t* mii = menu_info_item_get_by_name(mi, mi->default_name);
+
+    g_debug("[key_grabber] %sXF86AudioLowerVolume pressed\n", (state & ControlMask) ? "Ctrl-" : "");
+    if(mii)
+         pulseaudio_volume(mii, -mis->settings.volume_inc);
+}
+
+void volume_mute_cb(unsigned int state, menu_infos_t *mis) {
+    menu_info_t* mi = &mis->menu_info[(state & ControlMask) ? MENU_SOURCE : MENU_SINK];
+    menu_info_item_t* mii = menu_info_item_get_by_name(mi, mi->default_name);
+
+    g_debug("[key_grabber] %sXF86AudioMute pressed\n", (state & ControlMask) ? "Ctrl-" : "");
+    if(mii)
+        pulseaudio_toggle_mute(mii);
+}
 
 static key_grabber_cb *grabbers[NUM_KEYS_TO_GRAB] = {
-    &volume_raise_cb,
-    &volume_lower_cb,
-    &volume_mute_cb
+    volume_raise_cb,
+    volume_lower_cb,
+    volume_mute_cb
 };
 
 static const char *keysym_names[NUM_KEYS_TO_GRAB] = {
@@ -67,7 +94,7 @@ static GdkFilterReturn filter_func(GdkXEvent *gdk_xevent, GdkEvent *event, gpoin
     for (int i = 0; i < NUM_KEYS_TO_GRAB; ++i) {
         if (keyevent->keycode == grabbed_keys[i]) {
             if (grabbers[i] != NULL)
-                (*grabbers[i])();
+                (*grabbers[i])(keyevent->state, data);
             return GDK_FILTER_REMOVE;
         }
     }
@@ -76,7 +103,7 @@ static GdkFilterReturn filter_func(GdkXEvent *gdk_xevent, GdkEvent *event, gpoin
     return GDK_FILTER_CONTINUE;
 }
 
-void key_grabber_grab_keys(void)
+void key_grabber_grab_keys(menu_infos_t *mis)
 {
     // Find the X11 display
     GdkDisplay *gdkDisplay = gdk_display_get_default();
@@ -130,14 +157,8 @@ void key_grabber_grab_keys(void)
 #else
             gdk_error_trap_push();
 #endif
-            XGrabKey(dpy, keycode, 0, root, True, GrabModeAsync, GrabModeAsync);
-            XGrabKey(dpy, keycode, Mod2Mask, root, True, GrabModeAsync, GrabModeAsync);
-            XGrabKey(dpy, keycode, Mod5Mask, root, True, GrabModeAsync, GrabModeAsync);
-            XGrabKey(dpy, keycode, LockMask, root, True, GrabModeAsync, GrabModeAsync);
-            XGrabKey(dpy, keycode, Mod2Mask | Mod5Mask, root, True, GrabModeAsync, GrabModeAsync);
-            XGrabKey(dpy, keycode, Mod2Mask | LockMask, root, True, GrabModeAsync, GrabModeAsync);
-            XGrabKey(dpy, keycode, Mod5Mask | LockMask, root, True, GrabModeAsync, GrabModeAsync);
-            XGrabKey(dpy, keycode, Mod2Mask | Mod5Mask | LockMask, root, True, GrabModeAsync, GrabModeAsync);
+            XGrabKey(dpy, keycode, AnyModifier, root, True, GrabModeAsync, GrabModeAsync);
+
 #if GTK_CHECK_VERSION(3,22,0)
             gdk_display_flush(gdkDisplay);
 #else
@@ -154,11 +175,11 @@ void key_grabber_grab_keys(void)
         }
 
         // Register for X events
-        gdk_window_add_filter(gdkRoot, filter_func, NULL);
+        gdk_window_add_filter(gdkRoot, filter_func, mis);
     }
 }
 
-void key_grabber_ungrab_keys(void)
+void key_grabber_ungrab_keys(menu_infos_t *mis)
 {
     // Find the X11 display
     GdkDisplay *gdkDisplay = gdk_display_get_default();
@@ -195,13 +216,8 @@ void key_grabber_ungrab_keys(void)
 #else
             gdk_error_trap_push();
 #endif
-            XUngrabKey(dpy, keycode, Mod2Mask, root);
-            XUngrabKey(dpy, keycode, Mod5Mask, root);
-            XUngrabKey(dpy, keycode, LockMask, root);
-            XUngrabKey(dpy, keycode, Mod2Mask | Mod5Mask, root);
-            XUngrabKey(dpy, keycode, Mod2Mask | LockMask, root);
-            XUngrabKey(dpy, keycode, Mod5Mask | LockMask, root);
-            XUngrabKey(dpy, keycode, Mod2Mask | Mod5Mask | LockMask, root);
+            XUngrabKey(dpy, keycode, AnyModifier, root);
+
 #if GTK_CHECK_VERSION(3,22,0)
             gdk_display_flush(gdkDisplay);
 
@@ -215,21 +231,6 @@ void key_grabber_ungrab_keys(void)
         }
 
         // Unregister for X events
-        gdk_window_remove_filter(gdkRoot, filter_func, NULL);
+        gdk_window_remove_filter(gdkRoot, filter_func, mis);
     }
-}
-
-void key_grabber_register_volume_raise_callback(key_grabber_cb cb)
-{
-    volume_raise_cb = cb;
-}
-
-void key_grabber_register_volume_lower_callback(key_grabber_cb cb)
-{
-    volume_lower_cb = cb;
-}
-
-void key_grabber_register_volume_mute_callback(key_grabber_cb cb)
-{
-    volume_mute_cb = cb;
 }
