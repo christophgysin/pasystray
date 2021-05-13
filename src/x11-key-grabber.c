@@ -106,7 +106,11 @@ void key_grabber_grab_keys(void)
 
     // Grab the keys for all screens
     for (int i = 0; i < numScreens; ++i) {
+#if GTK_CHECK_VERSION(3,20,0)
+        GdkScreen *screen = gdk_display_get_default_screen(gdkDisplay);
+#else
         GdkScreen *screen = gdk_display_get_screen(gdkDisplay, i);
+#endif
         if (screen == NULL)
             continue;
 
@@ -121,7 +125,11 @@ void key_grabber_grab_keys(void)
                 continue;
 
             // Try to grab the keycodes with any modifiers
+#if GTK_CHECK_VERSION(3,22,0)
+            gdk_x11_display_error_trap_push(gdkDisplay);
+#else
             gdk_error_trap_push();
+#endif
             XGrabKey(dpy, keycode, 0, root, True, GrabModeAsync, GrabModeAsync);
             XGrabKey(dpy, keycode, Mod2Mask, root, True, GrabModeAsync, GrabModeAsync);
             XGrabKey(dpy, keycode, Mod5Mask, root, True, GrabModeAsync, GrabModeAsync);
@@ -130,10 +138,18 @@ void key_grabber_grab_keys(void)
             XGrabKey(dpy, keycode, Mod2Mask | LockMask, root, True, GrabModeAsync, GrabModeAsync);
             XGrabKey(dpy, keycode, Mod5Mask | LockMask, root, True, GrabModeAsync, GrabModeAsync);
             XGrabKey(dpy, keycode, Mod2Mask | Mod5Mask | LockMask, root, True, GrabModeAsync, GrabModeAsync);
+#if GTK_CHECK_VERSION(3,22,0)
+            gdk_display_flush(gdkDisplay);
+#else
             gdk_flush();
+#endif
 
             // Handle errors
+#if GTK_CHECK_VERSION(3,22,0)
+            if (gdk_x11_display_error_trap_pop(gdkDisplay))
+#else
             if (gdk_error_trap_pop())
+#endif
                 g_printerr("Failed to grab %s\n", keysym_names[i]);
         }
 
@@ -155,7 +171,11 @@ void key_grabber_ungrab_keys(void)
 
     // Ungrab the keys for all screens
     for (int i = 0; i < numScreens; ++i) {
+#if GTK_CHECK_VERSION(3,20,0)
+        GdkScreen *screen = gdk_display_get_default_screen(gdkDisplay);
+#else
         GdkScreen *screen = gdk_display_get_screen(gdkDisplay, i);
+#endif
         if (screen == NULL)
             continue;
 
@@ -170,7 +190,11 @@ void key_grabber_ungrab_keys(void)
                 continue;
 
             // Ungrab everything
+#if GTK_CHECK_VERSION(3,22,0)
+            gdk_x11_display_error_trap_push(gdkDisplay);
+#else
             gdk_error_trap_push();
+#endif
             XUngrabKey(dpy, keycode, Mod2Mask, root);
             XUngrabKey(dpy, keycode, Mod5Mask, root);
             XUngrabKey(dpy, keycode, LockMask, root);
@@ -178,8 +202,15 @@ void key_grabber_ungrab_keys(void)
             XUngrabKey(dpy, keycode, Mod2Mask | LockMask, root);
             XUngrabKey(dpy, keycode, Mod5Mask | LockMask, root);
             XUngrabKey(dpy, keycode, Mod2Mask | Mod5Mask | LockMask, root);
+#if GTK_CHECK_VERSION(3,22,0)
+            gdk_display_flush(gdkDisplay);
+
+            if (gdk_x11_display_error_trap_pop(gdkDisplay))
+#else
             gdk_flush();
+
             if (gdk_error_trap_pop())
+#endif
                 g_printerr("Failed to ungrab %s\n", keysym_names[i]);
         }
 
