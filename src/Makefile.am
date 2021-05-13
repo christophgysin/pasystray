@@ -50,6 +50,12 @@ pasystray_SOURCES = \
     x11-property.c \
     x11-property.h
 
+if HAVE_X11
+pasystray_SOURCES += \
+    x11-key-grabber.c \
+    x11-key-grabber.h
+endif
+
 pasystray_LDADD = \
     $(AM_LDADD) \
     $(GTK_LIBS) \
