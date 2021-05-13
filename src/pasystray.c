@@ -31,6 +31,7 @@
 #include "pulseaudio.h"
 #include "avahi.h"
 #include "x11-property.h"
+#include "x11-key-grabber.h"
 
 static GMainLoop* loop;
 static menu_infos_t* mis;
@@ -51,7 +52,7 @@ int main(int argc, char *argv[])
 
     init(&settings);
     g_main_loop_run(loop);
-    destroy();
+    destroy(&settings);
 
     return EXIT_SUCCESS;
 }
@@ -73,6 +74,11 @@ void init(settings_t* settings)
 
     pulseaudio_init(mis);
     avahi_start(mis);
+
+#ifdef HAVE_X11
+    if (settings->key_grabbing)
+	    key_grabber_grab_keys(mis);
+#endif
 }
 
 void quit()
@@ -80,8 +86,13 @@ void quit()
     g_main_loop_quit(loop);
 }
 
-void destroy()
+void destroy(settings_t* settings)
 {
+#ifdef HAVE_X11
+    if (settings->key_grabbing)
+	    key_grabber_ungrab_keys(mis);
+#endif
+
     pulseaudio_destroy();
     avahi_destroy();
     menu_infos_destroy(mis);
