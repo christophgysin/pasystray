@@ -60,6 +60,7 @@ struct settings_t_ {
     int volume_inc;
     gboolean reverse_scroll;
     gboolean icon_tooltip;
+    gboolean foolproof;
     gboolean monitors;
     // Grab volume control keys
     gboolean key_grabbing;

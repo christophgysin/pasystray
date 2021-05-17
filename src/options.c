@@ -31,6 +31,7 @@ static int volume_max = 0;
 static int volume_inc = 2;
 static gboolean reverse_scroll = FALSE;
 static gboolean icon_tooltip = TRUE;
+static gboolean foolproof = FALSE;
 static gboolean no_notify = FALSE;
 static gboolean always_notify = FALSE;
 static gboolean monitors = FALSE;
@@ -47,6 +48,7 @@ static GOptionEntry entries[] =
 	&reverse_scroll, "Reverse volume scroll direction", NULL },
     { "no-icon-tooltip", 't', 0, G_OPTION_ARG_NONE,
         &icon_tooltip, "Disable the status icon tooltip for the connected state", NULL },
+    { "foolproof", 'f', 0, G_OPTION_ARG_NONE, &foolproof, "Disable the 'Quit' menu entry", NULL },
     { "no-notify", 'n', 0, G_OPTION_ARG_NONE, &no_notify,
         "Deprecated, use --notify=none instead", NULL },
     { "always-notify", 'a', 0, G_OPTION_ARG_NONE, &always_notify,
@@ -127,6 +129,8 @@ void parse_options(settings_t* settings)
 
     settings->reverse_scroll = reverse_scroll;
     settings->icon_tooltip = icon_tooltip;
+
+    settings->foolproof = foolproof;
 
     notify_default(settings);
 
