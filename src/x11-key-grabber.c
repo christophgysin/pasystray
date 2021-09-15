@@ -37,7 +37,7 @@
 #include "x11-key-grabber.h"
 #include "pulseaudio_action.h"
 
-#define NUM_KEYS_TO_GRAB 3
+#define NUM_KEYS_TO_GRAB 4
 
 void volume_raise_cb(unsigned int state, menu_infos_t *mis)
 {
@@ -68,16 +68,27 @@ void volume_mute_cb(unsigned int state, menu_infos_t *mis) {
         pulseaudio_toggle_mute(mii);
 }
 
+void mic_mute_cb(unsigned int state, menu_infos_t *mis) {
+    menu_info_t* mi = &mis->menu_info[MENU_SOURCE];
+    menu_info_item_t* mii = menu_info_item_get_by_name(mi, mi->default_name);
+
+    g_debug("[key_grabber] XF86AudioMicMute pressed\n");
+    if(mii)
+        pulseaudio_toggle_mute(mii);
+}
+
 static key_grabber_cb *grabbers[NUM_KEYS_TO_GRAB] = {
     volume_raise_cb,
     volume_lower_cb,
-    volume_mute_cb
+    volume_mute_cb,
+    mic_mute_cb
 };
 
 static const char *keysym_names[NUM_KEYS_TO_GRAB] = {
     "XF86AudioRaiseVolume",
     "XF86AudioLowerVolume",
-    "XF86AudioMute"
+    "XF86AudioMute",
+    "XF86AudioMicMute"
 };
 
 static KeyCode grabbed_keys[NUM_KEYS_TO_GRAB] = { 0, };
