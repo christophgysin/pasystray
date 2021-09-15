@@ -276,7 +276,7 @@ void pulseaudio_update_volume_notification(menu_info_item_t* mii)
                 menu_info_type_name(mii->menu_info->type), label);
     g_free(label);
 
-    gint volume = (mii->volume->values[0]*100+PA_VOLUME_NORM/2)/PA_VOLUME_NORM;
+    gint volume = (pa_cvolume_max(mii->volume)*100+PA_VOLUME_NORM/2)/PA_VOLUME_NORM;
 
     int volume_max = mii->menu_info->menu_infos->settings.volume_max;
     gint value = (volume_max > 0) ? volume * 100 / volume_max : volume;
