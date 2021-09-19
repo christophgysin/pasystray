@@ -92,7 +92,7 @@ void ui_set_volume_icon(menu_info_item_t* mii)
 {
     g_debug("pulseaudio_set_volume_icon(%s)", mii->name);
 
-    pa_volume_t volume = pa_cvolume_avg(mii->volume);
+    pa_volume_t volume = pa_cvolume_max(mii->volume);
 
     g_debug("volume:%u%s", volume, mii->mute ? " muted" : "");
 
