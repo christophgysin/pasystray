@@ -1,3 +1,4 @@
+
 /***
   This file is part of PaSystray
 
@@ -27,17 +28,19 @@
 
 typedef enum {
     ICON_IDX_MUTED = 0,
-    ICON_IDX_LOW = 1,
-    ICON_IDX_MEDIUM = 2,
-    ICON_IDX_HIGH = 3
+    ICON_IDX_ZERO = 1,
+    ICON_IDX_LOW = 2,
+    ICON_IDX_MEDIUM = 3,
+    ICON_IDX_HIGH = 4
 } icon_idx_t;
 
-enum { ICON_IDX_COUNT = 4 };
+enum { ICON_IDX_COUNT = 5 };
 
 typedef const gchar* icon_set_t[ICON_IDX_COUNT];
 
 static icon_set_t volume_icon_names = {
     [ICON_IDX_MUTED] = "audio-volume-muted",
+    [ICON_IDX_ZERO] = "audio-volume-zero",
     [ICON_IDX_LOW] = "audio-volume-low",
     [ICON_IDX_MEDIUM] = "audio-volume-medium",
     [ICON_IDX_HIGH] = "audio-volume-high"
@@ -45,6 +48,7 @@ static icon_set_t volume_icon_names = {
 
 static icon_set_t mic_icon_names = {
     [ICON_IDX_MUTED] = "microphone-sensitivity-muted",
+    [ICON_IDX_ZERO] = "microphone-sensitivity-zero",
     [ICON_IDX_LOW] = "microphone-sensitivity-low",
     [ICON_IDX_MEDIUM] = "microphone-sensitivity-medium",
     [ICON_IDX_HIGH] = "microphone-sensitivity-high"
@@ -101,6 +105,8 @@ void ui_set_volume_icon(menu_info_item_t* mii)
 
     if(mii->mute)
         idx = ICON_IDX_MUTED;
+    else if(volume == 0)
+        idx = ICON_IDX_ZERO;
     else if(volume < (PA_VOLUME_NORM / 3))
         idx = ICON_IDX_LOW;
     else if(volume < (PA_VOLUME_NORM / 3 * 2))

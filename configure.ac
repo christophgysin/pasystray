@@ -19,7 +19,7 @@
 
 AC_PREREQ([2.68])
 
-AC_INIT([pasystray], [0.8.0], [christoph.gysin@gmail.com], [pasystray],
+AC_INIT([pasystray], [0.9.0], [christoph.gysin@gmail.com], [pasystray],
         [http://github.com/christophgysin/pasystray])
 AC_CONFIG_SRCDIR([src/pasystray.c])
 AC_CONFIG_HEADERS([src/config.h])
