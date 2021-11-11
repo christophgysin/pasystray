@@ -156,23 +156,38 @@ GtkDialog* ui_errordialog(const gchar* title, const gchar* message)
     return GTK_DIALOG(dialog);
 }
 
-static const gchar* ui_find_icon_name(GtkIconTheme* theme, const gchar* name, const gchar* fallback)
+static const gchar* ui_find_icon_name(GtkIconTheme* theme, icon_set_t icons, icon_idx_t idx)
 {
-    const gchar* s = g_strdup_printf("%s-symbolic", name);
-    if(gtk_icon_theme_has_icon(theme, s))
-        return s;
-    g_free(s);
-    if(gtk_icon_theme_has_icon(theme, name))
-        return g_strdup(name);
-    return g_strdup(fallback);
+    while (idx < ICON_IDX_COUNT) {
+        g_debug(g_strdup_printf("Index: %d", idx));
+        const gchar* name = icons[idx];
+        const gchar* s = g_strdup_printf("%s-symbolic", name);
+        if(gtk_icon_theme_has_icon(theme, s))
+            return s;
+        g_free(s);
+        if(gtk_icon_theme_has_icon(theme, name))
+            return name;
+        idx++;
+    }
+    g_debug("NULL");
+    return NULL;
 }
 
 static void ui_load_icons(void) {
     GtkIconTheme* theme = gtk_icon_theme_get_default();
     for(menu_type_t mt = 0; mt < MENU_COUNT; mt++) {
-        const gchar** preferred_names = (mt == MENU_SOURCE ? mic_icon_names : volume_icon_names);
-        for(icon_idx_t i = 0; i < ICON_IDX_COUNT; i++) {
-            ui_icon_names[mt][i] = ui_find_icon_name(theme, preferred_names[i], volume_icon_names[i]);
+        if(mt == MENU_SOURCE) {
+            for(icon_idx_t i = 0; i < ICON_IDX_COUNT; i++) {
+                ui_icon_names[mt][i] = ui_find_icon_name(theme, mic_icon_names, i);
+                if(ui_icon_names[mt][i] == NULL) {
+                    ui_icon_names[mt][i] = ui_find_icon_name(theme, volume_icon_names, i);
+                }
+            }
+        }
+        else {
+            for(icon_idx_t i = 0; i < ICON_IDX_COUNT; i++) {
+                ui_icon_names[mt][i] = ui_find_icon_name(theme, volume_icon_names, i);
+            }
         }
     }
 }
