@@ -159,7 +159,6 @@ GtkDialog* ui_errordialog(const gchar* title, const gchar* message)
 static const gchar* ui_find_icon_name(GtkIconTheme* theme, icon_set_t icons, icon_idx_t idx)
 {
     while (idx < ICON_IDX_COUNT) {
-        g_debug(g_strdup_printf("Index: %d", idx));
         const gchar* name = icons[idx];
         const gchar* s = g_strdup_printf("%s-symbolic", name);
         if(gtk_icon_theme_has_icon(theme, s))
@@ -169,7 +168,6 @@ static const gchar* ui_find_icon_name(GtkIconTheme* theme, icon_set_t icons, ico
             return name;
         idx++;
     }
-    g_debug("NULL");
     return NULL;
 }
 
@@ -182,11 +180,13 @@ static void ui_load_icons(void) {
                 if(ui_icon_names[mt][i] == NULL) {
                     ui_icon_names[mt][i] = ui_find_icon_name(theme, volume_icon_names, i);
                 }
+                g_debug(g_strdup_printf("Using microphone icon %s", ui_icon_names[mt][i]));
             }
         }
         else {
             for(icon_idx_t i = 0; i < ICON_IDX_COUNT; i++) {
                 ui_icon_names[mt][i] = ui_find_icon_name(theme, volume_icon_names, i);
+                g_debug(g_strdup_printf("Using speaker icon %s", ui_icon_names[mt][i]));
             }
         }
     }
