@@ -25,7 +25,7 @@
 #include "menu_info.h"
 #include <gtk/gtk.h>
 
-void ui_load();
+void ui_load(settings_t* settings);
 void ui_set_volume_icon(menu_info_item_t* mii);
 void ui_update_systray_icon(menu_info_item_t* mii);
 GtkDialog* ui_renamedialog();

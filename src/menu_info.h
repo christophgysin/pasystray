@@ -63,6 +63,7 @@ struct settings_t_ {
     gboolean monitors;
     // Grab volume control keys
     gboolean key_grabbing;
+    gboolean symbolic_icons;
     // Notification options below
     gboolean n_new;
     gboolean n_sink;

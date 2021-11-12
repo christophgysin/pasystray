@@ -36,6 +36,7 @@ static gboolean always_notify = FALSE;
 static gboolean monitors = FALSE;
 static gboolean key_grabbing = FALSE;
 static gchar **notify_mode;
+static gboolean symbolic_icons = FALSE;
 
 static GOptionEntry entries[] =
 {
@@ -44,7 +45,7 @@ static GOptionEntry entries[] =
     { "volume-max", 'm', 0, G_OPTION_ARG_INT, &volume_max, "Maximum volume (in percent)", "N" },
     { "volume-inc", 'i', 0, G_OPTION_ARG_INT, &volume_inc, "Volume increment", "N" },
     { "reverse-scroll", 'r', 0, G_OPTION_ARG_NONE,
-	&reverse_scroll, "Reverse volume scroll direction", NULL },
+        &reverse_scroll, "Reverse volume scroll direction", NULL },
     { "no-icon-tooltip", 't', 0, G_OPTION_ARG_NONE,
         &icon_tooltip, "Disable the status icon tooltip for the connected state", NULL },
     { "no-notify", 'n', 0, G_OPTION_ARG_NONE, &no_notify,
@@ -55,6 +56,8 @@ static GOptionEntry entries[] =
     { "key-grabbing",  'g', 0, G_OPTION_ARG_NONE, &key_grabbing, "Grab volume control keys", NULL },
     { "notify", 'N', 0, G_OPTION_ARG_STRING_ARRAY, &notify_mode,
         "Set notification options, use --notify=help for a list of valid options", "OPTION" },
+    { "symbolic-icons", 'S', 0, G_OPTION_ARG_NONE, &symbolic_icons,
+        "Prefer symbolic icons", NULL },
     { .long_name = NULL }
 };
 
@@ -219,4 +222,5 @@ void parse_options(settings_t* settings)
 
     settings->monitors = monitors;
     settings->key_grabbing = key_grabbing;
+    settings->symbolic_icons = symbolic_icons;
 }
