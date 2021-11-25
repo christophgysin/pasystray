@@ -169,6 +169,7 @@ static const gchar* ui_find_icon_name(GtkIconTheme* theme, icon_set_t icons, ico
         idx++;
     }
     return NULL;
+}
 
 static void ui_load_icons(settings_t* settings) {
     GtkIconTheme* theme = gtk_icon_theme_get_default();
