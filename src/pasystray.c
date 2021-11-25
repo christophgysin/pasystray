@@ -65,7 +65,7 @@ void init(settings_t* settings)
     notify_initialize();
     x11_property_init();
 
-    ui_load();
+    ui_load(settings);
 
     mis = menu_infos_create();
     mis->settings = *settings;

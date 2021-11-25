@@ -58,9 +58,9 @@ static icon_set_t ui_icon_names[MENU_COUNT];
 
 static GtkBuilder* builder;
 
-static void ui_load_icons(void);
+static void ui_load_icons(settings_t* settings);
 
-void ui_load()
+void ui_load(settings_t* settings)
 {
     builder = gtk_builder_new();
 
@@ -84,7 +84,7 @@ void ui_load()
     g_free(local_file);
     g_free(local_file_src);
 
-    ui_load_icons();
+    ui_load_icons(settings);
 
     if(!ret)
     {
@@ -156,12 +156,12 @@ GtkDialog* ui_errordialog(const gchar* title, const gchar* message)
     return GTK_DIALOG(dialog);
 }
 
-static const gchar* ui_find_icon_name(GtkIconTheme* theme, icon_set_t icons, icon_idx_t idx)
+static const gchar* ui_find_icon_name(GtkIconTheme* theme, icon_set_t icons, icon_idx_t idx, gboolean symbolic_icons)
 {
     while (idx < ICON_IDX_COUNT) {
         const gchar* name = icons[idx];
         const gchar* s = g_strdup_printf("%s-symbolic", name);
-        if(gtk_icon_theme_has_icon(theme, s))
+        if(symbolic_icons && gtk_icon_theme_has_icon(theme, s))
             return s;
         g_free(s);
         if(gtk_icon_theme_has_icon(theme, name))
@@ -169,23 +169,22 @@ static const gchar* ui_find_icon_name(GtkIconTheme* theme, icon_set_t icons, ico
         idx++;
     }
     return NULL;
-}
 
-static void ui_load_icons(void) {
+static void ui_load_icons(settings_t* settings) {
     GtkIconTheme* theme = gtk_icon_theme_get_default();
     for(menu_type_t mt = 0; mt < MENU_COUNT; mt++) {
         if(mt == MENU_SOURCE) {
             for(icon_idx_t i = 0; i < ICON_IDX_COUNT; i++) {
-                ui_icon_names[mt][i] = ui_find_icon_name(theme, mic_icon_names, i);
+                ui_icon_names[mt][i] = ui_find_icon_name(theme, mic_icon_names, i, settings->symbolic_icons);
                 if(ui_icon_names[mt][i] == NULL) {
-                    ui_icon_names[mt][i] = ui_find_icon_name(theme, volume_icon_names, i);
+                    ui_icon_names[mt][i] = ui_find_icon_name(theme, volume_icon_names, i, settings->symbolic_icons);
                 }
                 g_debug(g_strdup_printf("Using microphone icon %s", ui_icon_names[mt][i]));
             }
         }
         else {
             for(icon_idx_t i = 0; i < ICON_IDX_COUNT; i++) {
-                ui_icon_names[mt][i] = ui_find_icon_name(theme, volume_icon_names, i);
+                ui_icon_names[mt][i] = ui_find_icon_name(theme, volume_icon_names, i, settings->symbolic_icons);
                 g_debug(g_strdup_printf("Using speaker icon %s", ui_icon_names[mt][i]));
             }
         }
