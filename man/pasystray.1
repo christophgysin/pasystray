@@ -100,17 +100,26 @@ Set the maximum volume (in percent).
 .B \-i, \-\-volume-inc=N
 Set the volume increment.
 .TP
+.B \-r, \-\-reverse-scroll
+Reverse the direction of volume adjustment with the mouse scroll wheel.
+.TP
 .B \-t, \-\-no-icon-tooltip
 Disable the status icon tooltip for the connected state.
 .TP
 .B \-n, \-\-no-notify
-Disable all notifications.
+Disable all notifications. Deprecated; use \-\-notify=none instead.
 .TP
 .B \-a, \-\-always-notify
-Enable notifications for all changes in pulsaudio.
+Enable notifications for all changes in pulsaudio. Deprecated; use \-\-notify=all instead.
 .TP
 .B \-\-include-monitors
 Show monitor sources.
+.TP
+.B \-g, \-\-key-grabbing
+Enable keyboard volume control and mute keys to adjust volume settings.
+.TP
+.B \-N, \-\-notify=option
+Set notification options; use \-\-notify=help for a list of valid options.
 .SH SEE ALSO
 .BR pulseaudio (1),
 .BR pactl (1).
