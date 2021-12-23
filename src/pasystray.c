@@ -40,6 +40,9 @@ int main(int argc, char *argv[])
 {
     GOptionEntry* options = get_options();
     GError *error = NULL;
+#if GTK_CHECK_VERSION(3,10,0) && !defined(HAVE_APPINDICATOR)
+    gdk_set_allowed_backends("x11");
+#endif
     gtk_init_with_args(&argc, &argv, NULL, options, NULL, &error);
     if(error)
     {
