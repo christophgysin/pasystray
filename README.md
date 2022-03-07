@@ -8,6 +8,30 @@ pasystray allows setting the default PulseAudio source/sink and moving
 streams on the fly between sources/sinks without restarting the client
 applications.
 
+Usage
+-------
+
+```
+Help Options:
+  -h, --help                Show help options
+  --help-all                Show all help options
+  --help-gtk                Show GTK+ Options
+
+Application Options:
+  -V, --version             Print version and exit
+  -d, --debug               Print debugging information
+  -m, --volume-max=N        Maximum volume (in percent)
+  -i, --volume-inc=N        Volume increment
+  -r, --reverse-scroll      Reverse volume scroll direction
+  -t, --no-icon-tooltip     Disable the status icon tooltip for the connected state
+  -n, --no-notify           Deprecated, use --notify=none instead
+  -a, --always-notify       Deprecated, use --notify=all instead
+  --include-monitors        Include monitor sources
+  -g, --key-grabbing        Grab volume control keys
+  -N, --notify=OPTION       Set notification options, use --notify=help for a list of valid options
+  --display=DISPLAY         X display to use
+```
+
 Features
 --------
 
