@@ -1,5 +1,5 @@
-PulseAudio System Tray
-======================
+# PulseAudio System Tray
+
 [![build](https://github.com/christophgysin/pasystray/actions/workflows/build.yml/badge.svg)](https://github.com/christophgysin/pasystray/actions/workflows/build.yml)
 
 A replacement for the deprecated padevchooser.
@@ -8,8 +8,11 @@ pasystray allows setting the default PulseAudio source/sink and moving
 streams on the fly between sources/sinks without restarting the client
 applications.
 
-Usage
--------
+<a href="https://repology.org/project/pasystray/versions">
+  <img align="right" src="https://repology.org/badge/vertical-allrepos/pasystray.svg?exclude_sources=site&exclude_unsupported=1" alt="Packaging status">
+</a>
+
+## Usage
 
 ```
 Help Options:
@@ -32,8 +35,7 @@ Application Options:
   --display=DISPLAY         X display to use
 ```
 
-Features
---------
+## Features
 
 * switch default sink/source
 * move playback/record stream to a different sink/source on the fly
@@ -50,8 +52,7 @@ To control a different server than the local instance, run pasystray as:
 $ PULSE_SERVER=remote_host pasystray
 ```
 
-Mouse Bindings
---------------
+## Mouse Bindings
 
 over status icon:
 * left/right-click: open menu
@@ -71,8 +72,7 @@ over playback/record stream:
 * scroll up/down: adjust the volume of respective stream
 * middle-click: toggle mute
 
-Troubleshooting
----------------
+## Troubleshooting
 
 If the pasystray icon is not displayed in your Unity system tray, you will have
 to whitelist it. Read this for instructions:
