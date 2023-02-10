@@ -528,6 +528,16 @@ void menu_info_item_activated(GtkWidget* item, menu_info_item_t* mii)
         return;
     }
 
+    GdkEvent *current_event = gtk_get_current_event();
+    if (current_event) {
+        GdkEventType type = current_event->type;
+        gdk_event_free(current_event);
+
+        /* Ignore activation if already handled by clicked callback */
+        if (type == GDK_BUTTON_PRESS || type == GDK_BUTTON_RELEASE)
+            return;
+    }
+
     g_debug("[menu_info] item activated: %s %s",
             menu_info_type_name(mii->menu_info->type),
             mii->name);
