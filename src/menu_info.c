@@ -507,14 +507,14 @@ menu_info_item_t* menu_info_item_get_by_desc(menu_info_t* mi, const char* desc)
 
 void menu_info_item_activated(GtkWidget* item, menu_info_item_t* mii)
 {
-    if (GTK_IS_CHECK_MENU_ITEM(item)
-            && !gtk_check_menu_item_get_active(GTK_MENU_ITEM(item)))
+    if (!GTK_IS_CHECK_MENU_ITEM(item)
+            || !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(item)))
     {
-        /* Ignore activation of deselected item  */
+        /* Ignore activation of submenus and deselected items */
         return;
     }
 
-    g_debug("[menu_info] subitem activated: %s %s",
+    g_debug("[menu_info] item activated: %s %s",
             menu_info_type_name(mii->menu_info->type),
             mii->name);
 
@@ -597,10 +597,10 @@ void menu_info_item_scrolled(GtkWidget* item, GdkEventScroll* event,
 
 void menu_info_subitem_activated(GtkWidget* item, menu_info_item_t* mii) {
 
-    if (GTK_IS_CHECK_MENU_ITEM(item)
-            && !gtk_check_menu_item_get_active(GTK_MENU_ITEM(item)))
+    if (!GTK_IS_CHECK_MENU_ITEM(item)
+            || !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(item)))
     {
-        /* Ignore activation of deselected item  */
+        /* Ignore activation of submenus and deselected items */
         return;
     }
 
