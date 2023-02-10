@@ -352,7 +352,7 @@ void pulseaudio_change_default_item(menu_info_t* mi, const char* new_default)
     menu_info_item_t* item = menu_info_item_get_by_name(mi, new_default);
 
     if(item)
-        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget), TRUE);
+        menu_info_item_set_active(item, TRUE);
 }
 
 void pulseaudio_sink_init_cb(pa_context* c, const pa_sink_info* i, int is_last, void* userdata)

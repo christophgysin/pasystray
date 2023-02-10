@@ -130,6 +130,8 @@ void menu_info_subitem_update(menu_info_t* mi, uint32_t index, const char* name,
 menu_info_item_t* menu_info_item_get(menu_info_t* mi, uint32_t index);
 menu_info_item_t* menu_info_item_get_by_name(menu_info_t* mi, const char* name);
 menu_info_item_t* menu_info_item_get_by_desc(menu_info_t* mi, const char* desc);
+void menu_info_item_set_active(menu_info_item_t* mii, gboolean is_active);
+void menu_info_subitem_set_active(menu_info_item_t* mii, gboolean is_active);
 
 void menu_info_item_activated(GtkWidget* item, menu_info_item_t* mii);
 void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
