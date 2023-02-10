@@ -473,7 +473,7 @@ void menu_info_subitem_update(menu_info_t* mi, uint32_t index, const char* name,
     g_free(label);
 
     if(active)
-        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget), TRUE);
+        menu_info_subitem_set_active(item, TRUE);
 }
 
 menu_info_item_t* menu_info_item_get(menu_info_t* mi, uint32_t index)
@@ -503,6 +503,20 @@ gboolean desc_equal(gpointer key, gpointer value, gpointer user_data)
 menu_info_item_t* menu_info_item_get_by_desc(menu_info_t* mi, const char* desc)
 {
     return g_hash_table_find(mi->items, desc_equal, (gpointer)desc);
+}
+
+void menu_info_item_set_active(menu_info_item_t* mii, gboolean is_active)
+{
+    g_signal_handlers_block_by_func(mii->widget, G_CALLBACK(menu_info_item_activated), mii);
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(mii->widget), is_active);
+    g_signal_handlers_unblock_by_func(mii->widget, G_CALLBACK(menu_info_item_activated), mii);
+}
+
+void menu_info_subitem_set_active(menu_info_item_t* mii, gboolean is_active)
+{
+    g_signal_handlers_block_by_func(mii->widget, G_CALLBACK(menu_info_subitem_activated), mii);
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(mii->widget), is_active);
+    g_signal_handlers_unblock_by_func(mii->widget, G_CALLBACK(menu_info_subitem_activated), mii);
 }
 
 void menu_info_item_activated(GtkWidget* item, menu_info_item_t* mii)
