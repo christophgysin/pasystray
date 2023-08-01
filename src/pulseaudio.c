@@ -379,15 +379,15 @@ void pulseaudio_sink_change_cb(pa_context* c, const pa_sink_info* i, int is_last
 
 void pulseaudio_sink_add(const pa_sink_info* i, int is_last, void* userdata, gboolean is_new)
 {
+    if(is_last > 0)
+        return;
+
     if(i == NULL || is_last < 0)
     {
         g_message("Failed to get sink information: %s",
                 pa_strerror(pa_context_errno(context)));
         return;
     }
-
-    if(is_last)
-        return;
 
     menu_info_t* mi = userdata;
     menu_infos_t* mis = mi->menu_infos;
@@ -422,14 +422,14 @@ void pulseaudio_source_change_cb(pa_context* c, const pa_source_info* i, int is_
 
 void pulseaudio_source_add(const pa_source_info* i, int is_last, void* userdata, gboolean is_new)
 {
+    if(is_last > 0)
+        return;
+
     if(i == NULL || is_last < 0)
     {
         g_message("Failed to get source information: %s", pa_strerror(pa_context_errno(context)));
         return;
     }
-
-    if(is_last)
-        return;
 
     const char* class = pa_proplist_gets(i->proplist, PA_PROP_DEVICE_CLASS);
 
@@ -470,14 +470,14 @@ void pulseaudio_sink_input_change_cb(pa_context* c, const pa_sink_input_info* i,
 
 void pulseaudio_sink_input_add(const pa_sink_input_info* i, int is_last, void* userdata, gboolean is_new)
 {
+    if(is_last > 0)
+        return;
+
     if(i == NULL || is_last < 0)
     {
         g_message("Failed to get sink input information: %s", pa_strerror(pa_context_errno(context)));
         return;
     }
-
-    if(is_last)
-        return;
 
     // ignore filters
     const char* media_role = pa_proplist_gets(i->proplist, PA_PROP_MEDIA_ROLE);
@@ -511,14 +511,14 @@ void pulseaudio_source_output_change_cb(pa_context* c, const pa_source_output_in
 
 void pulseaudio_source_output_add(const pa_source_output_info* i, int is_last, void* userdata, gboolean is_new)
 {
+    if(is_last > 0)
+        return;
+
     if(i == NULL || is_last < 0)
     {
         g_message("Failed to get source output information: %s", pa_strerror(pa_context_errno(context)));
         return;
     }
-
-    if(is_last)
-        return;
 
     // ignore peak detects
     const char* media_name = pa_proplist_gets(i->proplist, PA_PROP_MEDIA_NAME);
@@ -552,14 +552,14 @@ void pulseaudio_module_change_cb(pa_context* c, const pa_module_info* i, int is_
 
 void pulseaudio_module_add(const pa_module_info* i, int is_last, void* userdata, gboolean is_new)
 {
+    if(is_last > 0)
+        return;
+
     if(i == NULL || is_last < 0)
     {
         g_message("Failed to get module information: %s", pa_strerror(pa_context_errno(context)));
         return;
     }
-
-    if(is_last)
-        return;
 
     menu_info_t* mi = userdata;
     char* tooltip = module_info_str(i);
