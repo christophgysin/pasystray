@@ -572,9 +572,7 @@ void menu_info_item_clicked(GtkWidget* item, GdkEventButton* event,
         /* on right-click, show context menu (if any) */
         case 3:
             if(mii->context)
-                gtk_menu_popup(GTK_MENU(mii->context), NULL, NULL, NULL, NULL,
-                        (event != NULL) ? event->button : 0,
-                        gdk_event_get_time((GdkEvent*)event));
+                gtk_menu_popup_at_widget(GTK_MENU(mii->context), mii->widget, 0, 0, NULL);
             break;
     }
 }
