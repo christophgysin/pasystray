@@ -376,7 +376,17 @@ void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata
             /* on left-click, show menu */
             else
             {
+#if GTK_VERSION_MAJOR == 3
                 gtk_menu_popup_at_widget(GTK_MENU(mis->menu), mii->widget, 0, 0, NULL);
+#else
+                gtk_menu_popup(GTK_MENU(mis->menu), NULL, NULL,
+# if HAVE_STATUSICON
+                        gtk_status_icon_position_menu,
+# else
+                        NULL,
+# endif
+                        icon, ev->button, ev->time);
+#endif
             }
             break;
         case 2:
@@ -388,7 +398,17 @@ void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata
             break;
         case 3:
             /* on right-click, show menu */
-            gtk_menu_popup_at_widget(GTK_MENU(mis->menu), mii->widget, 0, 0, NULL);
+#if GTK_VERSION_MAJOR == 3
+                gtk_menu_popup_at_widget(GTK_MENU(mis->menu), mii->widget, 0, 0, NULL);
+#else
+            gtk_menu_popup(GTK_MENU(mis->menu), NULL, NULL,
+# if HAVE_STATUSICON
+                    gtk_status_icon_position_menu,
+# else
+                    NULL,
+# endif
+                    icon, ev->button, ev->time);
+#endif
             break;
     }
 }
