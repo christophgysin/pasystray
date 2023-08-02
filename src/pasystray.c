@@ -77,7 +77,7 @@ void init(settings_t* settings)
 
 #ifdef HAVE_X11
     if (settings->key_grabbing)
-	    key_grabber_grab_keys(mis);
+      key_grabber_grab_keys(mis);
 #endif
 }
 
@@ -90,7 +90,7 @@ void destroy(settings_t* settings)
 {
 #ifdef HAVE_X11
     if (settings->key_grabbing)
-	    key_grabber_ungrab_keys(mis);
+      key_grabber_ungrab_keys(mis);
 #endif
 
     pulseaudio_destroy();
