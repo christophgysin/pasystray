@@ -254,7 +254,7 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     if (vol != item->volume)
     {
         g_free(item->volume);
-        item->volume = g_memdup(vol, sizeof(pa_cvolume));
+        item->volume = g_memdup2(vol, sizeof(pa_cvolume));
     }
     item->mute = mute;
     item->target = target;
@@ -316,7 +316,7 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
     item->index = index;
     item->name = g_strdup(name);
     item->desc = g_strdup(desc);
-    item->volume = g_memdup(vol, sizeof(pa_cvolume));
+    item->volume = g_memdup2(vol, sizeof(pa_cvolume));
     item->target = target;
     item->mute = mute;
     item->icon = g_strdup(icon);
