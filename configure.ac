@@ -139,7 +139,7 @@ AC_SUBST(HAVE_APPINDICATOR)
 AM_CONDITIONAL([HAVE_APPINDICATOR], [test "x$HAVE_APPINDICATOR" = x1])
 AS_IF([test "x$HAVE_APPINDICATOR" = x1], AC_DEFINE([HAVE_APPINDICATOR], 1,
       [Have AppIndicator?]))
-### optional libappindicator support ###########################################
+### optional libayatana-appindicator support ###################################
 AC_ARG_ENABLE([ayatana-appindicator],
     AS_HELP_STRING([--disable-ayatana-appindicator], [Disable optional ayatana-appindicator support]))
 
