@@ -24,9 +24,13 @@
 #include "config.h"
 #include "systray.h"
 
-#ifdef HAVE_APPINDICATOR
+#if defined(HAVE_APPINDICATOR) || defined(HAVE_AYATANA_APPINDICATOR)
 
+#ifdef HAVE_AYATANA_APPINDICATOR
+#include <libayatana-appindicator/app-indicator.h>
+#else
 #include <libappindicator/app-indicator.h>
+#endif
 
 static void systray_impl_scroll_cb(AppIndicator* appind, gint delta, GdkScrollDirection direction, gpointer userdata)
 {

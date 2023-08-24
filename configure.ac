@@ -139,6 +139,27 @@ AC_SUBST(HAVE_APPINDICATOR)
 AM_CONDITIONAL([HAVE_APPINDICATOR], [test "x$HAVE_APPINDICATOR" = x1])
 AS_IF([test "x$HAVE_APPINDICATOR" = x1], AC_DEFINE([HAVE_APPINDICATOR], 1,
       [Have AppIndicator?]))
+### optional libayatana-appindicator support ###################################
+AC_ARG_ENABLE([ayatana-appindicator],
+    AS_HELP_STRING([--disable-ayatana-appindicator], [Disable optional ayatana-appindicator support]))
+
+case ${with_gtk} in
+    2) AYATANA_APPINDICATOR_VERSION=ayatana-appindicator-0.1;;
+    3) AYATANA_APPINDICATOR_VERSION=ayatana-appindicator3-0.1;;
+esac
+AS_IF([test "x$enable_ayatana_appindicator" != xno],
+    [PKG_CHECK_MODULES(AYATANA_APPINDICATOR, [ $AYATANA_APPINDICATOR_VERSION ], HAVE_AYATANA_APPINDICATOR=1,
+                       HAVE_AYATANA_APPINDICATOR=0)], HAVE_AYATANA_APPINDICATOR=0)
+
+AS_IF([test "x$enable_ayatana_appindicator" = xyes && test "x$HAVE_APPINDICATOR" = x0],
+    [AC_MSG_ERROR([*** libappindicator not found])])
+
+AC_SUBST(AYATANA_APPINDICATOR_CFLAGS)
+AC_SUBST(AYATANA_APPINDICATOR_LIBS)
+AC_SUBST(HAVE_AYATANA_APPINDICATOR)
+AM_CONDITIONAL([HAVE_AYATANA_APPINDICATOR], [test "x$HAVE_AYATANA_APPINDICATOR" = x1])
+AS_IF([test "x$HAVE_AYATANA_APPINDICATOR" = x1], AC_DEFINE([HAVE_AYATANA_APPINDICATOR], 1,
+      [Have AyatanaAppIndicator?]))
 ################################################################################
 
 if test "x$GCC" = xyes -o "x$CLANG" = xyes; then
