@@ -63,6 +63,7 @@ pasystray_LDADD = \
     $(NOTIFY_LIBS) \
     $(AVAHI_LIBS) \
     $(APPINDICATOR_LIBS) \
+    $(AYATANA_APPINDICATOR_LIBS) \
     $(X11_LIBS)
 
 pasystray_CFLAGS = \
@@ -72,6 +73,7 @@ pasystray_CFLAGS = \
     $(NOTIFY_CFLAGS) \
     $(AVAHI_CFLAGS) \
     $(APPINDICATOR_CFLAGS) \
+    $(AYATANA_APPINDICATOR_CFLAGS) \
     $(X11_CFLAGS) \
     -DG_LOG_DOMAIN=\"pasystray\" \
     -DGLADE_FILE=\"$(gladedir)/$(gladefile)\"
