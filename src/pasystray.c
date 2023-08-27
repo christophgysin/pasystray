@@ -90,6 +90,7 @@ void init(settings_t* settings)
 #endif
     if (settings->key_grabbing && gdkisx11)
 	    key_grabber_grab_keys(mis);
+
 #endif
 }
 

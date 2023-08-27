@@ -254,7 +254,7 @@ void menu_info_item_update(menu_info_t* mi, uint32_t index, const char* name,
     if (vol != item->volume)
     {
         g_free(item->volume);
-        item->volume = g_memdup(vol, sizeof(pa_cvolume));
+        item->volume = g_memdup2(vol, sizeof(pa_cvolume));
     }
     item->mute = mute;
     item->target = target;
@@ -316,7 +316,7 @@ void menu_info_item_add(menu_info_t* mi, uint32_t index, const char* name,
     item->index = index;
     item->name = g_strdup(name);
     item->desc = g_strdup(desc);
-    item->volume = g_memdup(vol, sizeof(pa_cvolume));
+    item->volume = g_memdup2(vol, sizeof(pa_cvolume));
     item->target = target;
     item->mute = mute;
     item->icon = g_strdup(icon);
@@ -473,7 +473,7 @@ void menu_info_subitem_update(menu_info_t* mi, uint32_t index, const char* name,
     g_free(label);
 
     if(active)
-        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item->widget), TRUE);
+        menu_info_subitem_set_active(item, TRUE);
 }
 
 menu_info_item_t* menu_info_item_get(menu_info_t* mi, uint32_t index)
@@ -505,16 +505,40 @@ menu_info_item_t* menu_info_item_get_by_desc(menu_info_t* mi, const char* desc)
     return g_hash_table_find(mi->items, desc_equal, (gpointer)desc);
 }
 
+void menu_info_item_set_active(menu_info_item_t* mii, gboolean is_active)
+{
+    g_signal_handlers_block_by_func(mii->widget, G_CALLBACK(menu_info_item_activated), mii);
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(mii->widget), is_active);
+    g_signal_handlers_unblock_by_func(mii->widget, G_CALLBACK(menu_info_item_activated), mii);
+}
+
+void menu_info_subitem_set_active(menu_info_item_t* mii, gboolean is_active)
+{
+    g_signal_handlers_block_by_func(mii->widget, G_CALLBACK(menu_info_subitem_activated), mii);
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(mii->widget), is_active);
+    g_signal_handlers_unblock_by_func(mii->widget, G_CALLBACK(menu_info_subitem_activated), mii);
+}
+
 void menu_info_item_activated(GtkWidget* item, menu_info_item_t* mii)
 {
-    if (GTK_IS_CHECK_MENU_ITEM(item)
-            && !gtk_check_menu_item_get_active(GTK_MENU_ITEM(item)))
+    if (!GTK_IS_CHECK_MENU_ITEM(item)
+            || !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(item)))
     {
-        /* Ignore activation of deselected item  */
+        /* Ignore activation of submenus and deselected items */
         return;
     }
 
-    g_debug("[menu_info] subitem activated: %s %s",
+    GdkEvent *current_event = gtk_get_current_event();
+    if (current_event) {
+        GdkEventType type = current_event->type;
+        gdk_event_free(current_event);
+
+        /* Ignore activation if already handled by clicked callback */
+        if (type == GDK_BUTTON_PRESS || type == GDK_BUTTON_RELEASE)
+            return;
+    }
+
+    g_debug("[menu_info] item activated: %s %s",
             menu_info_type_name(mii->menu_info->type),
             mii->name);
 
@@ -597,10 +621,10 @@ void menu_info_item_scrolled(GtkWidget* item, GdkEventScroll* event,
 
 void menu_info_subitem_activated(GtkWidget* item, menu_info_item_t* mii) {
 
-    if (GTK_IS_CHECK_MENU_ITEM(item)
-            && !gtk_check_menu_item_get_active(GTK_MENU_ITEM(item)))
+    if (!GTK_IS_CHECK_MENU_ITEM(item)
+            || !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(item)))
     {
-        /* Ignore activation of deselected item  */
+        /* Ignore activation of submenus and deselected items */
         return;
     }
 
