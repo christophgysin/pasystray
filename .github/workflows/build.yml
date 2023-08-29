@@ -19,6 +19,8 @@ jobs:
           - { CC: gcc, CFLAGS: --std=c99, EXTRA_CONF: --disable-x11 }
           - { CC: gcc, CFLAGS: --std=c99, EXTRA_CONF: --disable-statusicon }
           - { CC: gcc, CFLAGS: --std=c99, EXTRA_CONF: --disable-appindicator}
+          - { CC: gcc, CFLAGS: --std=c99, EXTRA_CONF: --disable-ayatana-appindicator}
+          - { CC: gcc, CFLAGS: --std=c99, EXTRA_CONF: --disable-ayatana-appindicator --disable-appindicator}
           - { CC: gcc, CFLAGS: --std=c11 }
           - { CC: clang, CFLAGS: --std=c99 }
           - { CC: clang, CFLAGS: --std=c11 }
@@ -50,3 +52,48 @@ jobs:
       run: make
     - name: make test
       run: make test
+  build2:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          env:
+            - { CC: gcc, CFLAGS: --std=c99 }
+            - { CC: gcc, CFLAGS: --std=c99, EXTRA_CONF: --with-gtk=2 }
+            - { CC: gcc, CFLAGS: --std=c99, EXTRA_CONF: --disable-avahi }
+            - { CC: gcc, CFLAGS: --std=c99, EXTRA_CONF: --disable-notify }
+            - { CC: gcc, CFLAGS: --std=c99, EXTRA_CONF: --disable-x11 }
+            - { CC: gcc, CFLAGS: --std=c99, EXTRA_CONF: --disable-statusicon }
+            - { CC: gcc, CFLAGS: --std=c99, EXTRA_CONF: --disable-appindicator}
+            - { CC: gcc, CFLAGS: --std=c99, EXTRA_CONF: --disable-ayatana-appindicator}
+            - { CC: gcc, CFLAGS: --std=c99, EXTRA_CONF: --disable-ayatana-appindicator --disable-appindicator}
+            - { CC: gcc, CFLAGS: --std=c11 }
+            - { CC: clang, CFLAGS: --std=c99 }
+            - { CC: clang, CFLAGS: --std=c11 }
+      env: ${{ matrix.env }}
+      steps:
+      - name: apt-get update
+        run: sudo apt-get update
+      - name: apt-get install
+        run: >
+          sudo apt-get install --no-install-recommends
+          libgtk2.0-dev
+          libgtk-3-dev
+          libpulse-dev
+          libnotify-dev
+          libayatana-appindicator3-dev
+      - name: CC version
+        run: $CC --version
+      - name: git checkout
+        uses: actions/checkout@v2
+      - name: autotools
+        run: |
+          aclocal
+          autoconf
+          autoheader
+          automake --add-missing
+      - name: configure
+        run: ./configure ${EXTRA_CONF:-} || (cat config.log; exit 1)
+      - name: make
+        run: make
+      - name: make test
+        run: make test
