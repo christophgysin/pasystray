@@ -6,24 +6,7 @@ on:
   pull_request:
     branches: [ master ]
   workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-        type: choice
-        options:
-        - info
-        - warning
-        - debug
-      tags:
-        description: 'Test scenario tags'
-        required: false
-        type: boolean
-      matrix:
-        description: 'Environment to run tests against'
-        type: matrix
-        required: true
+    
         
 jobs:
   build:
