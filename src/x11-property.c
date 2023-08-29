@@ -35,6 +35,7 @@ char* x11_property_get(const char* key){ return NULL; }
 #include <string.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+#include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
 static Display* display = NULL;
@@ -42,12 +43,23 @@ static Window window;
 
 void x11_property_init()
 {
+#ifndef GDK_WINDOWING_X11
+    return;
+#elif GTK_CHECK_VERSION(3,0,0)
+    if (!GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+        return;
+    }
+#endif
     display = gdk_x11_get_default_xdisplay();
     window = RootWindow(display, 0);
 }
 
 void x11_property_set(const char* key, const char* value)
 {
+    if (!display) {
+        g_warning("x11_property_set: call has no effect on non-X sessions");
+        return;
+    }
     g_debug("[x11-property] setting '%s' to '%s'", key, value);
 
     Atom atom = XInternAtom(display, key, False);
@@ -57,6 +69,10 @@ void x11_property_set(const char* key, const char* value)
 
 void x11_property_del(const char* key)
 {
+    if (!display) {
+        g_warning("x11_property_del: call has no effect on non-X sessions");
+        return;
+    }
     g_debug("[x11-property] deleting '%s'", key);
 
     Atom atom = XInternAtom(display, key, False);
@@ -65,6 +81,10 @@ void x11_property_del(const char* key)
 
 char* x11_property_get(const char* key)
 {
+    if (!display) {
+        g_warning("x11_property_get: call has no effect on non-X sessions");
+        return NULL;
+    }
     Atom property = XInternAtom(display, key, False);
     Atom actual_type;
     int actual_format;

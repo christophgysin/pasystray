@@ -22,6 +22,9 @@
 #include <stdlib.h>
 #include <glib.h>
 #include <gtk/gtk.h>
+#ifdef GDK_WINDOWING_X11
+#include <gdk/gdkx.h>
+#endif
 #include "config.h"
 #include "options.h"
 
@@ -222,5 +225,16 @@ void parse_options(settings_t* settings)
 
     settings->monitors = monitors;
     settings->key_grabbing = key_grabbing;
+#ifndef GDK_WINDOWING_X11
+    settings->key_grabbing = FALSE;
+#elif GTK_CHECK_VERSION(3,0,0)
+    if (!GDK_IS_X11_DISPLAY(gdk_display_get_default())) {
+        settings->key_grabbing = FALSE;
+    }
+#endif
+    if (key_grabbing && !settings->key_grabbing) {
+        g_warning("--key-grabbing can only be used on X11, option ignored");
+    }
+
     settings->symbolic_icons = symbolic_icons;
 }
