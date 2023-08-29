@@ -20,7 +20,11 @@ on:
         description: 'Test scenario tags'
         required: false
         type: boolean
-
+      matrix:
+        description: 'Environment to run tests against'
+        type: matrix
+        required: true
+        
 jobs:
   build:
     runs-on: ubuntu-latest
