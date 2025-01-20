@@ -123,17 +123,17 @@ void ui_update_systray_icon(menu_info_item_t* mii)
     systray_impl_set_icon(mis->systray, mii->icon);
 }
 
-GtkDialog* ui_renamedialog()
+GtkDialog* ui_renamedialog(void)
 {
     return (GtkDialog*) gtk_builder_get_object(builder, "renamedialog");
 }
 
-GtkLabel* ui_renamedialog_label()
+GtkLabel* ui_renamedialog_label(void)
 {
     return (GtkLabel*) gtk_builder_get_object(builder, "label");
 }
 
-GtkEntry* ui_renamedialog_entry()
+GtkEntry* ui_renamedialog_entry(void)
 {
     return (GtkEntry*) gtk_builder_get_object(builder, "entry");
 }

@@ -25,7 +25,7 @@
 
 #include "notify.h"
 
-void notify_initialize(){}
+void notify_initialize(void){}
 notify_handle_t notify(const char* msg, const char* body, const char* icon, gint value){ return 0; }
 void notify_update(notify_handle_t h, const char* msg, const char* body, const char* icon, gint value){}
 
@@ -34,7 +34,7 @@ void notify_update(notify_handle_t h, const char* msg, const char* body, const c
 #include <libnotify/notify.h>
 typedef struct NotifyNotification* notify_handle_t;
 
-void notify_initialize()
+void notify_initialize(void)
 {
     notify_init(PACKAGE_NAME);
 }

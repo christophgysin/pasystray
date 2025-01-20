@@ -40,7 +40,7 @@ void pulseaudio_init(menu_infos_t* mis)
     pulseaudio_connect(mis);
 }
 
-void pulseaudio_destroy()
+void pulseaudio_destroy(void)
 {
     pulseaudio_quit(NULL);
 }

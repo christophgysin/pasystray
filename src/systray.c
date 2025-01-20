@@ -328,7 +328,7 @@ void systray_remove_item_from_all_submenus(menu_info_item_t* item, menu_info_t* 
         menu_info_item_remove(mii->submenu, item->index);
 }
 
-void systray_about_dialog()
+void systray_about_dialog(void)
 {
     char *authors[] = { _("Christoph Gysin <christoph.gysin@gmail.com>"),
                         NULL };

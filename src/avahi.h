@@ -28,6 +28,6 @@
 
 void avahi_init(GMainLoop* loop);
 void avahi_start(menu_infos_t* mis);
-void avahi_destroy();
+void avahi_destroy(void);
 
 #endif /* PASYSTRAY_AVAHI_H */

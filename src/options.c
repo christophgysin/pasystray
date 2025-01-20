@@ -62,7 +62,7 @@ static GOptionEntry entries[] =
     { .long_name = NULL }
 };
 
-GOptionEntry* get_options()
+GOptionEntry* get_options(void)
 {
     return entries;
 }

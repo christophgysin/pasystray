@@ -28,7 +28,7 @@
 #include "ui.h"
 #include "x11-property.h"
 
-menu_infos_t* menu_infos_create()
+menu_infos_t* menu_infos_create(void)
 {
     menu_infos_t* mis = g_new(menu_infos_t, 1);
 

@@ -28,9 +28,9 @@
 void ui_load(settings_t* settings);
 void ui_set_volume_icon(menu_info_item_t* mii);
 void ui_update_systray_icon(menu_info_item_t* mii);
-GtkDialog* ui_renamedialog();
-GtkLabel* ui_renamedialog_label();
-GtkEntry* ui_renamedialog_entry();
+GtkDialog* ui_renamedialog(void);
+GtkLabel* ui_renamedialog_label(void);
+GtkEntry* ui_renamedialog_entry(void);
 GtkDialog* ui_errordialog(const gchar* title, const gchar* message);
 
 #endif /* PASYSTRAY_UI_H */
