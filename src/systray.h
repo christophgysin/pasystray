@@ -57,7 +57,7 @@ void systray_add_item_to_all_submenus(menu_info_item_t* item, menu_info_t* subme
 void systray_update_item_in_all_submenus(menu_info_item_t* item, menu_info_t* submenu);
 void systray_remove_item_from_all_submenus(menu_info_item_t* item, menu_info_t* submenu);
 
-void systray_about_dialog();
+void systray_about_dialog(void);
 
 void systray_click_cb(GtkStatusIcon* icon, GdkEventButton* ev, gpointer userdata);
 void systray_scroll_cb(guint state, GdkScrollDirection direction, menu_infos_t* mis);

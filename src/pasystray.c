@@ -81,7 +81,7 @@ void init(settings_t* settings)
 #endif
 }
 
-void quit()
+void quit(void)
 {
     g_main_loop_quit(loop);
 }

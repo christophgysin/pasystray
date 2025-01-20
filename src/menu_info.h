@@ -100,7 +100,7 @@ struct menu_info_item_t_ {
     GtkMenuShell* context;
 };
 
-menu_infos_t* menu_infos_create();
+menu_infos_t* menu_infos_create(void);
 void menu_infos_init(menu_infos_t* mis);
 void menu_infos_clear(menu_infos_t* mis);
 void menu_infos_destroy(menu_infos_t* mis);

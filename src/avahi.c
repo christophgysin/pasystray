@@ -107,7 +107,7 @@ void avahi_start(menu_infos_t* mis)
                 avahi_strerror(avahi_client_errno(client)));
 }
 
-void avahi_destroy()
+void avahi_destroy(void)
 {
     if(sb)
         avahi_service_browser_free(sb);

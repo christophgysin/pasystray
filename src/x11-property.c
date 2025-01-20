@@ -25,7 +25,7 @@
 
 #include <stdlib.h>
 
-void x11_property_init(){}
+void x11_property_init(void){}
 void x11_property_set(const char* key, const char* value){}
 void x11_property_del(const char* key){}
 char* x11_property_get(const char* key){ return NULL; }
@@ -40,7 +40,7 @@ char* x11_property_get(const char* key){ return NULL; }
 static Display* display = NULL;
 static Window window;
 
-void x11_property_init()
+void x11_property_init(void)
 {
     display = gdk_x11_get_default_xdisplay();
     window = RootWindow(display, 0);

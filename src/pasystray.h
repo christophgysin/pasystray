@@ -22,8 +22,10 @@
 #ifndef PASYSTRAY_PASYSTRAY_H
 #define PASYSTRAY_PASYSTRAY_H
 
-void init();
-void quit();
-void destroy();
+#include "menu_info.h"
+
+void init(settings_t* settings);
+void quit(void);
+void destroy(settings_t* settings);
 
 #endif /* PASYSTRAY_PASYSTRAY_H */
