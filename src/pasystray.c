@@ -21,6 +21,9 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
+#if GTK_CHECK_VERSION(3,0,0) && defined(GDK_WINDOWING_X11)
+#include <gdk/gdkx.h>
+#endif
 
 #include "pasystray.h"
 #include "options.h"
@@ -35,11 +38,15 @@
 
 static GMainLoop* loop;
 static menu_infos_t* mis;
+gboolean gdkisx11 = FALSE;
 
 int main(int argc, char *argv[])
 {
     GOptionEntry* options = get_options();
     GError *error = NULL;
+#if GTK_CHECK_VERSION(3,10,0) && !defined(HAVE_APPINDICATOR)
+    gdk_set_allowed_backends("x11");
+#endif
     gtk_init_with_args(&argc, &argv, NULL, options, NULL, &error);
     if(error)
     {
@@ -76,7 +83,12 @@ void init(settings_t* settings)
     avahi_start(mis);
 
 #ifdef HAVE_X11
-    if (settings->key_grabbing)
+#if GTK_CHECK_VERSION(3,0,0)
+    gdkisx11 = GDK_IS_X11_DISPLAY(gdk_display_get_default());
+#else
+    gdkisx11 = TRUE;
+#endif
+    if (settings->key_grabbing && gdkisx11)
       key_grabber_grab_keys(mis);
 #endif
 }
@@ -89,7 +101,7 @@ void quit(void)
 void destroy(settings_t* settings)
 {
 #ifdef HAVE_X11
-    if (settings->key_grabbing)
+    if (settings->key_grabbing && gdkisx11)
       key_grabber_ungrab_keys(mis);
 #endif
 
