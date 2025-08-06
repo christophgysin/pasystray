@@ -45,7 +45,9 @@ void systray_menu_create(menu_infos_t* mis)
 {
     mis->menu = GTK_MENU_SHELL(gtk_menu_new());
 
-    systray_rootmenu_add_submenu(mis, MENU_SERVER, "Default _Server", "network-server");
+    if (mis->settings.in_x11) {
+        systray_rootmenu_add_submenu(mis, MENU_SERVER, "Default _Server", "network-server");
+    }
     systray_rootmenu_add_submenu(mis, MENU_SINK, "Default S_ink", "audio-card");
     systray_rootmenu_add_submenu(mis, MENU_SOURCE, "Default S_ource", "audio-input-microphone");
     systray_rootmenu_add_submenu(mis, MENU_INPUT, "Playback S_treams", "media-playback-start");

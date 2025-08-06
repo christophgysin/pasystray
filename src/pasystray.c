@@ -63,7 +63,9 @@ void init(settings_t* settings)
 
     avahi_init(loop);
     notify_initialize();
-    x11_property_init();
+    if (settings->in_x11) {
+        x11_property_init();
+    }
 
     ui_load(settings);
 
