@@ -143,6 +143,7 @@ void menu_info_item_init(menu_info_item_t* mii)
     mii->submenu = NULL;
     mii->context = NULL;
     mii->address = NULL;
+    mii->active_port = NULL;
 }
 
 void menu_info_item_destroy(menu_info_item_t* mii)
@@ -152,6 +153,7 @@ void menu_info_item_destroy(menu_info_item_t* mii)
     g_free(mii->volume);
     g_free(mii->icon);
     g_free(mii->address);
+    g_free(mii->active_port);
     g_free(mii);
 }
 
@@ -711,6 +713,12 @@ void menu_info_item_rename_error(menu_info_item_t* mii)
 
     gtk_dialog_run(dialog);
     gtk_widget_destroy(GTK_WIDGET(dialog));
+}
+
+void menu_info_item_set_port_cb(GtkWidget* item, GdkEventButton* event, void* userdata)
+{
+    port_callback_data_t* data = userdata;
+    pulseaudio_set_port(data->mii, data->port_name);
 }
 
 void menu_info_module_unload_cb(GtkWidget* item, GdkEventButton* event, void* userdata)
