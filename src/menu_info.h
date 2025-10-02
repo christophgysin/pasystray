@@ -98,6 +98,7 @@ struct menu_info_item_t_ {
     menu_info_t* menu_info;
     menu_info_t* submenu;
     GtkMenuShell* context;
+    char* active_port;
 };
 
 menu_infos_t* menu_infos_create(void);
@@ -147,6 +148,13 @@ void menu_info_item_move_all_cb(GtkWidget* item, GdkEventButton* event, void* us
 void menu_info_item_rename_cb(GtkWidget* item, GdkEventButton* event, void* userdata);
 void menu_info_item_rename_dialog(menu_info_item_t* mii);
 void menu_info_item_rename_error(menu_info_item_t* mii);
+
+typedef struct {
+    menu_info_item_t* mii;
+    char* port_name;
+} port_callback_data_t;
+
+void menu_info_item_set_port_cb(GtkWidget* item, GdkEventButton* event, void* userdata);
 
 void menu_info_module_unload_cb(GtkWidget* item, GdkEventButton* event, void* userdata);
 

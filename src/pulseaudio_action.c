@@ -366,6 +366,42 @@ void pulseaudio_module_unload_success_cb(pa_context *c, int success, void *userd
         g_warning("failed to unload module %s!\n", mii->name);
 }
 
+void pulseaudio_set_port(menu_info_item_t* mii, const char* port_name)
+{
+    pa_operation* o = NULL;
+
+    g_debug("[pulseaudio_action] set %s %s port to %s",
+            menu_info_type_name(mii->menu_info->type), mii->name, port_name);
+
+    switch(mii->menu_info->type)
+    {
+        case MENU_SINK:
+            o = pa_context_set_sink_port_by_index(context, mii->index,
+                    port_name, pulseaudio_set_port_success_cb, mii);
+            break;
+        case MENU_SOURCE:
+            o = pa_context_set_source_port_by_index(context, mii->index,
+                    port_name, pulseaudio_set_port_success_cb, mii);
+            break;
+        default:
+            g_warning("port switching not supported for %s",
+                    menu_info_type_name(mii->menu_info->type));
+            return;
+    }
+
+    if(o)
+        pa_operation_unref(o);
+}
+
+void pulseaudio_set_port_success_cb(pa_context *c, int success, void *userdata)
+{
+    menu_info_item_t* mii = userdata;
+
+    if(!success)
+        g_warning("failed to set port for %s \"%s\"!\n",
+                menu_info_type_name(mii->menu_info->type), mii->name);
+}
+
 void pulseaudio_terminate(void)
 {
     pa_operation* exit_op = pa_context_exit_daemon(context, NULL, NULL);

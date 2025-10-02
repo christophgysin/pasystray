@@ -377,6 +377,156 @@ void pulseaudio_sink_change_cb(pa_context* c, const pa_sink_info* i, int is_last
     pulseaudio_sink_add(i, is_last, userdata, FALSE);
 }
 
+static void pulseaudio_add_sink_ports_to_context(menu_info_item_t* mii, const pa_sink_info* i)
+{
+    if(!mii->context || !i)
+        return;
+
+    // Check if port menu already exists and remove it
+    GList* children = gtk_container_get_children(GTK_CONTAINER(mii->context));
+    GList* iter = children;
+    gboolean separator_found = FALSE;
+
+    while(iter)
+    {
+        GtkWidget* child = GTK_WIDGET(iter->data);
+        if(GTK_IS_SEPARATOR_MENU_ITEM(child) && !separator_found)
+        {
+            separator_found = TRUE;
+            iter = iter->next;
+            continue;
+        }
+        if(separator_found)
+        {
+            GtkWidget* to_remove = child;
+            iter = iter->next;
+            gtk_widget_destroy(to_remove);
+        }
+        else
+        {
+            iter = iter->next;
+        }
+    }
+    g_list_free(children);
+
+    if(i->n_ports == 0)
+        return;
+
+    // Add separator before ports
+    GtkWidget* separator = gtk_separator_menu_item_new();
+    gtk_menu_shell_append(mii->context, separator);
+
+    // Create ports submenu
+    GtkMenuShell* ports_menu = GTK_MENU_SHELL(gtk_menu_new());
+    GtkWidget* ports_item = gtk_menu_item_new_with_label("Switch Port");
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(ports_item), GTK_WIDGET(ports_menu));
+    gtk_menu_shell_append(mii->context, ports_item);
+
+    GSList* group = NULL;
+    for(uint32_t p = 0; p < i->n_ports; p++)
+    {
+        const pa_sink_port_info* port = i->ports[p];
+        GtkWidget* port_item = gtk_radio_menu_item_new_with_label(group, port->description);
+        group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(port_item));
+
+        if(i->active_port && g_str_equal(port->name, i->active_port->name))
+            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(port_item), TRUE);
+
+        if(port->available == PA_PORT_AVAILABLE_NO)
+            gtk_widget_set_sensitive(port_item, FALSE);
+
+        port_callback_data_t* data = g_new(port_callback_data_t, 1);
+        data->mii = mii;
+        data->port_name = g_strdup(port->name);
+
+        g_signal_connect(port_item, "button-press-event",
+                G_CALLBACK(menu_info_item_set_port_cb), data);
+        g_signal_connect_swapped(port_item, "destroy",
+                G_CALLBACK(g_free), data->port_name);
+        g_signal_connect_swapped(port_item, "destroy",
+                G_CALLBACK(g_free), data);
+
+        gtk_menu_shell_append(ports_menu, port_item);
+    }
+
+    gtk_widget_show_all(GTK_WIDGET(mii->context));
+}
+
+static void pulseaudio_add_source_ports_to_context(menu_info_item_t* mii, const pa_source_info* i)
+{
+    if(!mii->context || !i)
+        return;
+
+    // Check if port menu already exists and remove it
+    GList* children = gtk_container_get_children(GTK_CONTAINER(mii->context));
+    GList* iter = children;
+    gboolean separator_found = FALSE;
+
+    while(iter)
+    {
+        GtkWidget* child = GTK_WIDGET(iter->data);
+        if(GTK_IS_SEPARATOR_MENU_ITEM(child) && !separator_found)
+        {
+            separator_found = TRUE;
+            iter = iter->next;
+            continue;
+        }
+        if(separator_found)
+        {
+            GtkWidget* to_remove = child;
+            iter = iter->next;
+            gtk_widget_destroy(to_remove);
+        }
+        else
+        {
+            iter = iter->next;
+        }
+    }
+    g_list_free(children);
+
+    if(i->n_ports == 0)
+        return;
+
+    // Add separator before ports
+    GtkWidget* separator = gtk_separator_menu_item_new();
+    gtk_menu_shell_append(mii->context, separator);
+
+    // Create ports submenu
+    GtkMenuShell* ports_menu = GTK_MENU_SHELL(gtk_menu_new());
+    GtkWidget* ports_item = gtk_menu_item_new_with_label("Switch Port");
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(ports_item), GTK_WIDGET(ports_menu));
+    gtk_menu_shell_append(mii->context, ports_item);
+
+    GSList* group = NULL;
+    for(uint32_t p = 0; p < i->n_ports; p++)
+    {
+        const pa_source_port_info* port = i->ports[p];
+        GtkWidget* port_item = gtk_radio_menu_item_new_with_label(group, port->description);
+        group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(port_item));
+
+        if(i->active_port && g_str_equal(port->name, i->active_port->name))
+            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(port_item), TRUE);
+
+        if(port->available == PA_PORT_AVAILABLE_NO)
+            gtk_widget_set_sensitive(port_item, FALSE);
+
+        port_callback_data_t* data = g_new(port_callback_data_t, 1);
+        data->mii = mii;
+        data->port_name = g_strdup(port->name);
+
+        g_signal_connect(port_item, "button-press-event",
+                G_CALLBACK(menu_info_item_set_port_cb), data);
+        g_signal_connect_swapped(port_item, "destroy",
+                G_CALLBACK(g_free), data->port_name);
+        g_signal_connect_swapped(port_item, "destroy",
+                G_CALLBACK(g_free), data);
+
+        gtk_menu_shell_append(ports_menu, port_item);
+    }
+
+    gtk_widget_show_all(GTK_WIDGET(mii->context));
+}
+
 void pulseaudio_sink_add(const pa_sink_info* i, int is_last, void* userdata, gboolean is_new)
 {
     if(is_last > 0)
@@ -403,6 +553,11 @@ void pulseaudio_sink_add(const pa_sink_info* i, int is_last, void* userdata, gbo
     menu_info_item_update(mi, i->index, i->name, i->description, &i->volume,
             i->mute, tooltip, NULL, NULL, -1);
     g_free(tooltip);
+
+    // Add port switching to context menu
+    menu_info_item_t* mii = menu_info_item_get(mi, i->index);
+    if(mii)
+        pulseaudio_add_sink_ports_to_context(mii, i);
 }
 
 void pulseaudio_source_init_cb(pa_context* c, const pa_source_info* i, int is_last, void* userdata)
@@ -451,6 +606,11 @@ void pulseaudio_source_add(const pa_source_info* i, int is_last, void* userdata,
     menu_info_item_update(mi, i->index, i->name, i->description, &i->volume,
             i->mute, tooltip, NULL, NULL, -1);
     g_free(tooltip);
+
+    // Add port switching to context menu
+    menu_info_item_t* mii = menu_info_item_get(mi, i->index);
+    if(mii)
+        pulseaudio_add_source_ports_to_context(mii, i);
 }
 
 void pulseaudio_sink_input_init_cb(pa_context* c, const pa_sink_input_info* i, int is_last, void* userdata)
