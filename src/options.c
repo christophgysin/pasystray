@@ -23,6 +23,9 @@
 #include <stdlib.h>
 #include <glib.h>
 #include <gtk/gtk.h>
+#ifdef GDK_WINDOWING_X11
+#include <gdk/gdkx.h>
+#endif
 #include "config.h"
 #include "options.h"
 
@@ -54,7 +57,7 @@ static GOptionEntry entries[] =
     { "always-notify", 'a', 0, G_OPTION_ARG_NONE, &always_notify,
         "Deprecated, use --notify=all instead", NULL },
     { "include-monitors", 'n', 0, G_OPTION_ARG_NONE, &monitors, "Include monitor sources", NULL },
-    { "key-grabbing",  'g', 0, G_OPTION_ARG_NONE, &key_grabbing, "Grab volume control keys", NULL },
+    { "key-grabbing",  'g', 0, G_OPTION_ARG_NONE, &key_grabbing, "Grab volume control keys (X11 only)", NULL },
     { "notify", 'N', 0, G_OPTION_ARG_STRING_ARRAY, &notify_mode,
         "Set notification options, use --notify=help for a list of valid options", "OPTION" },
     { "symbolic-icons", 'S', 0, G_OPTION_ARG_NONE, &symbolic_icons,
@@ -116,6 +119,12 @@ void parse_options(settings_t* settings)
     {
         setenv("G_MESSAGES_DEBUG", "pasystray", 1);
     }
+
+#ifndef GDK_WINDOWING_X11
+    settings->in_x11 = FALSE;
+#elif GTK_CHECK_VERSION(3,0,0)
+    settings->in_x11 = GDK_IS_X11_DISPLAY(gdk_display_get_default());
+#endif
 
     settings->volume_max = 0;
     if(volume_max > 0)
@@ -223,5 +232,11 @@ void parse_options(settings_t* settings)
 
     settings->monitors = monitors;
     settings->key_grabbing = key_grabbing;
+
+    if (settings->key_grabbing && !settings->in_x11) {
+        settings->key_grabbing = FALSE;
+        g_warning("--key-grabbing can only be used on X11, option ignored");
+    }
+
     settings->symbolic_icons = symbolic_icons;
 }

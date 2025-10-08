@@ -41,6 +41,10 @@ menu_infos_t* menu_infos_create(void)
 
 void menu_infos_init(menu_infos_t* mis)
 {
+    if (!mis->settings.in_x11) {
+        // MENU_SERVER is not populated unless running in X11
+        return;
+    }
     menu_info_t* servers = &mis->menu_info[MENU_SERVER];
     servers->default_name = x11_property_get("PULSE_SERVER");
 

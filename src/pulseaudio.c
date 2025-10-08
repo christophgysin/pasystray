@@ -341,10 +341,13 @@ void pulseaudio_server_add(const pa_server_info* i, void* userdata, gboolean is_
       return;
     }
 
-    char* tooltip = server_info_str(i);
+    if (mi->menu) {
+        // The "default server" menu will not have been created for Wayland sessions
+        char* tooltip = server_info_str(i);
 
-    menu_info_item_update(mi, 0, "localhost", i->host_name, NULL, 0, tooltip, NULL, NULL, -1);
-    g_free(tooltip);
+        menu_info_item_update(mi, 0, "localhost", i->host_name, NULL, 0, tooltip, NULL, NULL, -1);
+        g_free(tooltip);
+    }
 
     /* set default sink/source */
     pulseaudio_change_default_item(&mi->menu_infos->menu_info[MENU_SINK], i->default_sink_name);

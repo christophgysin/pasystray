@@ -74,6 +74,8 @@ struct settings_t_ {
     gboolean n_stream_output;
     gboolean n_stream_input;
     gboolean n_systray_action;
+    // Not strictly a setting but affects which settings are available
+    gboolean in_x11;
 };
 typedef struct settings_t_ settings_t;
 
